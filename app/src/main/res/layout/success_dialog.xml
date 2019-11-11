@@ -14,7 +14,7 @@
         android:layout_centerInParent="true"
         android:src="@drawable/ic_validate" />
 
-    <com.skypaps.clover.common.ui.FontTextView
+    <com.vtec.terrassteel.common.ui.FontTextView
         android:id="@+id/success_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
