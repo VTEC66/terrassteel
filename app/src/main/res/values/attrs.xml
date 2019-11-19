@@ -14,4 +14,11 @@
             <enum name="SF_PRO_SEMI_BOLD_ITALIC" value="9" />
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="ActionBarView">
+        <attr name="title" format="string" />
+        <attr name="actionButtonDrawable" format="reference" />
+        <attr name="showBackArrow" format="boolean"/>
+        <attr name="showActionButton" format="boolean" />
+    </declare-styleable>
 </resources>

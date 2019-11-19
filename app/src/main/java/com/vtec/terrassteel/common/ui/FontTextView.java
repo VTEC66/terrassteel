@@ -6,7 +6,7 @@ import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
-import com.skypaps.clover.R;
+import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.utils.FontUtil;
 
 import androidx.appcompat.widget.AppCompatTextView;

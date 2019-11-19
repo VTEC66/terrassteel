@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="xlarge">28dp</dimen>
-    <dimen name="large">24dp</dimen>
+    <dimen name="xxlarge">38dp</dimen>
+    <dimen name="xlarge">31dp</dimen>
+    <dimen name="large">25dp</dimen>
     <dimen name="standard">20dp</dimen>
-    <dimen name="small">16dp</dimen>
-    <dimen name="xsmall">12dp</dimen>
+    <dimen name="small">15dp</dimen>
+    <dimen name="xsmall">9dp</dimen>
 
     <dimen name="text_size_standard">14sp</dimen>
     <dimen name="text_size_title">17sp</dimen>
@@ -17,6 +18,11 @@
     <dimen name="button_height">48dp</dimen>
     <dimen name="button_min_width">111dp</dimen>
     <dimen name="button_radius">40dp</dimen>
+
+    <dimen name="action_bar_height">60dp</dimen>
+
+    <dimen name="tab_indicator_height">4dp</dimen>
+    <dimen name="construction_itemview_height">70dp</dimen>
 
 
 </resources>

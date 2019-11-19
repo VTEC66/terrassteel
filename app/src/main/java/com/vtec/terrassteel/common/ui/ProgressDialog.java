@@ -10,7 +10,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.skypaps.clover.R;
+
+import com.vtec.terrassteel.R;
 
 import androidx.annotation.NonNull;
 import butterknife.BindView;

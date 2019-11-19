@@ -11,7 +11,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.skypaps.clover.R;
+
+import com.vtec.terrassteel.R;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

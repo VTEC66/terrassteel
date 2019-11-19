@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/action_bar_height"
+    android:background="@color/colorPrimary"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:layout_alignParentStart="true"
+        android:id="@+id/back_arrow"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/standard"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/ic_arrow_back"
+        android:tint="@color/white"/>
+
+    <com.vtec.terrassteel.common.ui.FontTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_title"
+        app:fontType="SF_PRO_BOLD"
+        android:text="titre"/>
+
+    <ImageView
+        android:id="@+id/actionButton"
+        android:gravity="end"
+        android:layout_marginEnd="@dimen/standard"
+        android:layout_alignParentEnd="true"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_centerVertical="true"
+        android:tint="@color/white"
+        android:src="@drawable/ic_add"
+        android:visibility="invisible"/>
+
+
+</RelativeLayout>

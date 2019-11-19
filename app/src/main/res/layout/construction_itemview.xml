@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="@dimen/construction_itemview_height">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="@dimen/standard"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:id="@+id/construction_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            android:textColor="@color/antracite_grey"/>
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:id="@+id/customer_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_standard"
+            android:textColor="@color/manatee_grey"/>
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/status_indicator_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/standard"
+        android:paddingStart="@dimen/small"
+        android:paddingEnd="@dimen/small"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:id="@+id/status_indicator_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_standard"
+            android:textColor="@color/antracite_grey"
+            android:layout_gravity="center"
+            android:gravity="center" />
+    </FrameLayout>
+
+</RelativeLayout>

@@ -3,4 +3,12 @@
 
     <!-- General -->
     <string name="cancel">Annuler</string>
+    <string name="version">Version : %1$s </string>
+    <string name="no_internet_title">Aucune connexion</string>
+    <string name="no_internet_message">Votre appareil n\'est pas connecté à internet</string>
+    <string name="tab_construction">Mes chantiers</string>
+    <string name="tab_company">Mon entreprise</string>
+    <string name="construction_status_inprogress">En cours</string>
+    <string name="construction_status_finished">Terminé</string>
+    <string name="add_construction_title">Ajouter un chantier</string>
 </resources>

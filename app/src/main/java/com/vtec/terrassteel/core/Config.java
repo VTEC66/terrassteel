@@ -1,7 +1,7 @@
 package com.vtec.terrassteel.core;
 
 
-import com.skypaps.clover.BuildConfig;
+import com.vtec.terrassteel.BuildConfig;
 
 public class Config {
 

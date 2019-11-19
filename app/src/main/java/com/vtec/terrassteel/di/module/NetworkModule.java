@@ -4,7 +4,7 @@ import android.app.Application;
 import android.os.Build;
 
 import com.google.gson.Gson;
-import com.skypaps.clover.BuildConfig;
+import com.vtec.terrassteel.BuildConfig;
 import com.vtec.terrassteel.core.manager.PreferenceManager;
 import com.vtec.terrassteel.core.manager.SessionManager;
 import com.vtec.terrassteel.core.model.annotation.ApplicationScope;
