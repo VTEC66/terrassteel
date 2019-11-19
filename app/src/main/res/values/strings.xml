@@ -11,4 +11,11 @@
     <string name="construction_status_inprogress">En cours</string>
     <string name="construction_status_finished">Terminé</string>
     <string name="add_construction_title">Ajouter un chantier</string>
+    <string name="hint_construction_name">Nom du chantier</string>
+    <string name="hint_customer">Client</string>
+    <string name="hint_address1">Adresse 1</string>
+    <string name="hint_address2">Adresse 2</string>
+    <string name="hint_zip">Code postale</string>
+    <string name="hint_city">Ville</string>
+    <string name="validate">Valider</string>
 </resources>

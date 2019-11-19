@@ -6,10 +6,141 @@
     android:layout_height="match_parent">
 
     <com.vtec.terrassteel.common.ui.ActionBar
-        android:id="@+id/toolbar"
+        android:id="@+id/action_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:showBackArrow="true"
         app:title="@string/add_construction_title" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/construction_name_til"
+        style="@style/TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/standard"
+        android:layout_marginTop="@dimen/xlarge"
+        android:layout_marginEnd="@dimen/standard">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/construction_name_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_construction_name"
+            android:imeOptions="actionNext"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/customer_textinputlayout"
+        style="@style/TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/standard"
+        android:layout_marginTop="@dimen/standard"
+        android:layout_marginEnd="@dimen/standard">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/customer_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_customer"
+            android:imeOptions="actionNext"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/construction_address1_textinputlayout"
+        style="@style/TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/standard"
+        android:layout_marginTop="@dimen/standard"
+        android:layout_marginEnd="@dimen/standard">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/construction_address1_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_address1"
+            android:imeOptions="actionNext"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/construction_address2_textinputlayout"
+        style="@style/TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/standard"
+        android:layout_marginTop="@dimen/standard"
+        android:layout_marginEnd="@dimen/standard">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/construction_address2_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_address2"
+            android:imeOptions="actionNext"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/standard">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/construction_zip_textinputlayout"
+            style="@style/TextInputLayout"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/standard">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/construction_zip_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_zip"
+                android:imeOptions="actionNext"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/construction_city_textinputlayout"
+            style="@style/TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/standard"
+            android:layout_marginEnd="@dimen/standard">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/construction_city_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_city"
+                android:imeOptions="actionDone"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <com.vtec.terrassteel.common.ui.FontButton
+        style="@style/FullButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginBottom="@dimen/xxlarge"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/validate"/>
 
 </LinearLayout>
