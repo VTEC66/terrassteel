@@ -9,10 +9,8 @@ import android.widget.TextView;
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.model.Construction;
 import com.vtec.terrassteel.home.construction.callback.ConstructionCallback;
-import com.vtec.terrassteel.home.construction.ui.MyConstructionsFragment;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,10 +38,10 @@ public class ConstructionAdapter extends RecyclerView.Adapter<ConstructionAdapte
         Construction construction = elements.get(position);
 
         holder.constructionNameTextView.setText(construction.getConstructionName());
-        holder.customerTextView.setText(construction.getCustomer());
-        holder.statusIndicatorTextView.setText(construction.getStatus().getRessourceReference());
+        holder.customerTextView.setText(construction.getCustomer().getCustomerName());
+        holder.statusIndicatorTextView.setText(construction.getConstructionStatus().getRessourceReference());
 
-        switch (construction.getStatus()){
+        switch (construction.getConstructionStatus()){
             case IN_PROGRESS:
                 holder.statusIndicatorContainer.setBackground(context.getResources().getDrawable(R.drawable.bg_status_indicator_inprogress));
                 break;

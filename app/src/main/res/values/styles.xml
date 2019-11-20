@@ -32,11 +32,18 @@
         <item name="android:textSize">@dimen/text_size_standard</item>
     </style>
 
+    <style name="HintText" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/antracite_grey</item>
+        <item name="android:textSize">@dimen/text_size_standard</item>
+    </style>
+
     <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:textColorHint">@color/antracite_grey</item>
+        <item name="hintTextAppearance">@style/HintText</item>
         <item name="boxStrokeColor">@color/antracite_grey</item>
         <item name="boxStrokeWidth">2dp</item>
     </style>
+
 
     <style name="TerrassteelButtonStyle" parent ="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:height">@dimen/button_height</item>

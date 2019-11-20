@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.model.Construction;
 import com.vtec.terrassteel.common.model.ConstructionStatus;
+import com.vtec.terrassteel.core.manager.DatabaseManager;
+import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractFragment;
 import com.vtec.terrassteel.home.construction.adapter.ConstructionAdapter;
 import com.vtec.terrassteel.home.construction.callback.ConstructionCallback;
@@ -56,7 +58,6 @@ public class MyConstructionsFragment extends AbstractFragment implements Constru
         constructionRecyclerView.setLayoutManager(linearLayoutManager);
 
         constructionAdapter = new ConstructionAdapter(getContext());
-        constructionAdapter.setData(makeMock());
         constructionAdapter.setCallback(this);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(constructionRecyclerView.getContext(),
@@ -68,13 +69,29 @@ public class MyConstructionsFragment extends AbstractFragment implements Constru
         return view;
     }
 
-    private ArrayList<Construction> makeMock() {
-        ArrayList<Construction> mokeConstructions = new ArrayList<>();
+    @Override
+    public void onResume() {
+        super.onResume();
 
-        mokeConstructions.add(new Construction("Chantier perpignan", "Client Conseil Générale", ConstructionStatus.IN_PROGRESS));
+        DatabaseManager.getInstance(getContext()).getAllConstructions(new DatabaseOperationCallBack<ArrayList<Construction>>() {
+            @Override
+            public void onSuccess(ArrayList<Construction> constructions) {
+                constructionAdapter.setData(constructions);
+                constructionAdapter.notifyDataSetChanged();
+            }
 
-        return mokeConstructions;
+            @Override
+            public void onError() {
+                super.onError();
+            }
+        });
+
+        /*constructionAdapter.setData(DatabaseManager.getInstance(getContext()).getAllConstructions());//makeMock());
+        constructionAdapter.notifyDataSetChanged();*/
+
     }
+
+
 
     @Override
     public void onConstructionSelected(Construction construction) {
