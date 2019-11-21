@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.vtec.terrassteel.common.ui.ActionBar
+        android:id="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:showBackArrow="true"
+        app:title="@string/add_customer_title" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/customer_name_til"
+        style="@style/TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/standard"
+        android:layout_marginTop="@dimen/xlarge"
+        android:layout_marginEnd="@dimen/standard">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/customer_name_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_customer_name"
+            android:imeOptions="actionNext"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/customer_address1_textinputlayout"
+        style="@style/TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/standard"
+        android:layout_marginTop="@dimen/standard"
+        android:layout_marginEnd="@dimen/standard">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/customer_address1_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_address1"
+            android:imeOptions="actionNext"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/customer_address2_textinputlayout"
+        style="@style/TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/standard"
+        android:layout_marginTop="@dimen/standard"
+        android:layout_marginEnd="@dimen/standard">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/customer_address2_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_address2"
+            android:imeOptions="actionNext"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/standard">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/customer_zip_textinputlayout"
+            style="@style/TextInputLayout"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/standard">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/customer_zip_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_zip"
+                android:imeOptions="actionNext"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/customer_city_textinputlayout"
+            style="@style/TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/standard"
+            android:layout_marginEnd="@dimen/standard">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/customer_city_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_city"
+                android:imeOptions="actionNext"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/customer_phone_textinputlayout"
+            style="@style/TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/standard"
+            android:layout_marginTop="@dimen/standard"
+            android:layout_marginEnd="@dimen/standard">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/customer_phone_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_phone"
+                android:imeOptions="actionNext"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/customer_email_textinputlayout"
+            style="@style/TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/standard"
+            android:layout_marginTop="@dimen/standard"
+            android:layout_marginEnd="@dimen/standard">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/customer_email_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_email"
+                android:imeOptions="actionDone"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <com.vtec.terrassteel.common.ui.FontButton
+        android:id="@+id/validate_button"
+        style="@style/FullButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginBottom="@dimen/xxlarge"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/validate"/>
+
+</LinearLayout>

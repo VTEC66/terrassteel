@@ -2,16 +2,56 @@ package com.vtec.terrassteel.common.model;
 
 public class Customer {
 
-    public int customerId;
+    public long customerId;
     public String customerName;
     public String customerAddress1;
     public String customerAddress2;
     public String customerZip;
     public String customerCity;
     public String customerPhone;
-    public String customerMail;
+    public String customerEmail;
 
-    public int getCustomerId() {
+    public Customer withCustomerId(long customerId){
+        this.customerId = customerId;
+        return this;
+    }
+
+    public Customer withCustomerName(String customerName){
+        this.customerName = customerName;
+        return this;
+    }
+
+    public Customer withCustomerAddress1(String customerAddress1){
+        this.customerAddress1 = customerAddress1;
+        return this;
+    }
+
+    public Customer withCustomerAddress2(String customerAddress2){
+        this.customerAddress2 = customerAddress2;
+        return this;
+    }
+
+    public Customer withCustomerZip(String customerZip){
+        this.customerZip = customerZip;
+        return this;
+    }
+
+    public Customer withCustomerCity(String customerCity){
+        this.customerCity = customerCity;
+        return this;
+    }
+
+    public Customer withCustomerPhone(String customerPhone){
+        this.customerPhone = customerPhone;
+        return this;
+    }
+
+    public Customer withCustomerEmail(String customerEmail){
+        this.customerEmail = customerEmail;
+        return this;
+    }
+
+    public long getCustomerId() {
         return customerId;
     }
 
@@ -39,7 +79,7 @@ public class Customer {
         return customerPhone;
     }
 
-    public String getCustomerMail() {
-        return customerMail;
+    public String getCustomerEmail() {
+        return customerEmail;
     }
 }

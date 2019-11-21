@@ -34,6 +34,21 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullTranslucent"/>
 
+        <activity android:name=".home.company.ui.ListCustomersActivity"
+            android:launchMode="singleInstance"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FullTranslucent"/>
+
+        <activity android:name=".home.company.ui.ListEmployeesActivity"
+            android:launchMode="singleInstance"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FullTranslucent"/>
+
+        <activity android:name=".home.company.ui.AddCustomerActivity"
+            android:launchMode="singleInstance"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FullTranslucent"/>
+
     </application>
 
 </manifest>

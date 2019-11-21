@@ -1,7 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/antracite_grey">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/customer_management_view"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_standard"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/standard"
+            android:text="@string/customer_management"/>
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/standard"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_chevron_right"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/manatee_grey"/>
+
+    <RelativeLayout
+        android:id="@+id/employee_management_view"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_standard"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/standard"
+            android:text="@string/employee_management"/>
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/standard"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_chevron_right"/>
+
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/manatee_grey"/>
 
 </LinearLayout>

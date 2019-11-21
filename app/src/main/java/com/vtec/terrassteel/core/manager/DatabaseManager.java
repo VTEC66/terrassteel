@@ -14,7 +14,6 @@ import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DatabaseManager extends SQLiteOpenHelper {
 
@@ -162,7 +161,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             values.put(KEY_CUSTOMER_ZIP, customer.getCustomerZip());
             values.put(KEY_CUSTOMER_CITY, customer.getCustomerCity());
             values.put(KEY_CUSTOMER_PHONE, customer.getCustomerPhone());
-            values.put(KEY_CUSTOMER_MAIL, customer.getCustomerMail());
+            values.put(KEY_CUSTOMER_MAIL, customer.getCustomerEmail());
 
 
             // First try to update the user in case the user already exists in the database
@@ -206,14 +205,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
         ArrayList<Construction> constructions = new ArrayList<>();
 
         String CONSTRUCTIONS_SELECT_QUERY =
-                String.format("SELECT * FROM %s",// LEFT OUTER JOIN %s ON %s.%s = %s.%s",
-                        TABLE_CONSTRUCTIONS);/*,
-                        TABLE_USERS,
-                        TABLE_POSTS, KEY_POST_USER_ID_FK,
-                        TABLE_USERS, KEY_USER_ID);*/
+                String.format("SELECT * FROM %s",
+                        TABLE_CONSTRUCTIONS);
 
-        // "getReadableDatabase()" and "getWriteableDatabase()" return the same object (except under low
-        // disk space scenarios)
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(CONSTRUCTIONS_SELECT_QUERY, null);
         try {
@@ -228,7 +222,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
                                     .withConstructionZip(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ZIP)))
                                     .withConstructionCity(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_CITY)))
                                     .withConstructionStatus(ConstructionStatus.valueOf(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_STATUS))));
-                    // Customer
 
                     constructions.add(newConstruction);
 
@@ -246,4 +239,76 @@ public class DatabaseManager extends SQLiteOpenHelper {
         Log.d(TAG, "Database successfully return " + constructions.size() + " constructions.");
         callBack.onSuccess(constructions);
     }
+
+    public void addCustomer(Customer customer, DatabaseOperationCallBack<DefaultResponse> callBack) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_CUSTOMER_NAME, customer.getCustomerName());
+            values.put(KEY_CUSTOMER_ADDRESS1, customer.getCustomerAddress1());
+            values.put(KEY_CUSTOMER_ADDRESS2, customer.getCustomerAddress2());
+            values.put(KEY_CUSTOMER_ZIP, customer.getCustomerZip());
+            values.put(KEY_CUSTOMER_CITY, customer.getCustomerCity());
+            values.put(KEY_CUSTOMER_PHONE, customer.getCustomerPhone());
+            values.put(KEY_CUSTOMER_MAIL, customer.getCustomerEmail());
+
+            // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
+            db.insertOrThrow(TABLE_CUSTOMERS, null, values);
+            db.setTransactionSuccessful();
+
+            Log.d(TAG, "New Customer successfuly added into database");
+            callBack.onSuccess(new DefaultResponse());
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to add Customer into database : " + e.toString());
+            callBack.onError();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void getAllCustomers(DatabaseOperationCallBack<ArrayList<Customer>> callBack) {
+        ArrayList<Customer> customers = new ArrayList<>();
+
+        String CUSTOMERS_SELECT_QUERY =
+                String.format("SELECT * FROM %s",
+                        TABLE_CUSTOMERS);
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(CUSTOMERS_SELECT_QUERY, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Customer newCustomer =
+                            new Customer()
+                                    .withCustomerId(cursor.getLong(cursor.getColumnIndex(KEY_CUSTOMER_ID)))
+                                    .withCustomerName(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_NAME)))
+                                    .withCustomerAddress1(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ADDRESS1)))
+                                    .withCustomerAddress2(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ADDRESS2)))
+                                    .withCustomerZip(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ZIP)))
+                                    .withCustomerCity(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_CITY)))
+                                    .withCustomerPhone(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_PHONE)))
+                                    .withCustomerEmail(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_MAIL)));
+
+                    customers.add(newCustomer);
+
+                } while(cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to get customers from database : " + e.toString());
+            callBack.onError();
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+        Log.d(TAG, "Database successfully return " + customers.size() + " customers.");
+        callBack.onSuccess(customers);
+    }
+
+
 }

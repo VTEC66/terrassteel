@@ -18,4 +18,12 @@
     <string name="hint_zip">Code postale</string>
     <string name="hint_city">Ville</string>
     <string name="validate">Valider</string>
+    <string name="customer_management">Gestion des clients</string>
+    <string name="employee_management">Gestion des employés</string>
+    <string name="my_customers">Mes clients</string>
+    <string name="my_employees">Mes employés</string>
+    <string name="add_customer_title">Ajouter un client</string>
+    <string name="hint_phone">Téléphone</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_customer_name">Nom du client</string>
 </resources>
