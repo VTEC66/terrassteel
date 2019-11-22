@@ -33,4 +33,5 @@
     <string name="hint_employee_name">Nom de l\'employé</string>
     <string name="hint_employee_job">Type d\'emploi</string>
     <string name="select_job_title">Sélectionnez un type d\'emploi</string>
+    <string name="select_customer_title">Selectionnez un client</string>
 </resources>

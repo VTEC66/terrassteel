@@ -24,6 +24,11 @@ public class Construction {
         return this;
     }
 
+    public Construction withCustomer(Customer customer) {
+        this.customer = customer;
+        return this;
+    }
+
     public Construction withConstructionAddress1(String constructionAddress1){
         this.constructionAddress1 = constructionAddress1;
         return this;
@@ -92,4 +97,6 @@ public class Construction {
     public String getConstructionCity() {
         return constructionCity;
     }
+
+
 }

@@ -248,6 +248,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                             new Construction()
                                     .withConstructionId(cursor.getLong(cursor.getColumnIndex(KEY_CONSTRUCTION_ID)))
                                     .withConstructionName(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_NAME)))
+                                    .withCustomer(getCustomerWithId(cursor.getInt(cursor.getColumnIndex(KEY_CONSTRUCTION_CUSTOMER_ID_FK))))
                                     .withConstructionAddress1(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ADDRESS1)))
                                     .withConstructionAddress2(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ADDRESS2)))
                                     .withConstructionZip(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ZIP)))
@@ -269,6 +270,38 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         Log.d(TAG, "Database successfully return " + constructions.size() + " constructions.");
         callBack.onSuccess(constructions);
+    }
+
+    private Customer getCustomerWithId(int customerId) throws Exception{
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+
+        String CUSTOMERS_SELECT_QUERY =
+                String.format("SELECT * FROM %s WHERE " + KEY_CUSTOMER_ID + " = %d",
+                        TABLE_CUSTOMERS, customerId);
+
+        Cursor cursor = db.rawQuery(CUSTOMERS_SELECT_QUERY, null);
+
+        cursor.moveToFirst();
+
+        Customer newCustomer =
+                        new Customer()
+                                .withCustomerId(cursor.getLong(cursor.getColumnIndex(KEY_CUSTOMER_ID)))
+                                .withCustomerName(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_NAME)))
+                                .withCustomerAddress1(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ADDRESS1)))
+                                .withCustomerAddress2(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ADDRESS2)))
+                                .withCustomerZip(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ZIP)))
+                                .withCustomerCity(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_CITY)))
+                                .withCustomerPhone(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_PHONE)))
+                                .withCustomerEmail(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_MAIL)));
+
+
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+
+        return newCustomer;
+
     }
 
     public void addCustomer(Customer customer, DatabaseOperationCallBack<DefaultResponse> callBack) {
