@@ -1,4 +1,4 @@
-package com.vtec.terrassteel.home.company.ui;
+package com.vtec.terrassteel.home.company.customer.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import com.vtec.terrassteel.common.ui.ActionBar;
 import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
-import com.vtec.terrassteel.home.company.adapter.CustomersAdapter;
+import com.vtec.terrassteel.home.company.customer.adapter.CustomersAdapter;
 
 import java.util.ArrayList;
 

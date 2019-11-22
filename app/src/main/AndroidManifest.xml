@@ -34,22 +34,22 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullTranslucent"/>
 
-        <activity android:name=".home.company.ui.ListCustomersActivity"
+        <activity android:name=".home.company.customer.ui.ListCustomersActivity"
             android:launchMode="singleInstance"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullTranslucent"/>
 
-        <activity android:name=".home.company.ui.ListEmployeesActivity"
+        <activity android:name=".home.company.employee.ui.ListEmployeesActivity"
             android:launchMode="singleInstance"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullTranslucent"/>
 
-        <activity android:name=".home.company.ui.AddCustomerActivity"
+        <activity android:name=".home.company.customer.ui.AddCustomerActivity"
             android:launchMode="singleInstance"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullTranslucent"/>
 
-        <activity android:name=".home.company.ui.AddEmployeeActivity"
+        <activity android:name=".home.company.employee.ui.AddEmployeeActivity"
             android:launchMode="singleInstance"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullTranslucent"/>

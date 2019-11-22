@@ -1,4 +1,4 @@
-package com.vtec.terrassteel.home.company.adapter;
+package com.vtec.terrassteel.home.company.customer.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.vtec.terrassteel.R;
-import com.vtec.terrassteel.common.model.Construction;
 import com.vtec.terrassteel.common.model.Customer;
-import com.vtec.terrassteel.home.construction.callback.ConstructionCallback;
 
 import java.util.ArrayList;
 

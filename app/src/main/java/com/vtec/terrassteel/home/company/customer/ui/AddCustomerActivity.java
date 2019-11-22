@@ -1,4 +1,4 @@
-package com.vtec.terrassteel.home.company.ui;
+package com.vtec.terrassteel.home.company.customer.ui;
 
 import android.os.Bundle;
 import android.widget.EditText;

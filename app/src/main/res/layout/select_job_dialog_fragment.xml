@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:background="@drawable/bg_rounded_dialog"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.vtec.terrassteel.common.ui.FontTextView
+        style="@style/TitleTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:text="@string/select_job_title"
+        android:layout_margin="@dimen/large"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/job_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
