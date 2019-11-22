@@ -7,8 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.vtec.terrassteel.R;
-import com.vtec.terrassteel.common.model.Construction;
-import com.vtec.terrassteel.common.model.Customer;
+import com.vtec.terrassteel.common.model.Employee;
 import com.vtec.terrassteel.home.construction.callback.ConstructionCallback;
 
 import java.util.ArrayList;
@@ -18,26 +17,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CustomersAdapter extends RecyclerView.Adapter<CustomersAdapter.ViewHolder> {
+public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.ViewHolder> {
 
     private Context context;
-    private ArrayList<Customer> elements = new ArrayList<>();
+    private ArrayList<Employee> elements = new ArrayList<>();
 
-    public CustomersAdapter(Context context) {
+    public EmployeesAdapter(Context context) {
         this.context = context;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new CustomersAdapter.ViewHolder(
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.customer_itemview, parent, false));    }
+        return new EmployeesAdapter.ViewHolder(
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.employee_itemview, parent, false));    }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Customer construction = elements.get(position);
+        Employee employee = elements.get(position);
 
-        holder.customerNameTextView.setText(construction.getCustomerName());
+        holder.employeeNameTextView.setText(employee.getEmployeeName());
+        holder.employeeJobTextView.setText(employee.getEmployeeJob().getRessourceReference());
+
     }
 
     @Override
@@ -47,14 +48,17 @@ public class CustomersAdapter extends RecyclerView.Adapter<CustomersAdapter.View
         return 0;
     }
 
-    public void setData(ArrayList<Customer> elements) {
+    public void setData(ArrayList<Employee> elements) {
         this.elements = elements;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.customer_name_tv)
-        TextView customerNameTextView;
+        @BindView(R.id.employee_name_tv)
+        TextView employeeNameTextView;
+
+        @BindView(R.id.employee_job_tv)
+        TextView employeeJobTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

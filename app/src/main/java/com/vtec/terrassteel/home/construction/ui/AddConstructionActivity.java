@@ -8,12 +8,10 @@ import com.vtec.terrassteel.common.listener.ActionBarListener;
 import com.vtec.terrassteel.common.model.Construction;
 import com.vtec.terrassteel.common.model.ConstructionStatus;
 import com.vtec.terrassteel.common.ui.ActionBar;
-import com.vtec.terrassteel.core.manager.DatabaseManager;
+import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

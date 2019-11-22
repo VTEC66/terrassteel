@@ -1,4 +1,4 @@
-package com.vtec.terrassteel.core.manager;
+package com.vtec.terrassteel.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,6 +10,8 @@ import android.util.Log;
 import com.vtec.terrassteel.common.model.Construction;
 import com.vtec.terrassteel.common.model.ConstructionStatus;
 import com.vtec.terrassteel.common.model.Customer;
+import com.vtec.terrassteel.common.model.Employee;
+import com.vtec.terrassteel.common.model.Job;
 import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 
@@ -26,7 +28,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     // Tables
     private static final String TABLE_CONSTRUCTIONS = "constructions";
     private static final String TABLE_CUSTOMERS = "customers";
-    //private static final String TABLE_EMPLOYEES = "employees";
+    private static final String TABLE_EMPLOYEES = "employees";
 
 
     // Construction Table Columns
@@ -49,6 +51,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String KEY_CUSTOMER_CITY = "customerCity";
     private static final String KEY_CUSTOMER_PHONE = "customerPhone";
     private static final String KEY_CUSTOMER_MAIL = "customerMail";
+
+
+    // Employee Table Columns
+    private static final String KEY_EMPLOYEE_ID = "id";
+    private static final String KEY_EMPLOYEE_NAME = "employeeName";
+    private static final String KEY_EMPLOYEE_JOB = "employeeJob";
+    private static final String KEY_EMPLOYEE_ADDRESS1 = "employeeAddress1";
+    private static final String KEY_EMPLOYEE_ADDRESS2 = "employeeAddress2";
+    private static final String KEY_EMPLOYEE_ZIP = "employeeZip";
+    private static final String KEY_EMPLOYEE_CITY = "employeeCity";
+    private static final String KEY_EMPLOYEE_PHONE = "employeePhone";
+    private static final String KEY_EMPLOYEE_MAIL = "employeeMail";
 
     private static DatabaseManager sInstance;
 
@@ -99,8 +113,23 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 KEY_CUSTOMER_MAIL + " TEXT" +
                 ")";
 
+        String CREATE_EMPLOYEES_TABLE = "CREATE TABLE " + TABLE_EMPLOYEES +
+                "(" +
+                KEY_EMPLOYEE_ID + " INTEGER PRIMARY KEY," +
+                KEY_EMPLOYEE_NAME + " TEXT," +
+                KEY_EMPLOYEE_JOB + " TEXT," +
+                KEY_EMPLOYEE_ADDRESS1 + " TEXT," +
+                KEY_EMPLOYEE_ADDRESS2 + " TEXT," +
+                KEY_EMPLOYEE_ZIP + " TEXT," +
+                KEY_EMPLOYEE_CITY + " TEXT," +
+                KEY_EMPLOYEE_PHONE + " TEXT," +
+                KEY_EMPLOYEE_MAIL + " TEXT" +
+                ")";
+
         db.execSQL(CREATE_CONSTRUCTIONS_TABLE);
         db.execSQL(CREATE_CUSTOMERS_TABLE);
+        db.execSQL(CREATE_EMPLOYEES_TABLE);
+
     }
 
     @Override
@@ -108,6 +137,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (oldVersion != newVersion) {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONSTRUCTIONS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_CUSTOMERS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_EMPLOYEES);
+
             onCreate(db);
         }
     }
@@ -310,5 +341,76 @@ public class DatabaseManager extends SQLiteOpenHelper {
         callBack.onSuccess(customers);
     }
 
+    public void addEmployee(Employee employee, DatabaseOperationCallBack<DefaultResponse> callBack) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_EMPLOYEE_NAME, employee.getEmployeeName());
+            values.put(KEY_EMPLOYEE_JOB, employee.getEmployeeJob().name());
+            values.put(KEY_EMPLOYEE_ADDRESS1, employee.getEmployeeAddress1());
+            values.put(KEY_EMPLOYEE_ADDRESS2, employee.getEmployeeAddress2());
+            values.put(KEY_EMPLOYEE_ZIP, employee.getEmployeeZip());
+            values.put(KEY_EMPLOYEE_CITY, employee.getEmployeeCity());
+            values.put(KEY_EMPLOYEE_PHONE, employee.getEmployeePhone());
+            values.put(KEY_EMPLOYEE_MAIL, employee.getEmployeeEmail());
+
+            // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
+            db.insertOrThrow(TABLE_EMPLOYEES, null, values);
+            db.setTransactionSuccessful();
+
+            Log.d(TAG, "New Employee successfuly added into database");
+            callBack.onSuccess(new DefaultResponse());
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to add Employee into database : " + e.toString());
+            callBack.onError();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void getAllEmployees(DatabaseOperationCallBack<ArrayList<Employee>> callBack) {
+        ArrayList<Employee> employees = new ArrayList<>();
+
+        String EMPLOYEES_SELECT_QUERY =
+                String.format("SELECT * FROM %s",
+                        TABLE_EMPLOYEES);
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(EMPLOYEES_SELECT_QUERY, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Employee employee =
+                            new Employee()
+                                    .withEmployeeId(cursor.getLong(cursor.getColumnIndex(KEY_EMPLOYEE_ID)))
+                                    .withEmployeeName(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_NAME)))
+                                    .withEmployeeJob(Job.valueOf(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_JOB))))
+                                    .withEmployeeAddress1(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ADDRESS1)))
+                                    .withEmployeeAddress2(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ADDRESS2)))
+                                    .withEmployeeZip(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ZIP)))
+                                    .withEmployeeCity(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_CITY)))
+                                    .withEmployeePhone(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_PHONE)))
+                                    .withEmployeeEmail(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_MAIL)));
+
+                    employees.add(employee);
+
+                } while(cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to get employees from database : " + e.toString());
+            callBack.onError();
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+        Log.d(TAG, "Database successfully return " + employees.size() + " employees.");
+        callBack.onSuccess(employees);
+    }
 
 }

@@ -49,6 +49,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullTranslucent"/>
 
+        <activity android:name=".home.company.ui.AddEmployeeActivity"
+            android:launchMode="singleInstance"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FullTranslucent"/>
+
     </application>
 
 </manifest>

@@ -26,4 +26,10 @@
     <string name="hint_phone">Téléphone</string>
     <string name="hint_email">Email</string>
     <string name="hint_customer_name">Nom du client</string>
+    <string name="construction_manager">Chef de chantier</string>
+    <string name="poseur">Poseur</string>
+    <string name="commercial">Commerciale</string>
+    <string name="add_employee_title">Ajouter un employé</string>
+    <string name="hint_employee_name">Nom de l\'employé</string>
+    <string name="hint_employee_job">Type d\'emploi</string>
 </resources>

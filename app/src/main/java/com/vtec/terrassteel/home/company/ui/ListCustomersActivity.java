@@ -5,15 +5,12 @@ import android.os.Bundle;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.listener.ActionBarListener;
-import com.vtec.terrassteel.common.model.Construction;
 import com.vtec.terrassteel.common.model.Customer;
 import com.vtec.terrassteel.common.ui.ActionBar;
-import com.vtec.terrassteel.core.manager.DatabaseManager;
+import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
 import com.vtec.terrassteel.home.company.adapter.CustomersAdapter;
-import com.vtec.terrassteel.home.construction.adapter.ConstructionAdapter;
-import com.vtec.terrassteel.home.construction.ui.AddConstructionActivity;
 
 import java.util.ArrayList;
 

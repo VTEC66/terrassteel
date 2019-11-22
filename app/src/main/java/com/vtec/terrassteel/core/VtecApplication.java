@@ -6,7 +6,7 @@ import android.content.Context;
 import com.karumi.dexter.Dexter;
 import com.vtec.terrassteel.core.di.ApplicationComponent;
 import com.vtec.terrassteel.core.di.DaggerApplicationComponent;
-import com.vtec.terrassteel.core.manager.DatabaseManager;
+import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.core.manager.SessionManager;
 import com.vtec.terrassteel.di.module.ApiModule;
 import com.vtec.terrassteel.di.module.AppModule;

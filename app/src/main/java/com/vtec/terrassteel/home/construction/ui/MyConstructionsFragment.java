@@ -8,15 +8,13 @@ import android.view.ViewGroup;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.model.Construction;
-import com.vtec.terrassteel.common.model.ConstructionStatus;
-import com.vtec.terrassteel.core.manager.DatabaseManager;
+import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractFragment;
 import com.vtec.terrassteel.home.construction.adapter.ConstructionAdapter;
 import com.vtec.terrassteel.home.construction.callback.ConstructionCallback;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -38,7 +36,6 @@ public class MyConstructionsFragment extends AbstractFragment implements Constru
         startActivityForResult(new Intent(getContext(), AddConstructionActivity.class), ADD_CONSTRUCTION_INTENT_CODE);
         getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
-
 
     private ConstructionAdapter constructionAdapter;
 
@@ -85,13 +82,7 @@ public class MyConstructionsFragment extends AbstractFragment implements Constru
                 super.onError();
             }
         });
-
-        /*constructionAdapter.setData(DatabaseManager.getInstance(getContext()).getAllConstructions());//makeMock());
-        constructionAdapter.notifyDataSetChanged();*/
-
     }
-
-
 
     @Override
     public void onConstructionSelected(Construction construction) {
