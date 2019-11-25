@@ -49,6 +49,9 @@ public class ConstructionAdapter extends RecyclerView.Adapter<ConstructionAdapte
                 holder.statusIndicatorContainer.setBackground(context.getResources().getDrawable(R.drawable.bg_status_indicator_finished));
                 break;
         }
+
+        holder.itemView.setOnClickListener(v -> callback.onConstructionSelected(construction));
+
     }
 
     @Override

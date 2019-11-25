@@ -13,6 +13,7 @@ import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractFragment;
 import com.vtec.terrassteel.home.construction.adapter.ConstructionAdapter;
 import com.vtec.terrassteel.home.construction.callback.ConstructionCallback;
+import com.vtec.terrassteel.main.ui.MainActivity;
 
 import java.util.ArrayList;
 
@@ -107,6 +108,10 @@ public class MyConstructionsFragment extends AbstractFragment implements Constru
 
     @Override
     public void onConstructionSelected(Construction construction) {
+
+        sessionManager.setConstruction(construction);
+        startActivity(new Intent(getContext(), MainActivity.class));
+        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
     }
 }

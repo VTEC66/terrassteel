@@ -1,5 +1,7 @@
 package com.vtec.terrassteel.core.manager;
 
+import com.vtec.terrassteel.common.model.Construction;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -8,6 +10,8 @@ public class SessionManager {
 
     private String token ="";
     private boolean isLoggedIn;
+
+    private Construction construction;
 
 
     @Inject
@@ -30,4 +34,7 @@ public class SessionManager {
         return isLoggedIn;
     }
 
+    public void setConstruction(Construction construction) {
+        this.construction = construction;
+    }
 }
