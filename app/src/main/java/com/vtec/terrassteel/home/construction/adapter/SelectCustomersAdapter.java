@@ -1,6 +1,5 @@
 package com.vtec.terrassteel.home.construction.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +7,7 @@ import android.widget.TextView;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.model.Customer;
-import com.vtec.terrassteel.home.construction.callback.SelectCustomerCallback;
+import com.vtec.terrassteel.home.construction.callback.SelectCustomerDialogCallback;
 
 import java.util.ArrayList;
 
@@ -19,11 +18,11 @@ import butterknife.ButterKnife;
 
 public class SelectCustomersAdapter extends RecyclerView.Adapter<SelectCustomersAdapter.ViewHolder> {
 
-    private final SelectCustomerCallback callback;
+    private final SelectCustomerDialogCallback callback;
 
     private ArrayList<Customer> elements = new ArrayList<>();
 
-    public SelectCustomersAdapter(SelectCustomerCallback callback) {
+    public SelectCustomersAdapter(SelectCustomerDialogCallback callback) {
         this.callback = callback;
     }
 

@@ -53,5 +53,6 @@ public class SplashScreenActivity extends AbstractActivity {
 
         //GetConfig
         startActivity(new Intent(this, HomeActivity.class));
+        finishAffinity();
     }
 }

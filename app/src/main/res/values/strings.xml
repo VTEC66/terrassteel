@@ -42,4 +42,6 @@
     <string name="empty_employee_text">Vous n\'avez pas encore ajouter d\'employé.</string>
     <string name="empty_customer_text">Vous n\'avez pas encore ajouter de client.</string>
     <string name="add_customer_textbutton">Ajouter un client</string>
+    <string name="edit_customer_title">Edition d\'un client</string>
+    <string name="edit_employee_title">Edition d\'un employé</string>
 </resources>

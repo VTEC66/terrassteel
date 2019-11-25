@@ -1,6 +1,8 @@
 package com.vtec.terrassteel.common.model;
 
-public class Employee {
+import java.io.Serializable;
+
+public class Employee implements Serializable {
 
     public long employeeId;
     public String employeeName;

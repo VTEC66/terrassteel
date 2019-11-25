@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.model.Employee;
+import com.vtec.terrassteel.home.company.employee.callback.SelectEmployeeCallback;
 
 import java.util.ArrayList;
 
@@ -20,9 +21,14 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.View
 
     private Context context;
     private ArrayList<Employee> elements = new ArrayList<>();
+    private SelectEmployeeCallback callback;
 
     public EmployeesAdapter(Context context) {
         this.context = context;
+    }
+
+    public void setCallback(SelectEmployeeCallback callback) {
+        this.callback = callback;
     }
 
     @NonNull
@@ -38,6 +44,8 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.View
         holder.employeeNameTextView.setText(employee.getEmployeeName());
         holder.employeeJobTextView.setText(employee.getEmployeeJob().getRessourceReference());
 
+        holder.itemView.setOnClickListener(v -> callback.onEmployeeSelected(employee));
+
     }
 
     @Override
@@ -50,6 +58,8 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.View
     public void setData(ArrayList<Employee> elements) {
         this.elements = elements;
     }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

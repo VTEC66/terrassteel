@@ -1,6 +1,8 @@
 package com.vtec.terrassteel.common.model;
 
-public class Customer {
+import java.io.Serializable;
+
+public class Customer implements Serializable {
 
     public long customerId;
     public String customerName;

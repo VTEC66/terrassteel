@@ -12,10 +12,8 @@ import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.model.Customer;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.database.DatabaseManager;
-import com.vtec.terrassteel.home.company.employee.adapter.JobAdapter;
-import com.vtec.terrassteel.home.company.employee.callback.SelectJobCallback;
 import com.vtec.terrassteel.home.construction.adapter.SelectCustomersAdapter;
-import com.vtec.terrassteel.home.construction.callback.SelectCustomerCallback;
+import com.vtec.terrassteel.home.construction.callback.SelectCustomerDialogCallback;
 
 import java.util.ArrayList;
 
@@ -30,7 +28,7 @@ import butterknife.OnClick;
 
 public class SelectCustomerDialogFragment extends DialogFragment {
 
-    private SelectCustomerCallback callback;
+    private SelectCustomerDialogCallback callback;
 
     @BindView(R.id.customer_recyclerview)
     RecyclerView customerRecyclerView;
@@ -48,7 +46,7 @@ public class SelectCustomerDialogFragment extends DialogFragment {
     }
 
 
-    public SelectCustomerDialogFragment setCallBack(SelectCustomerCallback callBack) {
+    public SelectCustomerDialogFragment setCallBack(SelectCustomerDialogCallback callBack) {
         this.callback = callBack;
         return this;
     }

@@ -11,6 +11,7 @@ import android.widget.EditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.listener.ActionBarListener;
+import com.vtec.terrassteel.common.model.Customer;
 import com.vtec.terrassteel.common.model.Employee;
 import com.vtec.terrassteel.common.model.Job;
 import com.vtec.terrassteel.common.ui.ActionBar;
@@ -27,12 +28,18 @@ import butterknife.OnClick;
 import static com.vtec.terrassteel.core.Const.NO_ERROR_CODE;
 import static com.vtec.terrassteel.core.Const.VIBRATION_DURATION;
 
-public class AddEmployeeActivity extends AbstractActivity implements SelectJobCallback {
+public class EditEmployeeActivity extends AbstractActivity implements SelectJobCallback {
 
     private static final String SELECT_JOB_DIALOG = "SELECT_JOB_DIALOG";
 
+    public static final String EXTRA_EMPLOYEE = "EXTRA_EMPLOYEE";
+
     private static final int ERROR_EMPTY_EMPLOYEE_NAME_FIELD = 2;
     private static final int ERROR_EMPTY_JOB_FIELD = 3;
+
+    private Employee employeeToEdit;
+
+    private boolean isEditMode;
 
     @OnClick(R.id.validate_button)
     public void onClickValidateButton() {
@@ -42,7 +49,11 @@ public class AddEmployeeActivity extends AbstractActivity implements SelectJobCa
         int error = controlField();
 
         if (error == NO_ERROR_CODE) {
-            addNewEmployee();
+            if(isEditMode){
+                editEmployee();
+            }else{
+                addNewEmployee();
+            }
         } else {
 
             Vibrator vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
@@ -102,6 +113,16 @@ public class AddEmployeeActivity extends AbstractActivity implements SelectJobCa
         setContentView(R.layout.add_employee_activity);
         ButterKnife.bind(this);
 
+
+
+        if (getIntent() != null && getIntent().hasExtra(EXTRA_EMPLOYEE)) {
+            Bundle bundle = getIntent().getExtras();
+            employeeToEdit = (Employee) bundle.getSerializable(EXTRA_EMPLOYEE);
+            if(employeeToEdit != null) {
+                setupEditMode();
+            }
+        }
+
         actionBar.setListener(new ActionBarListener() {
             @Override
             public void onBackArrowClick() {
@@ -123,32 +144,20 @@ public class AddEmployeeActivity extends AbstractActivity implements SelectJobCa
         });
     }
 
+    private void setupEditMode() {
 
-    private void addNewEmployee() {
+        actionBar.setTitle(getString(R.string.edit_employee_title));
 
-        Employee newEmployee = new Employee()
-                .withEmployeeName(employeeNameEditText.getText().toString())
-                .withEmployeeJob(selectedJob)
-                .withEmployeeAddress1(employeeAddress1EditText.getText().toString())
-                .withEmployeeAddress2(employeeAddress2EditText.getText().toString())
-                .withEmployeeZip(employeeZipEditText.getText().toString())
-                .withEmployeeCity(employeeCityEditText.getText().toString())
-                .withEmployeePhone(employeePhoneEditText.getText().toString())
-                .withEmployeeEmail(employeeEmailEditText.getText().toString());
+        employeeNameEditText.setText(employeeToEdit.getEmployeeName());
+        employeeJobEditText.setText(employeeToEdit.getEmployeeJob().getRessourceReference());
+        employeeAddress1EditText.setText(employeeToEdit.getEmployeeAddress1());
+        employeeAddress2EditText.setText(employeeToEdit.getEmployeeAddress2());
+        employeeZipEditText.setText(employeeToEdit.getEmployeeZip());
+        employeeCityEditText.setText(employeeToEdit.getEmployeeCity());
+        employeePhoneEditText.setText(employeeToEdit.getEmployeePhone());
+        employeeEmailEditText.setText(employeeToEdit.getEmployeeEmail());
 
-        DatabaseManager.getInstance(getApplicationContext()).addEmployee(newEmployee, new DatabaseOperationCallBack<DefaultResponse>() {
-
-            @Override
-            public void onSuccess(DefaultResponse defaultResponse) {
-                setResult(RESULT_OK);
-                finish();
-            }
-
-            @Override
-            public void onError() {
-                super.onError();
-            }
-        });
+        this.isEditMode = true;
     }
 
     @Override
@@ -187,5 +196,60 @@ public class AddEmployeeActivity extends AbstractActivity implements SelectJobCa
     private void clearHighlightErrors() {
         employeeNameEditText.setError(null);
         employeeJobEditText.setError(null);
+    }
+
+
+    private void addNewEmployee() {
+
+        Employee newEmployee = new Employee()
+                .withEmployeeName(employeeNameEditText.getText().toString())
+                .withEmployeeJob(selectedJob)
+                .withEmployeeAddress1(employeeAddress1EditText.getText().toString())
+                .withEmployeeAddress2(employeeAddress2EditText.getText().toString())
+                .withEmployeeZip(employeeZipEditText.getText().toString())
+                .withEmployeeCity(employeeCityEditText.getText().toString())
+                .withEmployeePhone(employeePhoneEditText.getText().toString())
+                .withEmployeeEmail(employeeEmailEditText.getText().toString());
+
+        DatabaseManager.getInstance(getApplicationContext()).addEmployee(newEmployee, new DatabaseOperationCallBack<DefaultResponse>() {
+
+            @Override
+            public void onSuccess(DefaultResponse defaultResponse) {
+                setResult(RESULT_OK);
+                finish();
+            }
+
+            @Override
+            public void onError() {
+                super.onError();
+            }
+        });
+    }
+
+    private void editEmployee() {
+
+        employeeToEdit
+                .withEmployeeName(employeeNameEditText.getText().toString())
+                .withEmployeeJob( (selectedJob!=null) ? selectedJob : employeeToEdit.getEmployeeJob())
+                .withEmployeeAddress1(employeeAddress1EditText.getText().toString())
+                .withEmployeeAddress2(employeeAddress2EditText.getText().toString())
+                .withEmployeeZip(employeeZipEditText.getText().toString())
+                .withEmployeeCity(employeeCityEditText.getText().toString())
+                .withEmployeePhone(employeePhoneEditText.getText().toString())
+                .withEmployeeEmail(employeeEmailEditText.getText().toString());
+
+        DatabaseManager.getInstance(getApplicationContext()).editEmployee(employeeToEdit, new DatabaseOperationCallBack<DefaultResponse>() {
+
+            @Override
+            public void onSuccess(DefaultResponse defaultResponse) {
+                setResult(RESULT_OK);
+                finish();
+            }
+
+            @Override
+            public void onError() {
+                super.onError();
+            }
+        });
     }
 }

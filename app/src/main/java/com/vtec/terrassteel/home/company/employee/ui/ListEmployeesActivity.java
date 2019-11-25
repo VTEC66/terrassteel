@@ -12,6 +12,7 @@ import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
 import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.home.company.employee.adapter.EmployeesAdapter;
+import com.vtec.terrassteel.home.company.employee.callback.SelectEmployeeCallback;
 
 import java.util.ArrayList;
 
@@ -22,9 +23,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ListEmployeesActivity extends AbstractActivity {
+import static com.vtec.terrassteel.home.company.employee.ui.EditEmployeeActivity.EXTRA_EMPLOYEE;
+
+public class ListEmployeesActivity extends AbstractActivity implements SelectEmployeeCallback {
 
     private static final int ADD_EMPLOYEE_INTENT_CODE = 18;
+    public static final int EDIT_EMPLOYEE_INTENT_CODE = 19;
 
     @BindView(R.id.empty_view)
     View emptyView;
@@ -40,7 +44,7 @@ public class ListEmployeesActivity extends AbstractActivity {
 
     @OnClick({R.id.add_fab, R.id.add_employee_button})
     public void onClicAddButton(){
-        startActivityForResult(new Intent(this, AddEmployeeActivity.class), ADD_EMPLOYEE_INTENT_CODE);
+        startActivityForResult(new Intent(this, EditEmployeeActivity.class), ADD_EMPLOYEE_INTENT_CODE);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
@@ -70,6 +74,7 @@ public class ListEmployeesActivity extends AbstractActivity {
         employeesRecyclerView.setLayoutManager(linearLayoutManager);
 
         employeesAdapter = new EmployeesAdapter(getBaseContext());
+        employeesAdapter.setCallback(this);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(employeesRecyclerView.getContext(),
                 linearLayoutManager.getOrientation());
@@ -111,4 +116,16 @@ public class ListEmployeesActivity extends AbstractActivity {
     }
 
 
+    @Override
+    public void onEmployeeSelected(Employee employee) {
+
+        Intent intent = new Intent(getBaseContext(), EditEmployeeActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(EXTRA_EMPLOYEE, employee);
+        intent.putExtras(bundle);
+
+        startActivityForResult(intent, EDIT_EMPLOYEE_INTENT_CODE);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
 }

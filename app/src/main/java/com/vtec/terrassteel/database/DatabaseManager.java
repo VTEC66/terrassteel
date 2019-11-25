@@ -446,4 +446,72 @@ public class DatabaseManager extends SQLiteOpenHelper {
         callBack.onSuccess(employees);
     }
 
+    public void editCustomer(Customer customerToEdit, DatabaseOperationCallBack<DefaultResponse> callBack) {
+
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_CUSTOMER_NAME, customerToEdit.getCustomerName());
+            values.put(KEY_CUSTOMER_ADDRESS1, customerToEdit.getCustomerAddress1());
+            values.put(KEY_CUSTOMER_ADDRESS2, customerToEdit.getCustomerAddress2());
+            values.put(KEY_CUSTOMER_ZIP, customerToEdit.getCustomerZip());
+            values.put(KEY_CUSTOMER_CITY, customerToEdit.getCustomerCity());
+            values.put(KEY_CUSTOMER_PHONE, customerToEdit.getCustomerPhone());
+            values.put(KEY_CUSTOMER_MAIL, customerToEdit.getCustomerEmail());
+
+            db.update(TABLE_CUSTOMERS
+                    , values
+                    , KEY_CUSTOMER_ID + "=" + customerToEdit.getCustomerId()
+                    ,null);
+
+            db.setTransactionSuccessful();
+
+            Log.d(TAG, "Customer have been successfuly edited into database");
+            callBack.onSuccess(new DefaultResponse());
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to edit Customer into database : " + e.toString());
+            callBack.onError();
+        } finally {
+            db.endTransaction();
+        }
+
+    }
+
+    public void editEmployee(Employee employee, DatabaseOperationCallBack<DefaultResponse> callBack) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_EMPLOYEE_NAME, employee.getEmployeeName());
+            values.put(KEY_EMPLOYEE_JOB, employee.getEmployeeJob().name());
+            values.put(KEY_EMPLOYEE_ADDRESS1, employee.getEmployeeAddress1());
+            values.put(KEY_EMPLOYEE_ADDRESS2, employee.getEmployeeAddress2());
+            values.put(KEY_EMPLOYEE_ZIP, employee.getEmployeeZip());
+            values.put(KEY_EMPLOYEE_CITY, employee.getEmployeeCity());
+            values.put(KEY_EMPLOYEE_PHONE, employee.getEmployeePhone());
+            values.put(KEY_EMPLOYEE_MAIL, employee.getEmployeeEmail());
+
+            db.update(TABLE_EMPLOYEES
+                    , values
+                    , KEY_EMPLOYEE_ID + "=" + employee.getEmployeeId()
+                    ,null);
+
+            db.setTransactionSuccessful();
+
+            Log.d(TAG, "Employee have been successfuly edited into database");
+            callBack.onSuccess(new DefaultResponse());
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to edit Employe into database : " + e.toString());
+            callBack.onError();
+        } finally {
+            db.endTransaction();
+        }
+    }
 }

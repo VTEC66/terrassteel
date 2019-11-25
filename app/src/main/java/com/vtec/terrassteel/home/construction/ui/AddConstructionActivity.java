@@ -19,12 +19,9 @@ import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
-import com.vtec.terrassteel.home.company.customer.ui.AddCustomerActivity;
+import com.vtec.terrassteel.home.company.customer.ui.EditCustomerActivity;
 import com.vtec.terrassteel.home.company.customer.ui.SelectCustomerDialogFragment;
-import com.vtec.terrassteel.home.company.employee.ui.SelectJobDialogFragment;
-import com.vtec.terrassteel.home.construction.callback.SelectCustomerCallback;
-
-import java.util.Objects;
+import com.vtec.terrassteel.home.construction.callback.SelectCustomerDialogCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +30,7 @@ import butterknife.OnClick;
 import static com.vtec.terrassteel.core.Const.NO_ERROR_CODE;
 import static com.vtec.terrassteel.core.Const.VIBRATION_DURATION;
 
-public class AddConstructionActivity extends AbstractActivity implements SelectCustomerCallback {
+public class AddConstructionActivity extends AbstractActivity implements SelectCustomerDialogCallback {
 
 
     private static final String SELECT_CUSTOMER_DIALOG = "SELECT_CUSTOMER_DIALOG" ;
@@ -160,7 +157,7 @@ public class AddConstructionActivity extends AbstractActivity implements SelectC
 
     @Override
     public void onSelectAddCustomer() {
-        startActivityForResult(new Intent(this, AddCustomerActivity.class), ADD_CUSTOMER_INTENT_CODE);
+        startActivityForResult(new Intent(this, EditCustomerActivity.class), ADD_CUSTOMER_INTENT_CODE);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         customerEditText.clearFocus();
     }

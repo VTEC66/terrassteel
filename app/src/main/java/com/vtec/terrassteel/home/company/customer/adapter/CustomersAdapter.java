@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.model.Customer;
+import com.vtec.terrassteel.home.company.customer.callback.SelectCustomerCallback;
+import com.vtec.terrassteel.home.company.customer.ui.ListCustomersActivity;
 
 import java.util.ArrayList;
 
@@ -20,6 +22,7 @@ public class CustomersAdapter extends RecyclerView.Adapter<CustomersAdapter.View
 
     private Context context;
     private ArrayList<Customer> elements = new ArrayList<>();
+    private SelectCustomerCallback callback;
 
     public CustomersAdapter(Context context) {
         this.context = context;
@@ -33,9 +36,12 @@ public class CustomersAdapter extends RecyclerView.Adapter<CustomersAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Customer construction = elements.get(position);
+        Customer customer = elements.get(position);
 
-        holder.customerNameTextView.setText(construction.getCustomerName());
+        holder.customerNameTextView.setText(customer.getCustomerName());
+
+        holder.itemView.setOnClickListener(v -> callback.onCustomerSelected(customer));
+
     }
 
     @Override
@@ -47,6 +53,10 @@ public class CustomersAdapter extends RecyclerView.Adapter<CustomersAdapter.View
 
     public void setData(ArrayList<Customer> elements) {
         this.elements = elements;
+    }
+
+    public void setCallback(SelectCustomerCallback callback) {
+        this.callback = callback;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
