@@ -1,6 +1,10 @@
 package com.vtec.terrassteel.home.construction.ui;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.View;
 import android.widget.EditText;
 
@@ -18,20 +22,47 @@ import com.vtec.terrassteel.home.company.customer.ui.SelectCustomerDialogFragmen
 import com.vtec.terrassteel.home.company.employee.ui.SelectJobDialogFragment;
 import com.vtec.terrassteel.home.construction.callback.SelectCustomerCallback;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.vtec.terrassteel.core.Const.NO_ERROR_CODE;
+import static com.vtec.terrassteel.core.Const.VIBRATION_DURATION;
 
 public class AddConstructionActivity extends AbstractActivity implements SelectCustomerCallback {
 
 
     private static final String SELECT_CUSTOMER_DIALOG = "SELECT_CUSTOMER_DIALOG" ;
 
+    private static final int ERROR_EMPTY_CONSTRUCTION_NAME_FIELD = 1;
+    private static final int ERROR_EMPTY_CUSTOMER_FIELD = 2;
+
     private Customer selectedCustomer;
 
     @OnClick(R.id.validate_button)
     public void onClickValidateButton(){
-        addNewConstruction();
+
+        clearHighlightErrors();
+
+        int error = controlField();
+
+        if (error == NO_ERROR_CODE) {
+            addNewConstruction();
+        } else {
+
+            Vibrator vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+
+            if (vibrator != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(VIBRATION_DURATION, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    vibrator.vibrate(VIBRATION_DURATION);
+                }
+            }
+            highlightError(error);
+        }
     }
 
     @BindView(R.id.action_bar)
@@ -124,4 +155,33 @@ public class AddConstructionActivity extends AbstractActivity implements SelectC
         selectCustomerDialogFragment.dismiss();
         customerEditText.clearFocus();
     }
+
+    private int controlField() {
+        if (constructionNameEditText.getText().length() == 0) {
+            return ERROR_EMPTY_CONSTRUCTION_NAME_FIELD;
+        }
+
+        if (customerEditText.getText().length() == 0) {
+            return ERROR_EMPTY_CUSTOMER_FIELD;
+        }
+
+        return NO_ERROR_CODE;
+    }
+
+    private void highlightError(int error) {
+        switch (error) {
+            case ERROR_EMPTY_CONSTRUCTION_NAME_FIELD:
+                constructionNameEditText.setError(getString(R.string.standard_mandatory_field_message));
+                break;
+            case ERROR_EMPTY_CUSTOMER_FIELD:
+                customerEditText.setError(getString(R.string.customer_mandatory_field_message));
+                break;
+        }
+    }
+
+    private void clearHighlightErrors() {
+        constructionNameEditText.setError(null);
+        customerEditText.setError(null);
+    }
+
 }

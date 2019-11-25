@@ -34,4 +34,6 @@
     <string name="hint_employee_job">Type d\'emploi</string>
     <string name="select_job_title">Sélectionnez un type d\'emploi</string>
     <string name="select_customer_title">Selectionnez un client</string>
+    <string name="standard_mandatory_field_message">Ce champ est obligatoire</string>
+    <string name="customer_mandatory_field_message">La sélection d\'un client est obligatoire</string>
 </resources>

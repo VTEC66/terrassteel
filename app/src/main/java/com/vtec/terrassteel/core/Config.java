@@ -10,5 +10,5 @@ public class Config {
 
         public static final String DEFAULT_ENDPOINT = "/api";
 
-        public static final String V2 = "/v1";
+        public static final String V1 = "/v1";
 }

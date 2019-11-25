@@ -1,6 +1,10 @@
 package com.vtec.terrassteel.home.company.customer.ui;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.widget.EditText;
 
 import com.vtec.terrassteel.R;
@@ -16,11 +20,35 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.vtec.terrassteel.core.Const.NO_ERROR_CODE;
+import static com.vtec.terrassteel.core.Const.VIBRATION_DURATION;
+
 public class AddCustomerActivity extends AbstractActivity {
+
+    private static final int ERROR_EMPTY_CUSTOMER_NAME_FIELD = 2;
 
     @OnClick(R.id.validate_button)
     public void onClickValidateButton(){
-        addNewCustomer();
+
+        clearHighlightErrors();
+
+        int error = controlField();
+
+        if (error == NO_ERROR_CODE) {
+            addNewCustomer();
+        } else {
+
+            Vibrator vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+
+            if (vibrator != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(VIBRATION_DURATION, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    vibrator.vibrate(VIBRATION_DURATION);
+                }
+            }
+            highlightError(error);
+        }
     }
 
     @BindView(R.id.action_bar)
@@ -89,5 +117,27 @@ public class AddCustomerActivity extends AbstractActivity {
                 super.onError();
             }
         });
+    }
+
+
+    private int controlField() {
+
+        if (customerNameEditText.getText().length() == 0) {
+            return ERROR_EMPTY_CUSTOMER_NAME_FIELD;
+        }
+
+        return NO_ERROR_CODE;
+    }
+
+    private void highlightError(int error) {
+        switch (error) {
+            case ERROR_EMPTY_CUSTOMER_NAME_FIELD:
+                customerNameEditText.setError(getString(R.string.standard_mandatory_field_message));
+                break;
+        }
+    }
+
+    private void clearHighlightErrors() {
+        customerNameEditText.setError(null);
     }
 }

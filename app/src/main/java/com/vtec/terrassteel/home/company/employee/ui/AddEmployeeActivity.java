@@ -1,6 +1,10 @@
 package com.vtec.terrassteel.home.company.employee.ui;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.View;
 import android.widget.EditText;
 
@@ -20,13 +24,38 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.vtec.terrassteel.core.Const.NO_ERROR_CODE;
+import static com.vtec.terrassteel.core.Const.VIBRATION_DURATION;
+
 public class AddEmployeeActivity extends AbstractActivity implements SelectJobCallback {
 
     private static final String SELECT_JOB_DIALOG = "SELECT_JOB_DIALOG";
 
+    private static final int ERROR_EMPTY_EMPLOYEE_NAME_FIELD = 2;
+    private static final int ERROR_EMPTY_JOB_FIELD = 3;
+
     @OnClick(R.id.validate_button)
-    public void onClickValidateButton(){
-        addNewEmployee();
+    public void onClickValidateButton() {
+
+        clearHighlightErrors();
+
+        int error = controlField();
+
+        if (error == NO_ERROR_CODE) {
+            addNewEmployee();
+        } else {
+
+            Vibrator vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+
+            if (vibrator != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(VIBRATION_DURATION, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    vibrator.vibrate(VIBRATION_DURATION);
+                }
+            }
+            highlightError(error);
+        }
     }
 
 
@@ -129,7 +158,34 @@ public class AddEmployeeActivity extends AbstractActivity implements SelectJobCa
         employeeJobEditText.setText(job.getRessourceReference());
         selectJobDialogFragment.dismiss();
         employeeJobEditText.clearFocus();
+    }
 
+    private int controlField() {
 
+        if (employeeNameEditText.getText().length() == 0) {
+            return ERROR_EMPTY_EMPLOYEE_NAME_FIELD;
+        }
+
+        if (employeeJobEditText.getText().length() == 0) {
+            return ERROR_EMPTY_JOB_FIELD;
+        }
+
+        return NO_ERROR_CODE;
+    }
+
+    private void highlightError(int error) {
+        switch (error) {
+            case ERROR_EMPTY_EMPLOYEE_NAME_FIELD:
+                employeeNameEditText.setError(getString(R.string.standard_mandatory_field_message));
+                break;
+            case ERROR_EMPTY_JOB_FIELD:
+                employeeJobEditText.setError(getString(R.string.customer_mandatory_field_message));
+                break;
+        }
+    }
+
+    private void clearHighlightErrors() {
+        employeeNameEditText.setError(null);
+        employeeJobEditText.setError(null);
     }
 }
