@@ -74,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_address1"
                     android:imeOptions="actionNext"
-                    android:inputType="text" />
+                    android:inputType="textPostalAddress" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -107,7 +107,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/employee_zip_textinputlayout"
                     style="@style/TextInputLayout"
-                    android:layout_width="125dp"
+                    android:layout_width="135dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/standard">
 
@@ -116,6 +116,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_zip"
+                        android:maxLength="5"
                         android:imeOptions="actionNext"
                         android:inputType="number" />
 
@@ -157,6 +158,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_phone"
+                    android:maxLength="10"
                     android:imeOptions="actionNext"
                     android:inputType="number" />
 
@@ -177,7 +179,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_email"
                     android:imeOptions="actionDone"
-                    android:inputType="text" />
+                    android:inputType="textEmailAddress" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

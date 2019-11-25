@@ -1,6 +1,7 @@
 package com.vtec.terrassteel.home.construction.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -18,6 +19,7 @@ import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
+import com.vtec.terrassteel.home.company.customer.ui.AddCustomerActivity;
 import com.vtec.terrassteel.home.company.customer.ui.SelectCustomerDialogFragment;
 import com.vtec.terrassteel.home.company.employee.ui.SelectJobDialogFragment;
 import com.vtec.terrassteel.home.construction.callback.SelectCustomerCallback;
@@ -38,6 +40,8 @@ public class AddConstructionActivity extends AbstractActivity implements SelectC
 
     private static final int ERROR_EMPTY_CONSTRUCTION_NAME_FIELD = 1;
     private static final int ERROR_EMPTY_CUSTOMER_FIELD = 2;
+
+    private static final int ADD_CUSTOMER_INTENT_CODE = 17;
 
     private Customer selectedCustomer;
 
@@ -89,8 +93,6 @@ public class AddConstructionActivity extends AbstractActivity implements SelectC
     final SelectCustomerDialogFragment selectCustomerDialogFragment =
             new SelectCustomerDialogFragment()
                     .setCallBack(this);
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +155,13 @@ public class AddConstructionActivity extends AbstractActivity implements SelectC
         this.selectedCustomer = customer;
         customerEditText.setText(customer.getCustomerName());
         selectCustomerDialogFragment.dismiss();
+        customerEditText.clearFocus();
+    }
+
+    @Override
+    public void onSelectAddCustomer() {
+        startActivityForResult(new Intent(this, AddCustomerActivity.class), ADD_CUSTOMER_INTENT_CODE);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         customerEditText.clearFocus();
     }
 

@@ -7,17 +7,57 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <com.vtec.terrassteel.common.ui.FontTextView
-        style="@style/TitleTextStyle"
+    <LinearLayout
+        android:id="@+id/customer_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal"
-        android:text="@string/select_customer_title"
-        android:layout_margin="@dimen/large"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/customer_recyclerview"
+        <com.vtec.terrassteel.common.ui.FontTextView
+            style="@style/TitleTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:text="@string/select_customer_title"
+            android:layout_margin="@dimen/large"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/customer_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/empty_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_margin="@dimen/standard"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/StandardTextStyle"
+            android:text="@string/empty_customer_text"/>
+
+        <com.vtec.terrassteel.common.ui.FontButton
+            android:id="@+id/add_customer_button"
+            android:layout_marginTop="@dimen/xlarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_add_circle"
+            android:drawablePadding="@dimen/standard"
+            android:drawableTint="@color/white"
+            style="@style/FullButtonStyle"
+            android:text="@string/add_customer_textbutton"/>
+
+    </LinearLayout>
 </LinearLayout>

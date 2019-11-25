@@ -2,6 +2,7 @@ package com.vtec.terrassteel.home.company.customer.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.listener.ActionBarListener;
@@ -25,13 +26,19 @@ public class ListCustomersActivity extends AbstractActivity {
 
     private static final int ADD_CUSTOMER_INTENT_CODE = 17;
 
+    @BindView(R.id.empty_view)
+    View emptyView;
+
+    @BindView(R.id.customer_view)
+    View customerView;
+
     @BindView(R.id.action_bar)
     ActionBar actionBar;
 
     @BindView(R.id.customer_listview)
     RecyclerView customersRecyclerView;
 
-    @OnClick(R.id.add_fab)
+    @OnClick({R.id.add_fab, R.id.add_customer_button})
     public void onClicAddButton(){
         startActivityForResult(new Intent(this, AddCustomerActivity.class), ADD_CUSTOMER_INTENT_CODE);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -79,6 +86,9 @@ public class ListCustomersActivity extends AbstractActivity {
         DatabaseManager.getInstance(this).getAllCustomers(new DatabaseOperationCallBack<ArrayList<Customer>>() {
             @Override
             public void onSuccess(ArrayList<Customer> customers) {
+
+                setupVisibility(customers.isEmpty());
+
                 customersAdapter.setData(customers);
                 customersAdapter.notifyDataSetChanged();
             }
@@ -89,8 +99,17 @@ public class ListCustomersActivity extends AbstractActivity {
             }
         });
 
-        /*constructionAdapter.setData(DatabaseManager.getInstance(getContext()).getAllConstructions());//makeMock());
-        constructionAdapter.notifyDataSetChanged();*/
-
     }
+
+    private void setupVisibility(boolean isDataEmpty) {
+
+        if (isDataEmpty) {
+            emptyView.setVisibility(View.VISIBLE);
+            customerView.setVisibility(View.GONE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+            customerView.setVisibility(View.VISIBLE);
+        }
+    }
+
 }

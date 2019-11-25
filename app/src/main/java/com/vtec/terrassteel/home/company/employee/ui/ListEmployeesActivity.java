@@ -2,6 +2,7 @@ package com.vtec.terrassteel.home.company.employee.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.listener.ActionBarListener;
@@ -25,13 +26,19 @@ public class ListEmployeesActivity extends AbstractActivity {
 
     private static final int ADD_EMPLOYEE_INTENT_CODE = 18;
 
+    @BindView(R.id.empty_view)
+    View emptyView;
+
+    @BindView(R.id.employee_view)
+    View employeeView;
+
     @BindView(R.id.action_bar)
     ActionBar actionBar;
 
     @BindView(R.id.employee_listview)
     RecyclerView employeesRecyclerView;
 
-    @OnClick(R.id.add_fab)
+    @OnClick({R.id.add_fab, R.id.add_employee_button})
     public void onClicAddButton(){
         startActivityForResult(new Intent(this, AddEmployeeActivity.class), ADD_EMPLOYEE_INTENT_CODE);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -78,6 +85,9 @@ public class ListEmployeesActivity extends AbstractActivity {
         DatabaseManager.getInstance(this).getAllEmployees(new DatabaseOperationCallBack<ArrayList<Employee>>() {
             @Override
             public void onSuccess(ArrayList<Employee> employees) {
+
+                setupVisibility(employees.isEmpty());
+
                 employeesAdapter.setData(employees);
                 employeesAdapter.notifyDataSetChanged();
             }
@@ -88,5 +98,17 @@ public class ListEmployeesActivity extends AbstractActivity {
             }
         });
     }
+
+    private void setupVisibility(boolean isDataEmpty) {
+
+            if (isDataEmpty) {
+                emptyView.setVisibility(View.VISIBLE);
+                employeeView.setVisibility(View.GONE);
+            } else {
+                emptyView.setVisibility(View.GONE);
+                employeeView.setVisibility(View.VISIBLE);
+            }
+    }
+
 
 }

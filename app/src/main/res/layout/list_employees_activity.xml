@@ -12,23 +12,62 @@
         app:showBackArrow="true"
         app:title="@string/my_employees" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/employee_listview"
+    <LinearLayout
+        android:id="@+id/employee_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="@dimen/xlarge"
-        android:layout_marginEnd="@dimen/standard"
-        app:backgroundTint="@color/colorPrimary"
-        app:elevation="6dp"
-        app:pressedTranslationZ="12dp"
-        android:src="@drawable/ic_add"
-        android:tint="@color/white"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/employee_listview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/xlarge"
+            android:layout_marginEnd="@dimen/standard"
+            app:backgroundTint="@color/colorPrimary"
+            app:elevation="6dp"
+            app:pressedTranslationZ="12dp"
+            android:src="@drawable/ic_add"
+            android:tint="@color/white"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.vtec.terrassteel.common.ui.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/StandardTextStyle"
+                android:text="@string/empty_employee_text"/>
+
+            <com.vtec.terrassteel.common.ui.FontButton
+                android:id="@+id/add_employee_button"
+                android:layout_marginTop="@dimen/xlarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_add_circle"
+                android:drawablePadding="@dimen/standard"
+                android:drawableTint="@color/white"
+                style="@style/FullButtonStyle"
+                android:text="@string/add_employee_textbutton"/>
+
+        </LinearLayout>
 
 </LinearLayout>

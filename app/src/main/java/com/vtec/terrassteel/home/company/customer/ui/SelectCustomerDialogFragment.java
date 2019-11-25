@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SelectCustomerDialogFragment extends DialogFragment {
 
@@ -33,6 +34,18 @@ public class SelectCustomerDialogFragment extends DialogFragment {
 
     @BindView(R.id.customer_recyclerview)
     RecyclerView customerRecyclerView;
+
+    @BindView(R.id.empty_view)
+    View emptyView;
+
+    @BindView(R.id.customer_view)
+    View customerView;
+
+    @OnClick(R.id.add_customer_button)
+    public void onClicAddCustomer(){
+        dismiss();
+        callback.onSelectAddCustomer();
+    }
 
 
     public SelectCustomerDialogFragment setCallBack(SelectCustomerCallback callBack) {
@@ -55,6 +68,7 @@ public class SelectCustomerDialogFragment extends DialogFragment {
         DatabaseManager.getInstance(getContext()).getAllCustomers(new DatabaseOperationCallBack<ArrayList<Customer>>() {
                     @Override
                     public void onSuccess(ArrayList<Customer> customers) {
+                        setupVisibility(customers.isEmpty());
                         selectCustomersAdapter.setData(customers);
                         selectCustomersAdapter.notifyDataSetChanged();
                     }
@@ -75,6 +89,17 @@ public class SelectCustomerDialogFragment extends DialogFragment {
         customerRecyclerView.setAdapter(selectCustomersAdapter);
 
         return thisView;
+    }
+
+    private void setupVisibility(boolean isDataEmpty) {
+
+        if (isDataEmpty) {
+            emptyView.setVisibility(View.VISIBLE);
+            customerView.setVisibility(View.GONE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+            customerView.setVisibility(View.VISIBLE);
+        }
     }
 
 }

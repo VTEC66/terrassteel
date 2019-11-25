@@ -36,4 +36,10 @@
     <string name="select_customer_title">Selectionnez un client</string>
     <string name="standard_mandatory_field_message">Ce champ est obligatoire</string>
     <string name="customer_mandatory_field_message">La sélection d\'un client est obligatoire</string>
+    <string name="empty_construction_text">Vous n\'avez pas encore ajouter de chantier.</string>
+    <string name="add_construction_textbutton">Ajouter un chantier</string>
+    <string name="add_employee_textbutton">Ajouter un employé</string>
+    <string name="empty_employee_text">Vous n\'avez pas encore ajouter d\'employé.</string>
+    <string name="empty_customer_text">Vous n\'avez pas encore ajouter de client.</string>
+    <string name="add_customer_textbutton">Ajouter un client</string>
 </resources>

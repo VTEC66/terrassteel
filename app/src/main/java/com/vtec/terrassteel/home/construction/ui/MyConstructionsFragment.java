@@ -31,7 +31,13 @@ public class MyConstructionsFragment extends AbstractFragment implements Constru
     @BindView(R.id.construction_listview)
     RecyclerView constructionRecyclerView;
 
-    @OnClick(R.id.add_fab)
+    @BindView(R.id.construction_view)
+    View constructionView;
+
+    @BindView(R.id.empty_view)
+    View emptyView;
+
+    @OnClick({R.id.add_fab, R.id.add_construction_button})
     public void onClicAddButton(){
         startActivityForResult(new Intent(getContext(), AddConstructionActivity.class), ADD_CONSTRUCTION_INTENT_CODE);
         getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -73,8 +79,12 @@ public class MyConstructionsFragment extends AbstractFragment implements Constru
         DatabaseManager.getInstance(getContext()).getAllConstructions(new DatabaseOperationCallBack<ArrayList<Construction>>() {
             @Override
             public void onSuccess(ArrayList<Construction> constructions) {
+
+                setupVisibility(constructions.isEmpty());
+
                 constructionAdapter.setData(constructions);
                 constructionAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -82,6 +92,17 @@ public class MyConstructionsFragment extends AbstractFragment implements Constru
                 super.onError();
             }
         });
+    }
+
+    private void setupVisibility(boolean isDataEmpty) {
+
+        if(isDataEmpty){
+            emptyView.setVisibility(View.VISIBLE);
+            constructionView.setVisibility(View.GONE);
+        }else{
+            emptyView.setVisibility(View.GONE);
+            constructionView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
