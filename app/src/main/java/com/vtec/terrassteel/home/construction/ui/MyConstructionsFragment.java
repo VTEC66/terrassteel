@@ -80,12 +80,9 @@ public class MyConstructionsFragment extends AbstractFragment implements Constru
         DatabaseManager.getInstance(getContext()).getAllConstructions(new DatabaseOperationCallBack<ArrayList<Construction>>() {
             @Override
             public void onSuccess(ArrayList<Construction> constructions) {
-
                 setupVisibility(constructions.isEmpty());
-
                 constructionAdapter.setData(constructions);
                 constructionAdapter.notifyDataSetChanged();
-
             }
 
             @Override
@@ -96,7 +93,6 @@ public class MyConstructionsFragment extends AbstractFragment implements Constru
     }
 
     private void setupVisibility(boolean isDataEmpty) {
-
         if(isDataEmpty){
             emptyView.setVisibility(View.VISIBLE);
             constructionView.setVisibility(View.GONE);
@@ -112,6 +108,5 @@ public class MyConstructionsFragment extends AbstractFragment implements Constru
         sessionManager.setConstruction(construction);
         startActivity(new Intent(getContext(), MainActivity.class));
         getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
     }
 }

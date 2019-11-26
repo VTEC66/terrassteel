@@ -15,7 +15,7 @@
     <string name="hint_customer">Client</string>
     <string name="hint_address1">Adresse 1</string>
     <string name="hint_address2">Adresse 2</string>
-    <string name="hint_zip">Code postale</string>
+    <string name="hint_zip">Code postal</string>
     <string name="hint_city">Ville</string>
     <string name="validate">Valider</string>
     <string name="customer_management">Gestion des clients</string>
@@ -28,7 +28,7 @@
     <string name="hint_customer_name">Nom du client</string>
     <string name="construction_manager">Chef de chantier</string>
     <string name="poseur">Poseur</string>
-    <string name="commercial">Commerciale</string>
+    <string name="commercial">Commercial</string>
     <string name="add_employee_title">Ajouter un employé</string>
     <string name="hint_employee_name">Nom de l\'employé</string>
     <string name="hint_employee_job">Type d\'emploi</string>
@@ -36,11 +36,11 @@
     <string name="select_customer_title">Selectionnez un client</string>
     <string name="standard_mandatory_field_message">Ce champ est obligatoire</string>
     <string name="customer_mandatory_field_message">La sélection d\'un client est obligatoire</string>
-    <string name="empty_construction_text">Vous n\'avez pas encore ajouter de chantier.</string>
+    <string name="empty_construction_text">Vous n\'avez pas encore ajouté de chantier.</string>
     <string name="add_construction_textbutton">Ajouter un chantier</string>
     <string name="add_employee_textbutton">Ajouter un employé</string>
-    <string name="empty_employee_text">Vous n\'avez pas encore ajouter d\'employé.</string>
-    <string name="empty_customer_text">Vous n\'avez pas encore ajouter de client.</string>
+    <string name="empty_employee_text">Vous n\'avez pas encore ajouté d\'employé.</string>
+    <string name="empty_customer_text">Vous n\'avez pas encore ajouté de client.</string>
     <string name="add_customer_textbutton">Ajouter un client</string>
     <string name="edit_customer_title">Edition d\'un client</string>
     <string name="edit_employee_title">Edition d\'un employé</string>
