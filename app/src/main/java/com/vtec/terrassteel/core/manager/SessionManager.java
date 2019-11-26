@@ -37,4 +37,8 @@ public class SessionManager {
     public void setConstruction(Construction construction) {
         this.construction = construction;
     }
+
+    public Construction getContruction(){
+        return construction;
+    }
 }

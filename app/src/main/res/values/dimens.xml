@@ -19,7 +19,9 @@
     <dimen name="button_min_width">111dp</dimen>
     <dimen name="button_radius">40dp</dimen>
 
-    <dimen name="action_bar_height">60dp</dimen>
+    <dimen name="action_bar_height">55dp</dimen>
+    <dimen name="bottom_bar_height">55dp</dimen>
+
 
     <dimen name="tab_indicator_height">4dp</dimen>
     <dimen name="standard_itemview_height">70dp</dimen>

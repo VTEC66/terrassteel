@@ -5,6 +5,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
 import com.vtec.terrassteel.R;
@@ -62,6 +64,9 @@ public class EditCustomerActivity extends AbstractActivity {
 
     @BindView(R.id.action_bar)
     ActionBar actionBar;
+
+    @BindView(R.id.customer_name_til)
+    View customerNameTIL;
 
     @BindView(R.id.customer_name_edittext)
     EditText customerNameEditText;
@@ -140,6 +145,7 @@ public class EditCustomerActivity extends AbstractActivity {
     private void highlightError(int error) {
         switch (error) {
             case ERROR_EMPTY_CUSTOMER_NAME_FIELD:
+                customerNameTIL.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
                 customerNameEditText.setError(getString(R.string.standard_mandatory_field_message));
                 break;
         }

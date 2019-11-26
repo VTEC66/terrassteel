@@ -44,4 +44,11 @@
     <string name="add_customer_textbutton">Ajouter un client</string>
     <string name="edit_customer_title">Edition d\'un client</string>
     <string name="edit_employee_title">Edition d\'un employé</string>
+    <string name="pointing_time_menu">Pointage</string>
+    <string name="work_order_menu">Bons de travail</string>
+    <string name="dashboard_menu">Tableau de bord</string>
+    <string name="point_time_title">Pointage</string>
+    <string name="empty_active_working_order_text">Vous n\'avez aucun bon de travail ouvert actuellement pour ce chantier.</string>
+    <string name="empty_working_order_text">Vous n\'avez pas encore créé de bon de travail pour ce chantier.</string>
+    <string name="add_working_order_textbutton">Ajouter un bon de travail</string>
 </resources>

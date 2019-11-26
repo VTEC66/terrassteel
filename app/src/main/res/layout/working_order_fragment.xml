@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/StandardTextStyle"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginStart="@dimen/xxlarge"
+            android:layout_marginEnd="@dimen/xxlarge"
+            android:text="@string/empty_working_order_text"/>
+
+        <com.vtec.terrassteel.common.ui.FontButton
+            android:id="@+id/add_construction_button"
+            android:enabled="false"
+            android:layout_marginTop="@dimen/xlarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_add_circle"
+            android:drawablePadding="@dimen/standard"
+            android:drawableTint="@color/white"
+            style="@style/FullButtonStyle"
+            android:text="@string/add_working_order_textbutton"/>
+
+    </LinearLayout>
+
+</LinearLayout>

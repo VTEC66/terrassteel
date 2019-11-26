@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -72,6 +73,9 @@ public class EditEmployeeActivity extends AbstractActivity implements SelectJobC
 
     @BindView(R.id.action_bar)
     ActionBar actionBar;
+
+    @BindView(R.id.employee_name_til)
+    View employeeNameTIL;
 
     @BindView(R.id.employee_name_edittext)
     EditText employeeNameEditText;
@@ -185,9 +189,11 @@ public class EditEmployeeActivity extends AbstractActivity implements SelectJobC
     private void highlightError(int error) {
         switch (error) {
             case ERROR_EMPTY_EMPLOYEE_NAME_FIELD:
+                employeeNameTIL.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
                 employeeNameEditText.setError(getString(R.string.standard_mandatory_field_message));
                 break;
             case ERROR_EMPTY_JOB_FIELD:
+                employeeJobTIL.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
                 employeeJobEditText.setError(getString(R.string.customer_mandatory_field_message));
                 break;
         }

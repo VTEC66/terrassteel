@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
 import com.vtec.terrassteel.R;
@@ -69,11 +70,17 @@ public class AddConstructionActivity extends AbstractActivity implements SelectC
     @BindView(R.id.action_bar)
     ActionBar actionBar;
 
+    @BindView(R.id.construction_name_til)
+    View constructionNameTIL;
+
     @BindView(R.id.construction_name_edittext)
     EditText constructionNameEditText;
 
     @BindView(R.id.customer_edittext)
     EditText customerEditText;
+
+    @BindView(R.id.customer_textinputlayout)
+    View customerTIL;
 
     @BindView(R.id.construction_address1_edittext)
     EditText constructionAddress1EditText;
@@ -177,9 +184,11 @@ public class AddConstructionActivity extends AbstractActivity implements SelectC
     private void highlightError(int error) {
         switch (error) {
             case ERROR_EMPTY_CONSTRUCTION_NAME_FIELD:
+                constructionNameTIL.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
                 constructionNameEditText.setError(getString(R.string.standard_mandatory_field_message));
                 break;
             case ERROR_EMPTY_CUSTOMER_FIELD:
+                customerTIL.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
                 customerEditText.setError(getString(R.string.customer_mandatory_field_message));
                 break;
         }
