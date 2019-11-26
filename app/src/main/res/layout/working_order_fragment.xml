@@ -23,8 +23,7 @@
             android:text="@string/empty_working_order_text"/>
 
         <com.vtec.terrassteel.common.ui.FontButton
-            android:id="@+id/add_construction_button"
-            android:enabled="false"
+            android:id="@+id/add_workorder_button"
             android:layout_marginTop="@dimen/xlarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
