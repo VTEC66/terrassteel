@@ -12,6 +12,8 @@ import com.vtec.terrassteel.common.model.ConstructionStatus;
 import com.vtec.terrassteel.common.model.Customer;
 import com.vtec.terrassteel.common.model.Employee;
 import com.vtec.terrassteel.common.model.Job;
+import com.vtec.terrassteel.common.model.WorkOrder;
+import com.vtec.terrassteel.common.model.WorkOrderStatus;
 import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 
@@ -29,6 +31,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String TABLE_CONSTRUCTIONS = "constructions";
     private static final String TABLE_CUSTOMERS = "customers";
     private static final String TABLE_EMPLOYEES = "employees";
+    private static final String TABLE_WORK_ORDER = "work_order";
+
 
 
     // Construction Table Columns
@@ -63,6 +67,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String KEY_EMPLOYEE_CITY = "employeeCity";
     private static final String KEY_EMPLOYEE_PHONE = "employeePhone";
     private static final String KEY_EMPLOYEE_MAIL = "employeeMail";
+
+
+    // Work Order Table Columns
+    private static final String KEY_WORK_ORDER_ID = "id";
+    private static final String KEY_WORK_ORDER_CONSTRUCTION_ID_FK = "constructionId";
+    private static final String KEY_WORK_ORDER_REFERENCE = "work_order_reference";
+    private static final String KEY_WORK_ORDER_AFFAIRE = "work_order_affaire";
+    private static final String KEY_WORK_ORDER_PRODUCT_TYPE = "work_order_product_type";
+    private static final String KEY_WORK_ORDER_ALLOCATED_TIME = "work_order_allocated_time";
+    private static final String KEY_WORK_ORDER_STATUS = "work_order_Status";
+
 
     private static DatabaseManager sInstance;
 
@@ -126,9 +141,22 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 KEY_EMPLOYEE_MAIL + " TEXT" +
                 ")";
 
+        String CREATE_WORK_ORDER_TABLE = "CREATE TABLE " + TABLE_WORK_ORDER +
+                "(" +
+                KEY_WORK_ORDER_ID + " INTEGER PRIMARY KEY," +
+                KEY_WORK_ORDER_CONSTRUCTION_ID_FK + " INTEGER REFERENCES " + TABLE_CONSTRUCTIONS + "," + // Define a foreign key
+                KEY_WORK_ORDER_REFERENCE + " TEXT," +
+                KEY_WORK_ORDER_AFFAIRE + " TEXT," +
+                KEY_WORK_ORDER_PRODUCT_TYPE + " TEXT," +
+                KEY_WORK_ORDER_ALLOCATED_TIME + " TEXT," +
+                KEY_WORK_ORDER_STATUS + " TEXT" +
+                ")";
+
         db.execSQL(CREATE_CONSTRUCTIONS_TABLE);
         db.execSQL(CREATE_CUSTOMERS_TABLE);
         db.execSQL(CREATE_EMPLOYEES_TABLE);
+        db.execSQL(CREATE_WORK_ORDER_TABLE);
+
 
     }
 
@@ -138,6 +166,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONSTRUCTIONS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_CUSTOMERS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_EMPLOYEES);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_WORK_ORDER);
+
 
             onCreate(db);
         }
@@ -513,5 +543,107 @@ public class DatabaseManager extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
+    }
+
+
+    public void addWorkOrder(WorkOrder workOrder, DatabaseOperationCallBack<DefaultResponse> callBack) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_WORK_ORDER_REFERENCE, workOrder.getWorkOrderReference());
+            values.put(KEY_WORK_ORDER_AFFAIRE, workOrder.getWorkOrderAffaire());
+            values.put(KEY_WORK_ORDER_PRODUCT_TYPE, workOrder.getWorkOrderProductType());
+            values.put(KEY_WORK_ORDER_ALLOCATED_TIME, workOrder.getWorkOrderAllocatedHour());
+            values.put(KEY_WORK_ORDER_STATUS, workOrder.getWorkOrderStatus().name());
+            values.put(KEY_WORK_ORDER_CONSTRUCTION_ID_FK, workOrder.getConstruction().getConstructionId());
+
+            // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
+            db.insertOrThrow(TABLE_WORK_ORDER, null, values);
+            db.setTransactionSuccessful();
+
+            Log.d(TAG, "New Work order successfuly added into database");
+            callBack.onSuccess(new DefaultResponse());
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to add Work order into database : " + e.toString());
+            callBack.onError();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+
+    public void getAllWorkOrderForConstruction(Construction construction, DatabaseOperationCallBack<ArrayList<WorkOrder>> callBack) {
+        ArrayList<WorkOrder> workOrders = new ArrayList<>();
+
+        String WORK_ORDER_SELECT_QUERY =
+             String.format("SELECT * FROM %s WHERE %s = '%d'",
+                        TABLE_WORK_ORDER, KEY_WORK_ORDER_CONSTRUCTION_ID_FK, construction.getConstructionId());
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(WORK_ORDER_SELECT_QUERY, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    WorkOrder workOrder =
+                            new WorkOrder()
+                                    .withWorkOrderId(cursor.getLong(cursor.getColumnIndex(KEY_WORK_ORDER_ID)))
+                                    .withWorkOrderReference(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_REFERENCE)))
+                                    .withWorkOrderAffaire(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_AFFAIRE)))
+                                    .withWorkOrderProductType(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_PRODUCT_TYPE)))
+                                    .withWorkOrderAllocatedHour(cursor.getInt(cursor.getColumnIndex(KEY_WORK_ORDER_ALLOCATED_TIME)))
+                                    .withworkOrderStatus(WorkOrderStatus.valueOf(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_STATUS))))
+                                    .withConstruction(getConstructionWithId(cursor.getInt(cursor.getColumnIndex(KEY_WORK_ORDER_CONSTRUCTION_ID_FK))));
+
+
+                    workOrders.add(workOrder);
+
+                } while(cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to get work order from database : " + e.toString());
+            callBack.onError();
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+        Log.d(TAG, "Database successfully return " + workOrders.size() + " work orders.");
+        callBack.onSuccess(workOrders);
+    }
+
+    private Construction getConstructionWithId(int constructionId) throws Exception {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+
+        String CONSTRUCTION_SELECT_QUERY =
+                String.format("SELECT * FROM %s WHERE " + KEY_CONSTRUCTION_ID + " = %d",
+                        TABLE_CONSTRUCTIONS, constructionId);
+
+        Cursor cursor = db.rawQuery(CONSTRUCTION_SELECT_QUERY, null);
+
+        cursor.moveToFirst();
+
+        Construction newConstruction =
+                new Construction()
+                        .withConstructionId(cursor.getLong(cursor.getColumnIndex(KEY_CONSTRUCTION_ID)))
+                        .withConstructionName(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_NAME)))
+                        .withCustomer(getCustomerWithId(cursor.getInt(cursor.getColumnIndex(KEY_CONSTRUCTION_CUSTOMER_ID_FK))))
+                        .withConstructionAddress1(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ADDRESS1)))
+                        .withConstructionAddress2(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ADDRESS2)))
+                        .withConstructionZip(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ZIP)))
+                        .withConstructionCity(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_CITY)))
+                        .withConstructionStatus(ConstructionStatus.valueOf(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_STATUS))));
+
+
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+
+        return newConstruction;
     }
 }

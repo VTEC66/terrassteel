@@ -10,7 +10,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
 import com.vtec.terrassteel.R;
+import com.vtec.terrassteel.common.model.Construction;
+import com.vtec.terrassteel.common.model.ConstructionStatus;
+import com.vtec.terrassteel.common.model.WorkOrder;
+import com.vtec.terrassteel.common.model.WorkOrderStatus;
+import com.vtec.terrassteel.core.model.DefaultResponse;
+import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
+import com.vtec.terrassteel.database.DatabaseManager;
 
 import androidx.annotation.Nullable;
 import butterknife.BindView;
@@ -126,14 +133,35 @@ public class AddWorkOrderActivity extends AbstractActivity {
         }
     }
 
-    private void addNewWorkOrder() {
-
-    }
-
     private void clearHighlightErrors() {
         workOrderReferenceEdittext.setError(null);
         workOrderAffaireEdittext.setError(null);
         workOrderProductTypeEdittext.setError(null);
         workOrderHoursEdittext.setError(null);
+    }
+
+    private void addNewWorkOrder() {
+        WorkOrder newWorkOrder = new WorkOrder()
+                .withWorkOrderReference(workOrderReferenceEdittext.getText().toString())
+                .withWorkOrderAffaire(workOrderAffaireEdittext.getText().toString())
+                .withWorkOrderProductType(workOrderProductTypeEdittext.getText().toString())
+                .withWorkOrderAllocatedHour(Integer.parseInt(workOrderHoursEdittext.getText().toString()))
+                .withworkOrderStatus(WorkOrderStatus.IN_PROGRESS)
+                .withConstruction(sessionManager.getContruction());
+
+
+        DatabaseManager.getInstance(getApplicationContext()).addWorkOrder(newWorkOrder, new DatabaseOperationCallBack<DefaultResponse>() {
+
+            @Override
+            public void onSuccess(DefaultResponse defaultResponse) {
+                setResult(RESULT_OK);
+                finish();
+            }
+
+            @Override
+            public void onError() {
+                super.onError();
+            }
+        });
     }
 }

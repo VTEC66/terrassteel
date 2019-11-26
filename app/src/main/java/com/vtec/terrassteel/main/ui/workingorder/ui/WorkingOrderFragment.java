@@ -7,9 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.vtec.terrassteel.R;
+import com.vtec.terrassteel.common.model.Construction;
+import com.vtec.terrassteel.common.model.WorkOrder;
+import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractFragment;
+import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.home.company.customer.ui.EditCustomerActivity;
 import com.vtec.terrassteel.main.ui.dashboard.ui.DashboardFragment;
+
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,5 +45,24 @@ public class WorkingOrderFragment extends AbstractFragment {
         ButterKnife.bind(this, thisView);
 
         return thisView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        DatabaseManager.getInstance(getContext()).getAllWorkOrderForConstruction(sessionManager.getContruction(), new DatabaseOperationCallBack<ArrayList<WorkOrder>>() {
+            @Override
+            public void onSuccess(ArrayList<WorkOrder> workOrders) {
+                /*setupVisibility(constructions.isEmpty());
+                constructionAdapter.setData(constructions);
+                constructionAdapter.notifyDataSetChanged();*/
+            }
+
+            @Override
+            public void onError() {
+                super.onError();
+            }
+        });
     }
 }

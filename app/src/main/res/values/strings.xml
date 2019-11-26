@@ -56,4 +56,6 @@
     <string name="hint_workorder_affaire">Référence affaire</string>
     <string name="hint_workorder_producttype">Type de produit</string>
     <string name="hint_workorder_hours">Nombre d\'heure</string>
+    <string name="workorder_status_inprogress">En cours</string>
+    <string name="workorder_status_finished">Terminé</string>
 </resources>
