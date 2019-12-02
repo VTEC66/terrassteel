@@ -296,22 +296,23 @@ public class DatabaseManager extends SQLiteOpenHelper {
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
+
+
         }
 
         Log.d(TAG, "Database successfully return " + constructions.size() + " constructions.");
+
         callBack.onSuccess(constructions);
     }
 
     private Customer getCustomerWithId(int customerId) throws Exception{
         SQLiteDatabase db = getWritableDatabase();
-        db.beginTransaction();
 
         String CUSTOMERS_SELECT_QUERY =
                 String.format("SELECT * FROM %s WHERE " + KEY_CUSTOMER_ID + " = %d",
                         TABLE_CUSTOMERS, customerId);
 
         Cursor cursor = db.rawQuery(CUSTOMERS_SELECT_QUERY, null);
-
         cursor.moveToFirst();
 
         Customer newCustomer =
@@ -324,7 +325,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
                                 .withCustomerCity(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_CITY)))
                                 .withCustomerPhone(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_PHONE)))
                                 .withCustomerEmail(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_MAIL)));
-
 
         if (!cursor.isClosed()) {
             cursor.close();
@@ -577,11 +577,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 
     public void getAllWorkOrderForConstruction(Construction construction, DatabaseOperationCallBack<ArrayList<WorkOrder>> callBack) {
+
         ArrayList<WorkOrder> workOrders = new ArrayList<>();
 
         String WORK_ORDER_SELECT_QUERY =
              String.format("SELECT * FROM %s WHERE %s = '%d'",
                         TABLE_WORK_ORDER, KEY_WORK_ORDER_CONSTRUCTION_ID_FK, construction.getConstructionId());
+
+        /*String ALL_WORK_ORDER_SELECT_QUERY =
+                String.format("SELECT * FROM %s",
+                        TABLE_WORK_ORDER, KEY_WORK_ORDER_CONSTRUCTION_ID_FK);*/
+
+        Log.e(TAG, WORK_ORDER_SELECT_QUERY);
+
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(WORK_ORDER_SELECT_QUERY, null);
@@ -616,6 +624,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         callBack.onSuccess(workOrders);
     }
 
+
+
     private Construction getConstructionWithId(int constructionId) throws Exception {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -646,4 +656,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         return newConstruction;
     }
+
+
+
+
 }

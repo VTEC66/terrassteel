@@ -1,8 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/workorder_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/workorder_listview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/xlarge"
+            android:layout_marginEnd="@dimen/standard"
+            app:backgroundTint="@color/colorPrimary"
+            app:elevation="6dp"
+            app:pressedTranslationZ="12dp"
+            android:src="@drawable/ic_add"
+            android:tint="@color/white"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/empty_view"
@@ -10,7 +40,8 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:layout_gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <com.vtec.terrassteel.common.ui.FontTextView
             android:layout_width="wrap_content"

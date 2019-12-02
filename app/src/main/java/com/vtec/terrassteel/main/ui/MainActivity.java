@@ -9,7 +9,7 @@ import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
 import com.vtec.terrassteel.main.ui.dashboard.ui.DashboardFragment;
 import com.vtec.terrassteel.main.ui.pointing.ui.PointingTimeFragment;
-import com.vtec.terrassteel.main.ui.workingorder.ui.WorkingOrderFragment;
+import com.vtec.terrassteel.main.ui.workorder.ui.WorkOrderFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -88,12 +88,12 @@ public class MainActivity extends AbstractActivity {
     private void showWorkingOrderFragment() {
         Log.d(MainActivity.class.getSimpleName(), "Show working order Fragment");
 
-        WorkingOrderFragment fragment = (WorkingOrderFragment) getSupportFragmentManager().findFragmentByTag(WorkingOrderFragment.TAG);
+        WorkOrderFragment fragment = (WorkOrderFragment) getSupportFragmentManager().findFragmentByTag(WorkOrderFragment.TAG);
 
         if (fragment == null) {
-            fragment = new WorkingOrderFragment();
+            fragment = new WorkOrderFragment();
         }
 
-        showFragment(fragment, WorkingOrderFragment.TAG);
+        showFragment(fragment, WorkOrderFragment.TAG);
     }
 }
