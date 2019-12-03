@@ -4,16 +4,17 @@ public class Assign {
 
     public long assignId;
 
-    public WorkOrder workOrder;
+    public WorkOrder withWorkOrder;
 
     public Employee employee;
 
     public boolean isWorking;
 
-    public Assign(WorkOrder workOrder, Employee employee, boolean isWorking) {
-        this.workOrder = workOrder;
+    public Assign(){}
+
+    public Assign(WorkOrder withWorkOrder, Employee employee) {
+        this.withWorkOrder = withWorkOrder;
         this.employee = employee;
-        this.isWorking = isWorking;
     }
 
     public Assign withAssignId(long id){
@@ -22,7 +23,7 @@ public class Assign {
     }
 
     public Assign withWorkOrder(WorkOrder workOrder){
-        this.workOrder = workOrder;
+        this.withWorkOrder = workOrder;
         return this;
     }
 
@@ -31,12 +32,17 @@ public class Assign {
         return this;
     }
 
+    public Assign isWorking(boolean isWorking){
+        this.isWorking = isWorking;
+        return this;
+    }
+
     public long getAssignId() {
         return assignId;
     }
 
     public WorkOrder getWorkOrder() {
-        return workOrder;
+        return withWorkOrder;
     }
 
     public Employee getEmployee() {

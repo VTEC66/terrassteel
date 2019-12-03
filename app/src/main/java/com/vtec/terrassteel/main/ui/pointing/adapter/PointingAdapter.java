@@ -60,6 +60,13 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 HeaderViewHolder headerViewHolder = (HeaderViewHolder)holder;
 
                 headerViewHolder.workorderNameTextView.setText(assign.getWorkOrder().getWorkOrderReference());
+
+                headerViewHolder.addAsignView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.addAssignToWorkOrder(assign.getWorkOrder());
+                    }
+                });
                 break;
 
             case ITEM:
@@ -122,6 +129,9 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         @BindView(R.id.workorder_name_tv)
         TextView workorderNameTextView;
+
+        @BindView(R.id.add_assign_view)
+        View addAsignView;
 
 
         public HeaderViewHolder(@NonNull View itemView) {

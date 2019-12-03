@@ -1,6 +1,8 @@
 package com.vtec.terrassteel.common.model;
 
-public class Construction {
+import java.io.Serializable;
+
+public class Construction implements Serializable {
 
     public long constructionId;
     public String constructionName;

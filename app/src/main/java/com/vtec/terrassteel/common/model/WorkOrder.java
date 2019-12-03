@@ -1,6 +1,8 @@
 package com.vtec.terrassteel.common.model;
 
-public class WorkOrder {
+import java.io.Serializable;
+
+public class WorkOrder implements Serializable {
 
     public long workOrderId;
     public String workOrderReference;

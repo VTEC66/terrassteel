@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.vtec.terrassteel.common.model.Assign;
 import com.vtec.terrassteel.common.model.Construction;
 import com.vtec.terrassteel.common.model.ConstructionStatus;
 import com.vtec.terrassteel.common.model.Customer;
@@ -32,7 +33,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String TABLE_CUSTOMERS = "customers";
     private static final String TABLE_EMPLOYEES = "employees";
     private static final String TABLE_WORK_ORDER = "work_order";
-
+    private static final String TABLE_ASSIGN = "assign";
 
 
     // Construction Table Columns
@@ -77,6 +78,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String KEY_WORK_ORDER_PRODUCT_TYPE = "work_order_product_type";
     private static final String KEY_WORK_ORDER_ALLOCATED_TIME = "work_order_allocated_time";
     private static final String KEY_WORK_ORDER_STATUS = "work_order_Status";
+
+
+    // Assign Table
+    private static final String KEY_ASSIGN_ID = "id";
+    private static final String KEY_ASSIGN_WORKORDER_ID_FK = "workOrderId";
+    private static final String KEY_ASSIGN_EMPLOYEE_ID_FK = "employeeId";
+    private static final String KEY_ASSIGN_IS_WORKING = "isWorking";
+
+
 
 
     private static DatabaseManager sInstance;
@@ -152,22 +162,31 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 KEY_WORK_ORDER_STATUS + " TEXT" +
                 ")";
 
+        String CREATE_ASSIGN_TABLE = "CREATE TABLE " + TABLE_ASSIGN +
+                "(" +
+                KEY_ASSIGN_ID + " INTEGER PRIMARY KEY," +
+                KEY_ASSIGN_WORKORDER_ID_FK + " INTEGER REFERENCES " + TABLE_WORK_ORDER + "," + // Define a foreign key
+                KEY_ASSIGN_EMPLOYEE_ID_FK + " INTEGER REFERENCES " + TABLE_EMPLOYEES + "," + // Define a foreign key
+                KEY_ASSIGN_IS_WORKING + " INTEGER" +
+                ")";
+
         db.execSQL(CREATE_CONSTRUCTIONS_TABLE);
         db.execSQL(CREATE_CUSTOMERS_TABLE);
         db.execSQL(CREATE_EMPLOYEES_TABLE);
         db.execSQL(CREATE_WORK_ORDER_TABLE);
-
+        db.execSQL(CREATE_ASSIGN_TABLE);
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion != newVersion) {
+
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONSTRUCTIONS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_CUSTOMERS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_EMPLOYEES);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_WORK_ORDER);
-
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSIGN);
 
             onCreate(db);
         }
@@ -561,16 +580,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
             values.put(KEY_WORK_ORDER_CONSTRUCTION_ID_FK, workOrder.getConstruction().getConstructionId());
 
             // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
-            db.insertOrThrow(TABLE_WORK_ORDER, null, values);
+            workOrder.workOrderId = db.insertOrThrow(TABLE_WORK_ORDER, null, values);
             db.setTransactionSuccessful();
 
             Log.d(TAG, "New Work order successfuly added into database");
-            callBack.onSuccess(new DefaultResponse());
+            db.endTransaction();
+
+            addAssign(new Assign(workOrder, null), callBack);
+            //callBack.onSuccess(new DefaultResponse());
 
         } catch (Exception e) {
             Log.e(TAG, "Error while trying to add Work order into database : " + e.toString());
             callBack.onError();
-        } finally {
             db.endTransaction();
         }
     }
@@ -653,8 +674,136 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
 
+    public void addAssign(Assign assign, DatabaseOperationCallBack<DefaultResponse> callBack) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_ASSIGN_WORKORDER_ID_FK, assign.withWorkOrder.getWorkOrderId());
+            if(assign.getEmployee() != null){
+                values.put(KEY_ASSIGN_EMPLOYEE_ID_FK, assign.employee.getEmployeeId());
+            }
+            values.put(KEY_ASSIGN_IS_WORKING, 0);
+
+            // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
+            db.insertOrThrow(TABLE_ASSIGN, null, values);
+            db.setTransactionSuccessful();
+
+            Log.d(TAG, "New assign successfuly added into database");
+            callBack.onSuccess(new DefaultResponse());
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to add assign into database : " + e.toString());
+            callBack.onError();
+        } finally {
+            db.endTransaction();
+        }
+    }
 
 
+    public void getAllAssign(DatabaseOperationCallBack<ArrayList<Assign>> callBack) {
+
+        ArrayList<Assign> assigns = new ArrayList<>();
+
+        String ASSIGN_SELECT_QUERY =
+                String.format("SELECT * FROM %s",
+                        TABLE_ASSIGN);
+
+        Log.e(TAG, ASSIGN_SELECT_QUERY);
 
 
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(ASSIGN_SELECT_QUERY, null);
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    Assign assign =
+                            new Assign()
+                                    .withAssignId(cursor.getLong(cursor.getColumnIndex(KEY_ASSIGN_ID)))
+                                    .withWorkOrder(getWorkOrderWithId(cursor.getInt(cursor.getColumnIndex(KEY_ASSIGN_WORKORDER_ID_FK))))
+                                    .withEmployee(getEmployeeWithId(cursor.getInt(cursor.getColumnIndex(KEY_ASSIGN_EMPLOYEE_ID_FK))))
+                                    .isWorking(cursor.getInt(cursor.getColumnIndex(KEY_ASSIGN_IS_WORKING)) > 0);
+
+
+                    assigns.add(assign);
+
+                } while(cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to get assign from database : " + e.toString());
+            callBack.onError();
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+        Log.d(TAG, "Database successfully return " + assigns.size() + " assign.");
+        callBack.onSuccess(assigns);
+    }
+
+    private Employee getEmployeeWithId(int id) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        Employee employee = null;
+
+        String EMPLOYEE_SELECT_QUERY =
+                String.format("SELECT * FROM %s WHERE " + KEY_EMPLOYEE_ID + " = %d",
+                        TABLE_EMPLOYEES, id);
+
+        Cursor cursor = db.rawQuery(EMPLOYEE_SELECT_QUERY, null);
+
+        if(cursor != null && cursor.moveToFirst()){
+
+            employee  =
+                    new Employee()
+                            .withEmployeeId(cursor.getLong(cursor.getColumnIndex(KEY_EMPLOYEE_ID)))
+                            .withEmployeeName(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_NAME)))
+                            .withEmployeeJob(Job.valueOf(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_JOB))))
+                            .withEmployeeAddress1(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ADDRESS1)))
+                            .withEmployeeAddress2(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ADDRESS2)))
+                            .withEmployeeZip(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ZIP)))
+                            .withEmployeeCity(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_CITY)))
+                            .withEmployeePhone(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_PHONE)))
+                            .withEmployeeEmail(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_MAIL)));
+
+        }
+
+
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+
+        return employee;
+    }
+
+    private WorkOrder getWorkOrderWithId(int id) throws Exception {
+        SQLiteDatabase db = getWritableDatabase();
+
+        String WORKORDER_SELECT_QUERY =
+                String.format("SELECT * FROM %s WHERE " + KEY_WORK_ORDER_ID + " = %d",
+                        TABLE_WORK_ORDER, id);
+
+        Cursor cursor = db.rawQuery(WORKORDER_SELECT_QUERY, null);
+
+        cursor.moveToFirst();
+
+        WorkOrder workOrder =
+                new WorkOrder()
+                        .withWorkOrderId(cursor.getLong(cursor.getColumnIndex(KEY_WORK_ORDER_ID)))
+                        .withWorkOrderReference(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_REFERENCE)))
+                        .withWorkOrderAffaire(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_AFFAIRE)))
+                        .withWorkOrderProductType(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_PRODUCT_TYPE)))
+                        .withWorkOrderAllocatedHour(cursor.getInt(cursor.getColumnIndex(KEY_WORK_ORDER_ALLOCATED_TIME)))
+                        .withworkOrderStatus(WorkOrderStatus.valueOf(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_STATUS))))
+                        .withConstruction(getConstructionWithId(cursor.getInt(cursor.getColumnIndex(KEY_WORK_ORDER_CONSTRUCTION_ID_FK))));
+
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+
+        return workOrder;
+    }
 }

@@ -1,5 +1,6 @@
 package com.vtec.terrassteel.main.ui.pointing.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractFragment;
 import com.vtec.terrassteel.database.DatabaseManager;
+import com.vtec.terrassteel.home.company.customer.ui.EditCustomerActivity;
+import com.vtec.terrassteel.main.ui.assign.ui.AddAssignActivity;
 import com.vtec.terrassteel.main.ui.pointing.adapter.PointingAdapter;
 import com.vtec.terrassteel.main.ui.pointing.callback.PointingCallback;
 import com.vtec.terrassteel.main.ui.workorder.adapter.WorkorderAdapter;
@@ -26,9 +29,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.vtec.terrassteel.home.company.customer.ui.EditCustomerActivity.EXTRA_CUSTOMER;
+
 public class PointingTimeFragment extends AbstractFragment implements PointingCallback {
 
     public static final String TAG = PointingTimeFragment.class.getSimpleName();
+    public static final String EXTRA_WORK_ORDER = "EXTRA_WORK_ORDER";
+    private static final int ADD_ASSIGN_INTENT_CODE = 20;
 
     @BindView(R.id.pointing_time_listview)
     RecyclerView pointingTimeRecyclerView;
@@ -72,18 +79,13 @@ public class PointingTimeFragment extends AbstractFragment implements PointingCa
     public void onResume() {
         super.onResume();
 
-        DatabaseManager.getInstance(getContext()).getAllWorkOrderForConstruction(sessionManager.getContruction(), new DatabaseOperationCallBack<ArrayList<WorkOrder>>() {
+        DatabaseManager.getInstance(getContext()).getAllAssign(new DatabaseOperationCallBack<ArrayList<Assign>>() {
             @Override
-            public void onSuccess(ArrayList<WorkOrder> workOrders) {
+            public void onSuccess(ArrayList<Assign> assigns) {
 
-                DatabaseManager.getInstance(getContext()).getAllEmployees(new DatabaseOperationCallBack<ArrayList<Employee>>() {
-                    @Override
-                    public void onSuccess(ArrayList<Employee> employees) {
-                        setupVisibility(workOrders.isEmpty());
-                        pointingAdapter.setData(moke(workOrders, employees));
+                        setupVisibility(assigns.isEmpty());
+                        pointingAdapter.setData(assigns);
                         pointingAdapter.notifyDataSetChanged();
-                    }
-                });
             }
 
             @Override
@@ -103,22 +105,21 @@ public class PointingTimeFragment extends AbstractFragment implements PointingCa
         }
     }
 
-    private ArrayList<Assign> moke(ArrayList<WorkOrder> workOrders, ArrayList<Employee> employees){
-        ArrayList<Assign> list = new ArrayList();
-
-        for(WorkOrder wo : workOrders){
-            list.add(new Assign(wo, null, false ));
-
-            for(Employee emp : employees){
-                list.add(new Assign(wo, emp, false ));
-            }
-        }
-
-        return list;
-    }
 
     @Override
     public void actionPointing(Assign assign) {
         //TODO
+    }
+
+    @Override
+    public void addAssignToWorkOrder(WorkOrder workOrder) {
+        Intent intent = new Intent(getContext(), AddAssignActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(EXTRA_WORK_ORDER, workOrder);
+        intent.putExtras(bundle);
+
+        startActivityForResult(intent, ADD_ASSIGN_INTENT_CODE);
+        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 }
