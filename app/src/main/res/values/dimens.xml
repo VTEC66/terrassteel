@@ -10,6 +10,8 @@
 
     <dimen name="text_size_standard">14sp</dimen>
     <dimen name="text_size_title">17sp</dimen>
+    <dimen name="chronometer_size">21sp</dimen>
+
 
     <dimen name="small_interline">2sp</dimen>
     <dimen name="medium_interline">4sp</dimen>
@@ -28,4 +30,5 @@
 
 
     <dimen name="standard_separator_height">0.5dp</dimen>
+    <dimen name="standard_headerview_height">40dp</dimen>
 </resources>

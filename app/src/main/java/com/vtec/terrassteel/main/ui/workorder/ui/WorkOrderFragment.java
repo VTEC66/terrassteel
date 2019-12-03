@@ -44,7 +44,7 @@ public class WorkOrderFragment extends AbstractFragment implements WorkorderCall
     private WorkorderAdapter workorderAdapter;
 
 
-    @OnClick(R.id.add_workorder_button)
+    @OnClick({R.id.add_workorder_button, R.id.add_fab})
     public void onClickAddWorkOrder(){
         startActivityForResult(new Intent(getContext(), AddWorkOrderActivity.class), ADD_CUSTOMER_INTENT_CODE);
         getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -88,9 +88,6 @@ public class WorkOrderFragment extends AbstractFragment implements WorkorderCall
                 workorderAdapter.setData(workOrders);
                 workorderAdapter.notifyDataSetChanged();
 
-                /*setupVisibility(constructions.isEmpty());
-                workorderAdapter.setData(constructions);
-                workorderAdapter.notifyDataSetChanged();*/
             }
 
             @Override

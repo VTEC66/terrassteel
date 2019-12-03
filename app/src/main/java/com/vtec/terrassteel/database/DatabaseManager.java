@@ -584,10 +584,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
              String.format("SELECT * FROM %s WHERE %s = '%d'",
                         TABLE_WORK_ORDER, KEY_WORK_ORDER_CONSTRUCTION_ID_FK, construction.getConstructionId());
 
-        /*String ALL_WORK_ORDER_SELECT_QUERY =
-                String.format("SELECT * FROM %s",
-                        TABLE_WORK_ORDER, KEY_WORK_ORDER_CONSTRUCTION_ID_FK);*/
-
         Log.e(TAG, WORK_ORDER_SELECT_QUERY);
 
 
@@ -628,7 +624,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     private Construction getConstructionWithId(int constructionId) throws Exception {
         SQLiteDatabase db = getWritableDatabase();
-        db.beginTransaction();
 
         String CONSTRUCTION_SELECT_QUERY =
                 String.format("SELECT * FROM %s WHERE " + KEY_CONSTRUCTION_ID + " = %d",
@@ -656,6 +651,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         return newConstruction;
     }
+
+
 
 
 
