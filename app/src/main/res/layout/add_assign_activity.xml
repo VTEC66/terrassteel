@@ -13,11 +13,29 @@
         app:actionButtonDrawable="@drawable/ic_check" />
 
     <LinearLayout
+        android:id="@+id/empty_available_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/StandardTextStyle"
+            android:text="@string/empty_available_text"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/available_employee_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <com.vtec.terrassteel.common.ui.FontTextView
             android:layout_width="match_parent"
@@ -44,11 +62,30 @@
         android:background="@color/colorPrimary"/>
 
     <LinearLayout
+        android:id="@+id/empty_assigned_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/StandardTextStyle"
+            android:text="@string/empty_assigned_text"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/assigned_employee_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <com.vtec.terrassteel.common.ui.FontTextView
             android:layout_width="match_parent"

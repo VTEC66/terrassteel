@@ -60,4 +60,6 @@
     <string name="workorder_status_finished">Terminé</string>
     <string name="available_employee_title">Employés disponibles</string>
     <string name="assigned_employee_title">Employés assignés</string>
+    <string name="empty_assigned_text">Aucun employé n\'est assigné actuellement</string>
+    <string name="empty_available_text">Aucun employé disponible actuellement.</string>
 </resources>

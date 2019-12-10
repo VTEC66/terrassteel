@@ -1,6 +1,7 @@
 package com.vtec.terrassteel.main.ui.assign.ui;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.listener.ActionBarListener;
@@ -29,7 +30,6 @@ public class AddAssignActivity extends AbstractActivity implements AssignEmploye
 
     WorkOrder workOrder;
 
-
     @BindView(R.id.action_bar)
     ActionBar actionBar;
 
@@ -42,6 +42,17 @@ public class AddAssignActivity extends AbstractActivity implements AssignEmploye
     private AssignEmployeeAdapter availableEmployeesAdapter;
     private AssignEmployeeAdapter assignedEmployeesAdapter;
 
+    @BindView(R.id.assigned_employee_view)
+    View assignedView;
+
+    @BindView(R.id.empty_assigned_view)
+    View emptyAssignedView;
+
+    @BindView(R.id.available_employee_view)
+    View availableView;
+
+    @BindView(R.id.empty_available_view)
+    View emptyAvailableView;
 
 
     @Override
@@ -113,22 +124,44 @@ public class AddAssignActivity extends AbstractActivity implements AssignEmploye
                 availableEmployeesAdapter.setData(employees);
                 availableEmployeesAdapter.notifyDataSetChanged();
 
-                refreshAssignedEmployee();
+                setupAvailableEmployeeVisibility(employees.isEmpty());
             }
         });
 
-
-    }
-
-    private void refreshAssignedEmployee() {
         DatabaseManager.getInstance(this).getAssignedEmployee(workOrder, new DatabaseOperationCallBack<ArrayList<Employee>>() {
             @Override
             public void onSuccess(ArrayList<Employee> employees) {
 
                 assignedEmployeesAdapter.setData(employees);
                 assignedEmployeesAdapter.notifyDataSetChanged();
+
+                setupAssignedEmployeeVisibility(employees.isEmpty());
             }
+
+
         });
+    }
+
+    private void setupAvailableEmployeeVisibility(boolean isDataEmpty) {
+
+        if (isDataEmpty) {
+            emptyAvailableView.setVisibility(View.VISIBLE);
+            availableView.setVisibility(View.GONE);
+        } else {
+            emptyAvailableView.setVisibility(View.GONE);
+            availableView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setupAssignedEmployeeVisibility(boolean isDataEmpty) {
+
+        if (isDataEmpty) {
+            emptyAssignedView.setVisibility(View.VISIBLE);
+            assignedView.setVisibility(View.GONE);
+        } else {
+            emptyAssignedView.setVisibility(View.GONE);
+            assignedView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
