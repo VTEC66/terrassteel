@@ -58,4 +58,6 @@
     <string name="hint_workorder_hours">Nombre d\'heure</string>
     <string name="workorder_status_inprogress">En cours</string>
     <string name="workorder_status_finished">Terminé</string>
+    <string name="available_employee_title">Employés disponibles</string>
+    <string name="assigned_employee_title">Employés assignés</string>
 </resources>

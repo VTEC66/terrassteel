@@ -37,8 +37,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 
     // Construction Table Columns
-    private static final String KEY_CONSTRUCTION_ID = "id";
-    private static final String KEY_CONSTRUCTION_CUSTOMER_ID_FK = "customerId";
+    private static final String KEY_CONSTRUCTION_ID_PK = "constructionIdPk";
+    private static final String KEY_CONSTRUCTION_CUSTOMER_ID_FK = "customerIdFk";
     private static final String KEY_CONSTRUCTION_NAME = "constructionName";
     private static final String KEY_CONSTRUCTION_ADDRESS1 = "constructionAddress1";
     private static final String KEY_CONSTRUCTION_ADDRESS2 = "constructionAddress2";
@@ -48,7 +48,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 
     // Customer Table Columns
-    private static final String KEY_CUSTOMER_ID = "id";
+    private static final String KEY_CUSTOMER_ID_PK = "customerIdPk";
     private static final String KEY_CUSTOMER_NAME = "customerName";
     private static final String KEY_CUSTOMER_ADDRESS1 = "customerAddress1";
     private static final String KEY_CUSTOMER_ADDRESS2 = "customerAddress2";
@@ -59,7 +59,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 
     // Employee Table Columns
-    private static final String KEY_EMPLOYEE_ID = "id";
+    private static final String KEY_EMPLOYEE_ID_PK = "employeeIdPk";
     private static final String KEY_EMPLOYEE_NAME = "employeeName";
     private static final String KEY_EMPLOYEE_JOB = "employeeJob";
     private static final String KEY_EMPLOYEE_ADDRESS1 = "employeeAddress1";
@@ -71,19 +71,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 
     // Work Order Table Columns
-    private static final String KEY_WORK_ORDER_ID = "id";
-    private static final String KEY_WORK_ORDER_CONSTRUCTION_ID_FK = "constructionId";
-    private static final String KEY_WORK_ORDER_REFERENCE = "work_order_reference";
-    private static final String KEY_WORK_ORDER_AFFAIRE = "work_order_affaire";
-    private static final String KEY_WORK_ORDER_PRODUCT_TYPE = "work_order_product_type";
-    private static final String KEY_WORK_ORDER_ALLOCATED_TIME = "work_order_allocated_time";
-    private static final String KEY_WORK_ORDER_STATUS = "work_order_Status";
+    private static final String KEY_WORK_ORDER_ID_PK = "workOrderIdPk";
+    private static final String KEY_WORK_ORDER_CONSTRUCTION_ID_FK = "constructionIdFk";
+    private static final String KEY_WORK_ORDER_REFERENCE = "workOrderReference";
+    private static final String KEY_WORK_ORDER_AFFAIRE = "workOrderAffaire";
+    private static final String KEY_WORK_ORDER_PRODUCT_TYPE = "workOrderProductType";
+    private static final String KEY_WORK_ORDER_ALLOCATED_TIME = "workOrderAllocatedTime";
+    private static final String KEY_WORK_ORDER_STATUS = "workOrderStatus";
 
 
     // Assign Table
-    private static final String KEY_ASSIGN_ID = "id";
-    private static final String KEY_ASSIGN_WORKORDER_ID_FK = "workOrderId";
-    private static final String KEY_ASSIGN_EMPLOYEE_ID_FK = "employeeId";
+    private static final String KEY_ASSIGN_ID_PK = "assignIdPk";
+    private static final String KEY_ASSIGN_WORKORDER_ID_FK = "workOrderIdFk";
+    private static final String KEY_ASSIGN_EMPLOYEE_ID_FK = "employeeIdFk";
     private static final String KEY_ASSIGN_IS_WORKING = "isWorking";
 
 
@@ -116,7 +116,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         String CREATE_CONSTRUCTIONS_TABLE = "CREATE TABLE " + TABLE_CONSTRUCTIONS +
                 "(" +
-                KEY_CONSTRUCTION_ID + " INTEGER PRIMARY KEY," +
+                KEY_CONSTRUCTION_ID_PK + " INTEGER PRIMARY KEY," +
                 KEY_CONSTRUCTION_CUSTOMER_ID_FK + " INTEGER REFERENCES " + TABLE_CUSTOMERS + "," + // Define a foreign key
                 KEY_CONSTRUCTION_NAME + " TEXT," +
                 KEY_CONSTRUCTION_ADDRESS1 + " TEXT," +
@@ -128,7 +128,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         String CREATE_CUSTOMERS_TABLE = "CREATE TABLE " + TABLE_CUSTOMERS +
                 "(" +
-                KEY_CUSTOMER_ID + " INTEGER PRIMARY KEY," +
+                KEY_CUSTOMER_ID_PK + " INTEGER PRIMARY KEY," +
                 KEY_CUSTOMER_NAME + " TEXT," +
                 KEY_CUSTOMER_ADDRESS1 + " TEXT," +
                 KEY_CUSTOMER_ADDRESS2 + " TEXT," +
@@ -140,7 +140,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         String CREATE_EMPLOYEES_TABLE = "CREATE TABLE " + TABLE_EMPLOYEES +
                 "(" +
-                KEY_EMPLOYEE_ID + " INTEGER PRIMARY KEY," +
+                KEY_EMPLOYEE_ID_PK + " INTEGER PRIMARY KEY," +
                 KEY_EMPLOYEE_NAME + " TEXT," +
                 KEY_EMPLOYEE_JOB + " TEXT," +
                 KEY_EMPLOYEE_ADDRESS1 + " TEXT," +
@@ -153,7 +153,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         String CREATE_WORK_ORDER_TABLE = "CREATE TABLE " + TABLE_WORK_ORDER +
                 "(" +
-                KEY_WORK_ORDER_ID + " INTEGER PRIMARY KEY," +
+                KEY_WORK_ORDER_ID_PK + " INTEGER PRIMARY KEY," +
                 KEY_WORK_ORDER_CONSTRUCTION_ID_FK + " INTEGER REFERENCES " + TABLE_CONSTRUCTIONS + "," + // Define a foreign key
                 KEY_WORK_ORDER_REFERENCE + " TEXT," +
                 KEY_WORK_ORDER_AFFAIRE + " TEXT," +
@@ -164,7 +164,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         String CREATE_ASSIGN_TABLE = "CREATE TABLE " + TABLE_ASSIGN +
                 "(" +
-                KEY_ASSIGN_ID + " INTEGER PRIMARY KEY," +
+                KEY_ASSIGN_ID_PK + " INTEGER PRIMARY KEY," +
                 KEY_ASSIGN_WORKORDER_ID_FK + " INTEGER REFERENCES " + TABLE_WORK_ORDER + "," + // Define a foreign key
                 KEY_ASSIGN_EMPLOYEE_ID_FK + " INTEGER REFERENCES " + TABLE_EMPLOYEES + "," + // Define a foreign key
                 KEY_ASSIGN_IS_WORKING + " INTEGER" +
@@ -252,7 +252,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             if (rows == 1) {
                 // Get the primary key of the user we just updated
                 String usersSelectQuery = String.format("SELECT %s FROM %s WHERE %s = ?",
-                        KEY_CUSTOMER_ID, TABLE_CUSTOMERS, KEY_CUSTOMER_NAME);
+                        KEY_CUSTOMER_ID_PK, TABLE_CUSTOMERS, KEY_CUSTOMER_NAME);
 
                 Cursor cursor = db.rawQuery(usersSelectQuery, new String[]{String.valueOf(customer.getCustomerName())});
                 try {
@@ -295,7 +295,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 do {
                     Construction newConstruction =
                             new Construction()
-                                    .withConstructionId(cursor.getLong(cursor.getColumnIndex(KEY_CONSTRUCTION_ID)))
+                                    .withConstructionId(cursor.getLong(cursor.getColumnIndex(KEY_CONSTRUCTION_ID_PK)))
                                     .withConstructionName(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_NAME)))
                                     .withCustomer(getCustomerWithId(cursor.getInt(cursor.getColumnIndex(KEY_CONSTRUCTION_CUSTOMER_ID_FK))))
                                     .withConstructionAddress1(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ADDRESS1)))
@@ -328,7 +328,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         String CUSTOMERS_SELECT_QUERY =
-                String.format("SELECT * FROM %s WHERE " + KEY_CUSTOMER_ID + " = %d",
+                String.format("SELECT * FROM %s WHERE " + KEY_CUSTOMER_ID_PK + " = %d",
                         TABLE_CUSTOMERS, customerId);
 
         Cursor cursor = db.rawQuery(CUSTOMERS_SELECT_QUERY, null);
@@ -336,7 +336,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         Customer newCustomer =
                         new Customer()
-                                .withCustomerId(cursor.getLong(cursor.getColumnIndex(KEY_CUSTOMER_ID)))
+                                .withCustomerId(cursor.getLong(cursor.getColumnIndex(KEY_CUSTOMER_ID_PK)))
                                 .withCustomerName(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_NAME)))
                                 .withCustomerAddress1(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ADDRESS1)))
                                 .withCustomerAddress2(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ADDRESS2)))
@@ -397,7 +397,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 do {
                     Customer newCustomer =
                             new Customer()
-                                    .withCustomerId(cursor.getLong(cursor.getColumnIndex(KEY_CUSTOMER_ID)))
+                                    .withCustomerId(cursor.getLong(cursor.getColumnIndex(KEY_CUSTOMER_ID_PK)))
                                     .withCustomerName(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_NAME)))
                                     .withCustomerAddress1(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ADDRESS1)))
                                     .withCustomerAddress2(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ADDRESS2)))
@@ -468,7 +468,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 do {
                     Employee employee =
                             new Employee()
-                                    .withEmployeeId(cursor.getLong(cursor.getColumnIndex(KEY_EMPLOYEE_ID)))
+                                    .withEmployeeId(cursor.getLong(cursor.getColumnIndex(KEY_EMPLOYEE_ID_PK)))
                                     .withEmployeeName(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_NAME)))
                                     .withEmployeeJob(Job.valueOf(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_JOB))))
                                     .withEmployeeAddress1(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ADDRESS1)))
@@ -513,7 +513,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             db.update(TABLE_CUSTOMERS
                     , values
-                    , KEY_CUSTOMER_ID + "=" + customerToEdit.getCustomerId()
+                    , KEY_CUSTOMER_ID_PK + "=" + customerToEdit.getCustomerId()
                     ,null);
 
             db.setTransactionSuccessful();
@@ -548,7 +548,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             db.update(TABLE_EMPLOYEES
                     , values
-                    , KEY_EMPLOYEE_ID + "=" + employee.getEmployeeId()
+                    , KEY_EMPLOYEE_ID_PK + "=" + employee.getEmployeeId()
                     ,null);
 
             db.setTransactionSuccessful();
@@ -615,7 +615,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 do {
                     WorkOrder workOrder =
                             new WorkOrder()
-                                    .withWorkOrderId(cursor.getLong(cursor.getColumnIndex(KEY_WORK_ORDER_ID)))
+                                    .withWorkOrderId(cursor.getLong(cursor.getColumnIndex(KEY_WORK_ORDER_ID_PK)))
                                     .withWorkOrderReference(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_REFERENCE)))
                                     .withWorkOrderAffaire(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_AFFAIRE)))
                                     .withWorkOrderProductType(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_PRODUCT_TYPE)))
@@ -647,7 +647,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         String CONSTRUCTION_SELECT_QUERY =
-                String.format("SELECT * FROM %s WHERE " + KEY_CONSTRUCTION_ID + " = %d",
+                String.format("SELECT * FROM %s WHERE " + KEY_CONSTRUCTION_ID_PK + " = %d",
                         TABLE_CONSTRUCTIONS, constructionId);
 
         Cursor cursor = db.rawQuery(CONSTRUCTION_SELECT_QUERY, null);
@@ -656,7 +656,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         Construction newConstruction =
                 new Construction()
-                        .withConstructionId(cursor.getLong(cursor.getColumnIndex(KEY_CONSTRUCTION_ID)))
+                        .withConstructionId(cursor.getLong(cursor.getColumnIndex(KEY_CONSTRUCTION_ID_PK)))
                         .withConstructionName(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_NAME)))
                         .withCustomer(getCustomerWithId(cursor.getInt(cursor.getColumnIndex(KEY_CONSTRUCTION_CUSTOMER_ID_FK))))
                         .withConstructionAddress1(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ADDRESS1)))
@@ -721,7 +721,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 do {
                     Assign assign =
                             new Assign()
-                                    .withAssignId(cursor.getLong(cursor.getColumnIndex(KEY_ASSIGN_ID)))
+                                    .withAssignId(cursor.getLong(cursor.getColumnIndex(KEY_ASSIGN_ID_PK)))
                                     .withWorkOrder(getWorkOrderWithId(cursor.getInt(cursor.getColumnIndex(KEY_ASSIGN_WORKORDER_ID_FK))))
                                     .withEmployee(getEmployeeWithId(cursor.getInt(cursor.getColumnIndex(KEY_ASSIGN_EMPLOYEE_ID_FK))))
                                     .isWorking(cursor.getInt(cursor.getColumnIndex(KEY_ASSIGN_IS_WORKING)) > 0);
@@ -750,7 +750,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         Employee employee = null;
 
         String EMPLOYEE_SELECT_QUERY =
-                String.format("SELECT * FROM %s WHERE " + KEY_EMPLOYEE_ID + " = %d",
+                String.format("SELECT * FROM %s WHERE " + KEY_EMPLOYEE_ID_PK + " = %d",
                         TABLE_EMPLOYEES, id);
 
         Cursor cursor = db.rawQuery(EMPLOYEE_SELECT_QUERY, null);
@@ -759,7 +759,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             employee  =
                     new Employee()
-                            .withEmployeeId(cursor.getLong(cursor.getColumnIndex(KEY_EMPLOYEE_ID)))
+                            .withEmployeeId(cursor.getLong(cursor.getColumnIndex(KEY_EMPLOYEE_ID_PK)))
                             .withEmployeeName(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_NAME)))
                             .withEmployeeJob(Job.valueOf(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_JOB))))
                             .withEmployeeAddress1(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ADDRESS1)))
@@ -783,7 +783,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         String WORKORDER_SELECT_QUERY =
-                String.format("SELECT * FROM %s WHERE " + KEY_WORK_ORDER_ID + " = %d",
+                String.format("SELECT * FROM %s WHERE " + KEY_WORK_ORDER_ID_PK + " = %d",
                         TABLE_WORK_ORDER, id);
 
         Cursor cursor = db.rawQuery(WORKORDER_SELECT_QUERY, null);
@@ -792,7 +792,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         WorkOrder workOrder =
                 new WorkOrder()
-                        .withWorkOrderId(cursor.getLong(cursor.getColumnIndex(KEY_WORK_ORDER_ID)))
+                        .withWorkOrderId(cursor.getLong(cursor.getColumnIndex(KEY_WORK_ORDER_ID_PK)))
                         .withWorkOrderReference(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_REFERENCE)))
                         .withWorkOrderAffaire(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_AFFAIRE)))
                         .withWorkOrderProductType(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_PRODUCT_TYPE)))
@@ -806,4 +806,148 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         return workOrder;
     }
+
+
+
+    public void getAvailableEmployee(DatabaseOperationCallBack<ArrayList<Employee>> callBack) {
+
+        ArrayList<Employee> employees = new ArrayList<>();
+
+        String EMPLOYEE_SELECT_QUERY = "SELECT * " +
+                                "FROM "+ TABLE_EMPLOYEES + " employee " +
+                                "WHERE employee.employeeIdPk NOT IN " +
+                                    "(SELECT emp.employeeIdPk " +
+                                    "FROM "+ TABLE_EMPLOYEES + " emp " +
+                                    "INNER JOIN "+ TABLE_ASSIGN + " assign " +
+                                    "ON emp.employeeIdPk = assign.employeeIdFk " +
+                                    "INNER JOIN "+ TABLE_WORK_ORDER + " wo " +
+                                    "ON wo.workOrderIdPk = assign.workOrderIdFk " +
+                                    "WHERE wo.workOrderStatus LIKE '"+ WorkOrderStatus.IN_PROGRESS.name()+"')";
+
+
+        Log.e(TAG, EMPLOYEE_SELECT_QUERY);
+
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(EMPLOYEE_SELECT_QUERY, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Employee employee =
+                            new Employee()
+                                    .withEmployeeId(cursor.getLong(cursor.getColumnIndex(KEY_EMPLOYEE_ID_PK)))
+                                    .withEmployeeName(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_NAME)))
+                                    .withEmployeeJob(Job.valueOf(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_JOB))))
+                                    .withEmployeeAddress1(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ADDRESS1)))
+                                    .withEmployeeAddress2(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ADDRESS2)))
+                                    .withEmployeeZip(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ZIP)))
+                                    .withEmployeeCity(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_CITY)))
+                                    .withEmployeePhone(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_PHONE)))
+                                    .withEmployeeEmail(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_MAIL)));
+
+                    employees.add(employee);
+
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to get employees from database : " + e.toString());
+            callBack.onError();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        Log.d(TAG, "Available : ");
+        for(Employee emp : employees){
+            Log.d(TAG, emp.employeeName + " = id"+ emp.getEmployeeId());
+        }
+
+        Log.d(TAG, "Database successfully return " + employees.size() + " employees.");
+        callBack.onSuccess(employees);
+    }
+
+    public void getAssignedEmployee(WorkOrder workOrder, DatabaseOperationCallBack<ArrayList<Employee>> callBack) {
+
+        ArrayList<Employee> employees = new ArrayList<>();
+
+        String EMPLOYEE_SELECT_QUERY = "SELECT * " +
+                "FROM "+ TABLE_EMPLOYEES + " emp " +
+                "INNER JOIN "+ TABLE_ASSIGN + " assign " +
+                "ON emp.employeeIdPk = assign.employeeIdFk " +
+                "WHERE assign.workOrderIdFk = "+  workOrder.workOrderId ;
+
+
+        Log.e(TAG, EMPLOYEE_SELECT_QUERY);
+
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(EMPLOYEE_SELECT_QUERY, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Employee employee =
+                            new Employee()
+                                    .withEmployeeId(cursor.getLong(cursor.getColumnIndex(KEY_EMPLOYEE_ID_PK)))
+                                    .withEmployeeName(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_NAME)))
+                                    .withEmployeeJob(Job.valueOf(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_JOB))))
+                                    .withEmployeeAddress1(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ADDRESS1)))
+                                    .withEmployeeAddress2(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ADDRESS2)))
+                                    .withEmployeeZip(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ZIP)))
+                                    .withEmployeeCity(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_CITY)))
+                                    .withEmployeePhone(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_PHONE)))
+                                    .withEmployeeEmail(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_MAIL)));
+
+                    employees.add(employee);
+
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to get employees from database : " + e.toString());
+            callBack.onError();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        Log.d(TAG, "Database successfully return " + employees.size() + " employees.");
+
+        Log.d(TAG, "Assigned : ");
+        for(Employee emp : employees){
+            Log.d(TAG, emp.employeeName + " = id"+ emp.getEmployeeId());
+        }
+
+
+        callBack.onSuccess(employees);
+    }
+
+
+    public void deleteAssign(WorkOrder workOrder, Employee employee, DatabaseOperationCallBack<DefaultResponse> callBack) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+
+            String DELETE_ASSIGN_QUERY = "DELETE " +
+                    "FROM "+ TABLE_ASSIGN +
+                    " WHERE employeeIdFk = " + employee.getEmployeeId() +
+                    " AND workOrderIdFk = " + workOrder.getWorkOrderId();
+
+            Log.e(TAG, DELETE_ASSIGN_QUERY);
+
+            db.execSQL(DELETE_ASSIGN_QUERY);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to delete assign from database : " + e.toString());
+            callBack.onError();
+        } finally {
+            db.close();
+        }
+
+        callBack.onSuccess(new DefaultResponse());
+
+    }
+
+
 }

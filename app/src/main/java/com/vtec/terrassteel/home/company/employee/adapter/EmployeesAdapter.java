@@ -45,7 +45,6 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.View
         holder.employeeJobTextView.setText(employee.getEmployeeJob().getRessourceReference());
 
         holder.itemView.setOnClickListener(v -> callback.onEmployeeSelected(employee));
-
     }
 
     @Override

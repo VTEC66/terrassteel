@@ -33,13 +33,13 @@ public class ListEmployeesActivity extends AbstractActivity implements SelectEmp
     @BindView(R.id.empty_view)
     View emptyView;
 
-    @BindView(R.id.employee_view)
+    @BindView(R.id.available_employee_view)
     View employeeView;
 
     @BindView(R.id.action_bar)
     ActionBar actionBar;
 
-    @BindView(R.id.employee_listview)
+    @BindView(R.id.available_employee_listview)
     RecyclerView employeesRecyclerView;
 
     @OnClick({R.id.add_fab, R.id.add_employee_button})

@@ -12,4 +12,58 @@
         app:showActionButton="true"
         app:actionButtonDrawable="@drawable/ic_check" />
 
+    <LinearLayout
+        android:id="@+id/available_employee_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/small"
+            android:paddingBottom="@dimen/small"
+            android:paddingStart="@dimen/standard"
+            android:background="@color/light_grey"
+            style="@style/TitleTextStyle"
+            android:text="@string/available_employee_title"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/available_employee_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_marginStart="@dimen/xlarge"
+        android:layout_marginEnd="@dimen/xlarge"
+        android:background="@color/colorPrimary"/>
+
+    <LinearLayout
+        android:id="@+id/assigned_employee_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/small"
+            android:paddingBottom="@dimen/small"
+            android:paddingStart="@dimen/standard"
+            android:background="@color/light_grey"
+            style="@style/TitleTextStyle"
+            android:text="@string/assigned_employee_title"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/assigned_employee_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
 </LinearLayout>

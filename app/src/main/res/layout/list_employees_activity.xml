@@ -13,7 +13,7 @@
         app:title="@string/my_employees" />
 
     <LinearLayout
-        android:id="@+id/employee_view"
+        android:id="@+id/available_employee_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -21,7 +21,7 @@
         android:visibility="gone">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/employee_listview"
+            android:id="@+id/available_employee_listview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"/>
