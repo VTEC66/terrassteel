@@ -1,6 +1,7 @@
 package com.vtec.terrassteel.main.ui.pointing.adapter;
 
 import android.content.Context;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,10 @@ import android.widget.TextView;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.model.Assign;
+import com.vtec.terrassteel.common.model.Pointing;
+import com.vtec.terrassteel.core.model.DefaultResponse;
+import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
+import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.main.ui.pointing.callback.PointingCallback;
 
 import java.util.ArrayList;
@@ -73,24 +78,36 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 ItemViewHolder itemViewHolder = (ItemViewHolder)holder;
 
                 itemViewHolder.employeeNameTextView.setText(assign.getEmployee().getEmployeeName());
-                itemViewHolder.setDrawableForActionView(assign.isWorking);
+                itemViewHolder.setupChronometer(assign);
 
-                itemViewHolder.actionView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                itemViewHolder.setDrawableForActionView();
 
-                        if(assign.isWorking){
-                            itemViewHolder.chronometer.stop();
-                            assign.isWorking = false;
-                        }else{
-                            itemViewHolder.chronometer.start();
-                            assign.isWorking = true;
-                        }
+                itemViewHolder.actionView.setOnClickListener(v -> {
 
-                        itemViewHolder.setDrawableForActionView(assign.isWorking);
-                        callback.actionPointing(assign);
+                    if(itemViewHolder.isWorking){
+                        itemViewHolder.chronometer.stop();
 
+                        itemViewHolder.pointing
+                                .withTotalTime((System.currentTimeMillis()/1000 - itemViewHolder.pointing.getPointingStart()) + itemViewHolder.pointing.pointingTotalTime)
+                                .withPointingStart(0);
+
+                        DatabaseManager.getInstance(context).stopPointing(itemViewHolder.pointing, new DatabaseOperationCallBack<DefaultResponse>() {
+                            @Override
+                            public void onSuccess(DefaultResponse defaultResponse) {
+                                itemViewHolder.isWorking = false;
+                                callback.actionPointing();
+
+                            }
+                        });
+
+                    }else{
+
+                        itemViewHolder.chronometer.start();
+                        DatabaseManager.getInstance(context).startPointing(assign);
+                        itemViewHolder.isWorking = true;
                     }
+
+                    itemViewHolder.setDrawableForActionView();
                 });
 
                 break;
@@ -152,16 +169,41 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @BindView(R.id.action_view)
         ImageView actionView;
 
+        Pointing pointing;
+        boolean isWorking;
+
         public ItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            pointing = null;
         }
 
-        public void setDrawableForActionView(boolean isWorking){
+        public void setDrawableForActionView(){
             if(isWorking){
                 actionView.setImageDrawable(context.getDrawable(R.drawable.ic_pause_circle));
             }else{
                 actionView.setImageDrawable(context.getDrawable(R.drawable.ic_play_circle));
+            }
+        }
+
+        public void setupChronometer(Assign assign) {
+            pointing = DatabaseManager.getInstance(context).getPointingForAssign(assign);
+
+            if(pointing != null){
+                if(pointing.getPointingStart() > 0){
+
+                    this.isWorking = true;
+
+                    long time = (System.currentTimeMillis()/1000 - pointing.getPointingStart()) + pointing.pointingTotalTime;
+                    chronometer.setBase(SystemClock.elapsedRealtime() - time * 1000);
+                    chronometer.start();
+                }else{
+                    chronometer.setBase(SystemClock.elapsedRealtime() - pointing.pointingTotalTime * 1000);
+                    this.isWorking = false;
+                }
+            }else{
+                this.isWorking = false;
             }
         }
     }

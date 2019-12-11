@@ -107,7 +107,7 @@ public class PointingTimeFragment extends AbstractFragment implements PointingCa
 
 
     @Override
-    public void actionPointing(Assign assign) {
+    public void actionPointing() {
         //TODO
     }
 

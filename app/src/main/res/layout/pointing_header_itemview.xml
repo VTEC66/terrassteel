@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/standard_headerview_height"
+    android:layout_height="@dimen/standard_itemview_height"
     android:background="@color/light_grey"
     android:orientation="horizontal">
 
@@ -27,9 +27,4 @@
         android:src="@drawable/ic_group_add"
         android:tint="@color/antracite_grey"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="6dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/antracite_grey"/>
 </RelativeLayout>

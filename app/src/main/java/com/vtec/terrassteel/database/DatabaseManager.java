@@ -13,6 +13,7 @@ import com.vtec.terrassteel.common.model.ConstructionStatus;
 import com.vtec.terrassteel.common.model.Customer;
 import com.vtec.terrassteel.common.model.Employee;
 import com.vtec.terrassteel.common.model.Job;
+import com.vtec.terrassteel.common.model.Pointing;
 import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.common.model.WorkOrderStatus;
 import com.vtec.terrassteel.core.model.DefaultResponse;
@@ -34,6 +35,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String TABLE_EMPLOYEES = "employees";
     private static final String TABLE_WORK_ORDER = "work_order";
     private static final String TABLE_ASSIGN = "assign";
+    private static final String TABLE_POINTING = "pointing";
+
 
 
     // Construction Table Columns
@@ -85,6 +88,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String KEY_ASSIGN_WORKORDER_ID_FK = "workOrderIdFk";
     private static final String KEY_ASSIGN_EMPLOYEE_ID_FK = "employeeIdFk";
     private static final String KEY_ASSIGN_IS_WORKING = "isWorking";
+
+
+    // Pointing Table
+    private static final String KEY_POINTING_ID_PK = "pointingIdPk";
+    private static final String KEY_POINTING_ASSIGN_ID_FK = "assignIdFk";
+    private static final String KEY_POINTING_WORK_ORDER_ID_FK = "workOrderIdFk";
+    private static final String KEY_POINTING_TOTAL_TIME = "pointingTotalTime";
+    private static final String KEY_POINTING_START = "pointingStart";
+
 
 
 
@@ -170,12 +182,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 KEY_ASSIGN_IS_WORKING + " INTEGER" +
                 ")";
 
+        String CREATE_POINTING_TABLE = "CREATE TABLE " + TABLE_POINTING +
+                "(" +
+                KEY_POINTING_ID_PK + " INTEGER PRIMARY KEY," +
+                KEY_POINTING_ASSIGN_ID_FK + " INTEGER REFERENCES " + TABLE_ASSIGN + "," + // Define a foreign key
+                KEY_POINTING_WORK_ORDER_ID_FK + " INTEGER REFERENCES " + TABLE_WORK_ORDER + "," + // Define a foreign key
+                KEY_POINTING_START + " INTEGER," +
+                KEY_POINTING_TOTAL_TIME + " INTEGER" +
+                ")";
+
         db.execSQL(CREATE_CONSTRUCTIONS_TABLE);
         db.execSQL(CREATE_CUSTOMERS_TABLE);
         db.execSQL(CREATE_EMPLOYEES_TABLE);
         db.execSQL(CREATE_WORK_ORDER_TABLE);
         db.execSQL(CREATE_ASSIGN_TABLE);
-
+        db.execSQL(CREATE_POINTING_TABLE);
     }
 
     @Override
@@ -187,6 +208,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_EMPLOYEES);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_WORK_ORDER);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSIGN);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_POINTING);
 
             onCreate(db);
         }
@@ -946,8 +968,121 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
 
         callBack.onSuccess(new DefaultResponse());
-
     }
 
 
+    public Pointing getPointingForAssign(Assign assign) {
+
+        Pointing pointing = null;
+
+        String POINTING_SELECT_QUERY = "SELECT * " +
+                "FROM "+ TABLE_POINTING + " pointing " +
+                "INNER JOIN "+ TABLE_ASSIGN + " assign " +
+                "ON assign.assignIdPk = pointing.assignIdFk " +
+                "WHERE assign.assignIdPk = "+  assign.getAssignId();
+
+        Log.e(TAG, POINTING_SELECT_QUERY);
+
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(POINTING_SELECT_QUERY, null);
+
+        try {
+            if (cursor.getCount() > 0) {
+
+                cursor.moveToFirst();
+
+                pointing = new Pointing()
+                        .withPointingId(cursor.getLong(cursor.getColumnIndex(KEY_POINTING_ID_PK)))
+                        .withTotalTime(cursor.getInt(cursor.getColumnIndex(KEY_POINTING_TOTAL_TIME)))
+                        .withPointingStart(cursor.getInt(cursor.getColumnIndex(KEY_POINTING_START)));
+
+                Log.e(TAG, "One pointing data have been return for Work order assign to : " + assign.getEmployee().getEmployeeName() +" with total time : " + pointing.getPointingTotalTime());
+
+            }else{
+                Log.e(TAG, "No pointing data for Work order assign to : " + assign.getEmployee().getEmployeeName());
+            }
+
+        }catch (Exception e){
+            Log.e(TAG, "Error while trying to get pointing from database : " + e.toString());
+        }finally {
+            if (!cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+        return pointing;
+    }
+
+    public void startPointing(Assign assign) {
+        Pointing pointing = getPointingForAssign(assign);
+
+        if(pointing == null){
+            pointing = new Pointing()
+                    .withAssign(assign)
+                    .withWorkOrder(assign.getWorkOrder())
+                    .withPointingStart(System.currentTimeMillis()/1000);
+
+            addPointing(pointing);
+        }
+    }
+
+
+    public void addPointing(Pointing pointing) {
+
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+
+        try{
+
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_POINTING_ASSIGN_ID_FK, pointing.getAssign().getAssignId());
+            values.put(KEY_POINTING_WORK_ORDER_ID_FK, pointing.getWorkOrder().getWorkOrderId());
+            values.put(KEY_POINTING_START, pointing.getPointingStart());
+
+            // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
+            db.insertOrThrow(TABLE_POINTING, null, values);
+            db.setTransactionSuccessful();
+
+            Log.d(TAG, "New pointing successfuly added into database");
+
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to add pointing into database : " + e.toString());
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void stopPointing(Pointing pointing, DatabaseOperationCallBack<DefaultResponse> callBack) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_POINTING_START, pointing.getPointingStart());
+            values.put(KEY_POINTING_TOTAL_TIME, pointing.getPointingTotalTime());
+
+
+            db.update(TABLE_POINTING
+                    , values
+                    , KEY_POINTING_ID_PK + "=" + pointing.getPointingId()
+                    ,null);
+
+            db.setTransactionSuccessful();
+
+            Log.d(TAG, "Pointing have been successfuly edited into database");
+            callBack.onSuccess(new DefaultResponse());
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to edit Pointing into database : " + e.toString());
+            callBack.onError();
+        } finally {
+            db.endTransaction();
+        }
+
+    }
 }
