@@ -1154,4 +1154,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.endTransaction();
         }
     }
+
+    public int getConsumedTimeForWorkOrder(WorkOrder workOrder) {
+        int result = 0;
+
+        //TODO
+
+        return result;
+    }
+
+    public void closeWorkOrder(WorkOrder workOrder) {
+        //TODO
+    }
 }

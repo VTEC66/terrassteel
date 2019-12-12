@@ -62,4 +62,12 @@
     <string name="assigned_employee_title">Employés assignés</string>
     <string name="empty_assigned_text">Aucun employé n\'est assigné actuellement</string>
     <string name="empty_available_text">Aucun employé disponible actuellement.</string>
+    <string name="show_assign">Voir les affectations</string>
+    <string name="show_pointing">Voir les imputations</string>
+    <string name="close_workorder_textbutton">Fermer le bon de travail</string>
+    <string name="consumed_time">Consommé</string>
+    <string name="affected_time">Alloué</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="workorder_close_confirmation_message">Souhaitez-vous fermer ce bon de travail ?</string>
 </resources>

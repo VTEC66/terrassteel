@@ -12,6 +12,7 @@ import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractFragment;
 import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.home.construction.adapter.ConstructionAdapter;
+import com.vtec.terrassteel.main.ui.assign.ui.AddAssignActivity;
 import com.vtec.terrassteel.main.ui.workorder.adapter.WorkorderAdapter;
 import com.vtec.terrassteel.main.ui.workorder.callback.WorkorderCallback;
 
@@ -29,6 +30,7 @@ import butterknife.OnClick;
 public class WorkOrderFragment extends AbstractFragment implements WorkorderCallback {
 
     private static  final int ADD_CUSTOMER_INTENT_CODE = 19;
+    public static final String EXTRA_WORK_ORDER = "EXTRA_WORK_ORDER";
 
     public static final String TAG = WorkOrderFragment.class.getSimpleName();
 
@@ -109,6 +111,13 @@ public class WorkOrderFragment extends AbstractFragment implements WorkorderCall
 
     @Override
     public void onWorkOrderSelected(WorkOrder workOrder) {
+        Intent intent = new Intent(getContext(), DetailWorkOrderActivity.class);
 
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(EXTRA_WORK_ORDER, workOrder);
+        intent.putExtras(bundle);
+
+        startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 }
