@@ -85,26 +85,29 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 itemViewHolder.actionView.setOnClickListener(v -> {
 
                     if(itemViewHolder.isWorking){
-                        itemViewHolder.chronometer.stop();
 
+                        itemViewHolder.chronometer.stop();
                         itemViewHolder.pointing
                                 .withTotalTime((System.currentTimeMillis()/1000 - itemViewHolder.pointing.getPointingStart()) + itemViewHolder.pointing.pointingTotalTime)
                                 .withPointingStart(0);
 
-                        DatabaseManager.getInstance(context).stopPointing(itemViewHolder.pointing, new DatabaseOperationCallBack<DefaultResponse>() {
+                        DatabaseManager.getInstance(context).updatePointing(itemViewHolder.pointing, new DatabaseOperationCallBack<DefaultResponse>() {
                             @Override
                             public void onSuccess(DefaultResponse defaultResponse) {
                                 itemViewHolder.isWorking = false;
                                 callback.actionPointing();
-
                             }
                         });
 
                     }else{
 
-                        itemViewHolder.chronometer.start();
-                        DatabaseManager.getInstance(context).startPointing(assign);
-                        itemViewHolder.isWorking = true;
+                        DatabaseManager.getInstance(context).startPointing(assign, new DatabaseOperationCallBack<DefaultResponse>() {
+                            @Override
+                            public void onSuccess(DefaultResponse defaultResponse) {
+                                itemViewHolder.isWorking = true;
+                                itemViewHolder.setupChronometer(assign);
+                            }
+                        });
                     }
 
                     itemViewHolder.setDrawableForActionView();
@@ -188,22 +191,32 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         public void setupChronometer(Assign assign) {
-            pointing = DatabaseManager.getInstance(context).getPointingForAssign(assign);
+
+            pointing = DatabaseManager.getInstance(context).getPointingForAssign(assign.getAssignId());
+
+            chronometer.setBase(getBaseTime());
 
             if(pointing != null){
                 if(pointing.getPointingStart() > 0){
-
                     this.isWorking = true;
-
-                    long time = (System.currentTimeMillis()/1000 - pointing.getPointingStart()) + pointing.pointingTotalTime;
-                    chronometer.setBase(SystemClock.elapsedRealtime() - time * 1000);
                     chronometer.start();
                 }else{
-                    chronometer.setBase(SystemClock.elapsedRealtime() - pointing.pointingTotalTime * 1000);
                     this.isWorking = false;
                 }
             }else{
                 this.isWorking = false;
+            }
+        }
+
+        private long getBaseTime(){
+            if(pointing == null){
+                return SystemClock.elapsedRealtime();
+            }else{
+                if(pointing.getPointingStart() > 0){
+                    long time = (System.currentTimeMillis()/1000 - pointing.getPointingStart()) + pointing.pointingTotalTime;
+                    return SystemClock.elapsedRealtime() - time * 1000;
+                }
+                return SystemClock.elapsedRealtime() - pointing.pointingTotalTime * 1000;
             }
         }
     }

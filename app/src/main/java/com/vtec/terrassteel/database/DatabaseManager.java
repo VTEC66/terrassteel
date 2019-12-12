@@ -92,8 +92,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     // Pointing Table
     private static final String KEY_POINTING_ID_PK = "pointingIdPk";
-    private static final String KEY_POINTING_ASSIGN_ID_FK = "assignIdFk";
-    private static final String KEY_POINTING_WORK_ORDER_ID_FK = "workOrderIdFk";
+    private static final String KEY_POINTING_ASSIGN_ID = "pointingAssignId";
+    private static final String KEY_POINTING_EMPLOYEE_ID = "pointingEmployeeId";
+    private static final String KEY_POINTING_WORK_ORDER_ID_FK = "pointingWorkOrderIdFk";
     private static final String KEY_POINTING_TOTAL_TIME = "pointingTotalTime";
     private static final String KEY_POINTING_START = "pointingStart";
 
@@ -128,7 +129,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         String CREATE_CONSTRUCTIONS_TABLE = "CREATE TABLE " + TABLE_CONSTRUCTIONS +
                 "(" +
-                KEY_CONSTRUCTION_ID_PK + " INTEGER PRIMARY KEY," +
+                KEY_CONSTRUCTION_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 KEY_CONSTRUCTION_CUSTOMER_ID_FK + " INTEGER REFERENCES " + TABLE_CUSTOMERS + "," + // Define a foreign key
                 KEY_CONSTRUCTION_NAME + " TEXT," +
                 KEY_CONSTRUCTION_ADDRESS1 + " TEXT," +
@@ -140,7 +141,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         String CREATE_CUSTOMERS_TABLE = "CREATE TABLE " + TABLE_CUSTOMERS +
                 "(" +
-                KEY_CUSTOMER_ID_PK + " INTEGER PRIMARY KEY," +
+                KEY_CUSTOMER_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 KEY_CUSTOMER_NAME + " TEXT," +
                 KEY_CUSTOMER_ADDRESS1 + " TEXT," +
                 KEY_CUSTOMER_ADDRESS2 + " TEXT," +
@@ -152,7 +153,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         String CREATE_EMPLOYEES_TABLE = "CREATE TABLE " + TABLE_EMPLOYEES +
                 "(" +
-                KEY_EMPLOYEE_ID_PK + " INTEGER PRIMARY KEY," +
+                KEY_EMPLOYEE_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 KEY_EMPLOYEE_NAME + " TEXT," +
                 KEY_EMPLOYEE_JOB + " TEXT," +
                 KEY_EMPLOYEE_ADDRESS1 + " TEXT," +
@@ -165,7 +166,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         String CREATE_WORK_ORDER_TABLE = "CREATE TABLE " + TABLE_WORK_ORDER +
                 "(" +
-                KEY_WORK_ORDER_ID_PK + " INTEGER PRIMARY KEY," +
+                KEY_WORK_ORDER_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 KEY_WORK_ORDER_CONSTRUCTION_ID_FK + " INTEGER REFERENCES " + TABLE_CONSTRUCTIONS + "," + // Define a foreign key
                 KEY_WORK_ORDER_REFERENCE + " TEXT," +
                 KEY_WORK_ORDER_AFFAIRE + " TEXT," +
@@ -176,7 +177,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         String CREATE_ASSIGN_TABLE = "CREATE TABLE " + TABLE_ASSIGN +
                 "(" +
-                KEY_ASSIGN_ID_PK + " INTEGER PRIMARY KEY," +
+                KEY_ASSIGN_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 KEY_ASSIGN_WORKORDER_ID_FK + " INTEGER REFERENCES " + TABLE_WORK_ORDER + "," + // Define a foreign key
                 KEY_ASSIGN_EMPLOYEE_ID_FK + " INTEGER REFERENCES " + TABLE_EMPLOYEES + "," + // Define a foreign key
                 KEY_ASSIGN_IS_WORKING + " INTEGER" +
@@ -184,9 +185,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         String CREATE_POINTING_TABLE = "CREATE TABLE " + TABLE_POINTING +
                 "(" +
-                KEY_POINTING_ID_PK + " INTEGER PRIMARY KEY," +
-                KEY_POINTING_ASSIGN_ID_FK + " INTEGER REFERENCES " + TABLE_ASSIGN + "," + // Define a foreign key
+                KEY_POINTING_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                KEY_POINTING_ASSIGN_ID + " INTEGER," +
                 KEY_POINTING_WORK_ORDER_ID_FK + " INTEGER REFERENCES " + TABLE_WORK_ORDER + "," + // Define a foreign key
+                KEY_POINTING_EMPLOYEE_ID + " INTEGER," + // Define a foreign key
                 KEY_POINTING_START + " INTEGER," +
                 KEY_POINTING_TOTAL_TIME + " INTEGER" +
                 ")";
@@ -197,6 +199,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(CREATE_WORK_ORDER_TABLE);
         db.execSQL(CREATE_ASSIGN_TABLE);
         db.execSQL(CREATE_POINTING_TABLE);
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        if (!db.isReadOnly()) {
+            // Enable foreign key constraints
+            db.execSQL("PRAGMA foreign_keys=ON;");
+        }
     }
 
     @Override
@@ -944,8 +955,44 @@ public class DatabaseManager extends SQLiteOpenHelper {
         callBack.onSuccess(employees);
     }
 
+    public Assign getAssign(WorkOrder workOrder, Employee employee){
+
+        Assign assign = null;
+
+        String SELECT_ASSIGN_QUERY = "SELECT * " +
+                "FROM "+ TABLE_ASSIGN +
+                " WHERE employeeIdFk = " + employee.getEmployeeId() +
+                " AND workOrderIdFk = " + workOrder.getWorkOrderId();
+
+        Log.e(TAG, SELECT_ASSIGN_QUERY);
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(SELECT_ASSIGN_QUERY, null);
+        try {
+            if (cursor.moveToFirst()) {
+                assign = new Assign()
+                                .withAssignId(cursor.getLong(cursor.getColumnIndex(KEY_ASSIGN_ID_PK)))
+                                .withWorkOrder(getWorkOrderWithId(cursor.getInt(cursor.getColumnIndex(KEY_ASSIGN_WORKORDER_ID_FK))))
+                                .withEmployee(getEmployeeWithId(cursor.getInt(cursor.getColumnIndex(KEY_ASSIGN_EMPLOYEE_ID_FK))))
+                                .isWorking(cursor.getInt(cursor.getColumnIndex(KEY_ASSIGN_IS_WORKING)) > 0);
+
+                Log.e(TAG, "Database successfuly return an Assign");
+            }
+        }catch (Exception e){
+            Log.e(TAG, "Database Fail to return an Assign");
+        }finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return assign;
+    }
 
     public void deleteAssign(WorkOrder workOrder, Employee employee, DatabaseOperationCallBack<DefaultResponse> callBack) {
+
+        Assign assign = getAssign(workOrder, employee);
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -953,12 +1000,26 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             String DELETE_ASSIGN_QUERY = "DELETE " +
                     "FROM "+ TABLE_ASSIGN +
-                    " WHERE employeeIdFk = " + employee.getEmployeeId() +
-                    " AND workOrderIdFk = " + workOrder.getWorkOrderId();
+                    " WHERE assignIdPk = " + assign.getAssignId();
 
             Log.e(TAG, DELETE_ASSIGN_QUERY);
 
             db.execSQL(DELETE_ASSIGN_QUERY);
+
+            Pointing pointing = getPointingForAssign(assign.getAssignId());
+
+            if(pointing != null){
+                pointing
+                        .withTotalTime((System.currentTimeMillis()/1000 - pointing.getPointingStart()) + pointing.pointingTotalTime)
+                        .withPointingStart(0);
+
+                updatePointing(pointing, new DatabaseOperationCallBack<DefaultResponse>() {
+                    @Override
+                    public void onSuccess(DefaultResponse defaultResponse) {
+                        Log.e(TAG, "Pointing successfuly deleted for AssignId : " + assign.getAssignId());
+                    }
+                });
+            }
 
         } catch (Exception e) {
             Log.e(TAG, "Error while trying to delete assign from database : " + e.toString());
@@ -971,15 +1032,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
 
-    public Pointing getPointingForAssign(Assign assign) {
+
+    public Pointing getPointingForAssign(long assignId) {
 
         Pointing pointing = null;
 
         String POINTING_SELECT_QUERY = "SELECT * " +
-                "FROM "+ TABLE_POINTING + " pointing " +
-                "INNER JOIN "+ TABLE_ASSIGN + " assign " +
-                "ON assign.assignIdPk = pointing.assignIdFk " +
-                "WHERE assign.assignIdPk = "+  assign.getAssignId();
+                "FROM "+ TABLE_POINTING  +
+                " WHERE pointingAssignId = "+  assignId;
 
         Log.e(TAG, POINTING_SELECT_QUERY);
 
@@ -998,10 +1058,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
                         .withTotalTime(cursor.getInt(cursor.getColumnIndex(KEY_POINTING_TOTAL_TIME)))
                         .withPointingStart(cursor.getInt(cursor.getColumnIndex(KEY_POINTING_START)));
 
-                Log.e(TAG, "One pointing data have been return for Work order assign to : " + assign.getEmployee().getEmployeeName() +" with total time : " + pointing.getPointingTotalTime());
+                Log.e(TAG, "One pointing data have been return for Work order assign with total time : " + pointing.getPointingTotalTime());
 
             }else{
-                Log.e(TAG, "No pointing data for Work order assign to : " + assign.getEmployee().getEmployeeName());
+                Log.e(TAG, "No pointing data for Work order assign");
             }
 
         }catch (Exception e){
@@ -1015,8 +1075,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return pointing;
     }
 
-    public void startPointing(Assign assign) {
-        Pointing pointing = getPointingForAssign(assign);
+    public void startPointing(Assign assign, DatabaseOperationCallBack<DefaultResponse> callBack) {
+        Pointing pointing = getPointingForAssign(assign.getAssignId());
 
         if(pointing == null){
             pointing = new Pointing()
@@ -1024,12 +1084,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     .withWorkOrder(assign.getWorkOrder())
                     .withPointingStart(System.currentTimeMillis()/1000);
 
-            addPointing(pointing);
+            addPointing(pointing, callBack);
+        }else{
+            pointing
+                   .withPointingStart(System.currentTimeMillis()/1000);
+
+            updatePointing(pointing, callBack);
         }
     }
 
 
-    public void addPointing(Pointing pointing) {
+    public void addPointing(Pointing pointing, DatabaseOperationCallBack<DefaultResponse> callBack) {
 
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -1038,9 +1103,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             ContentValues values = new ContentValues();
 
-            values.put(KEY_POINTING_ASSIGN_ID_FK, pointing.getAssign().getAssignId());
+            values.put(KEY_POINTING_ASSIGN_ID, pointing.getAssign().getAssignId());
             values.put(KEY_POINTING_WORK_ORDER_ID_FK, pointing.getWorkOrder().getWorkOrderId());
             values.put(KEY_POINTING_START, pointing.getPointingStart());
+            //values.put(KEY_POINTING_EMPLOYEE_ID, pointing.getAssign().getEmployee().getEmployeeId());
 
             // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
             db.insertOrThrow(TABLE_POINTING, null, values);
@@ -1048,15 +1114,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             Log.d(TAG, "New pointing successfuly added into database");
 
+            callBack.onSuccess(new DefaultResponse());
 
         } catch (Exception e) {
             Log.e(TAG, "Error while trying to add pointing into database : " + e.toString());
+            callBack.onError();
         } finally {
             db.endTransaction();
         }
+
     }
 
-    public void stopPointing(Pointing pointing, DatabaseOperationCallBack<DefaultResponse> callBack) {
+    public void updatePointing(Pointing pointing, DatabaseOperationCallBack<DefaultResponse> callBack) {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
         try {
@@ -1075,6 +1144,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.setTransactionSuccessful();
 
             Log.d(TAG, "Pointing have been successfuly edited into database");
+
             callBack.onSuccess(new DefaultResponse());
 
         } catch (Exception e) {
@@ -1083,6 +1153,5 @@ public class DatabaseManager extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
-
     }
 }
