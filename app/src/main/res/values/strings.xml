@@ -75,5 +75,6 @@
     <string name="empty_imputation">Aucune imputation n\'est enregistrée pour ce bon de travail.</string>
     <string name="work_order">Bon de travail N°%1$s </string>
     <string name="qr_wo_notrecognized">Le QR code du Bon de travail n\'a pas été reconnu.</string>
+    <string name="qr_construction_notrecognized">Le QR code chantier n\'à pas été reconnu.</string>
 
 </resources>

@@ -130,7 +130,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         String CREATE_CONSTRUCTIONS_TABLE = "CREATE TABLE " + TABLE_CONSTRUCTIONS +
                 "(" +
                 KEY_CONSTRUCTION_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                KEY_CONSTRUCTION_CUSTOMER_ID_FK + " INTEGER REFERENCES " + TABLE_CUSTOMERS + "," + // Define a foreign key
+                KEY_CONSTRUCTION_CUSTOMER_ID_FK + " TEXT," + // Define a foreign key
                 KEY_CONSTRUCTION_NAME + " TEXT," +
                 KEY_CONSTRUCTION_ADDRESS1 + " TEXT," +
                 KEY_CONSTRUCTION_ADDRESS2 + " TEXT," +
@@ -234,9 +234,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             ContentValues values = new ContentValues();
 
-            values.put(KEY_CONSTRUCTION_CUSTOMER_ID_FK,
-                    addOrUpdateCustomer(construction.getCustomer()));
-
+            values.put(KEY_CONSTRUCTION_CUSTOMER_ID_FK, construction.getCustomer());
             values.put(KEY_CONSTRUCTION_NAME, construction.getConstructionName());
             values.put(KEY_CONSTRUCTION_ADDRESS1, construction.getConstructionAddress1());
             values.put(KEY_CONSTRUCTION_ADDRESS2, construction.getConstructionAddress2());
@@ -330,7 +328,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                             new Construction()
                                     .withConstructionId(cursor.getLong(cursor.getColumnIndex(KEY_CONSTRUCTION_ID_PK)))
                                     .withConstructionName(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_NAME)))
-                                    .withCustomer(getCustomerWithId(cursor.getInt(cursor.getColumnIndex(KEY_CONSTRUCTION_CUSTOMER_ID_FK))))
+                                    .withCustomer(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_CUSTOMER_ID_FK)))
                                     .withConstructionAddress1(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ADDRESS1)))
                                     .withConstructionAddress2(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ADDRESS2)))
                                     .withConstructionZip(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ZIP)))
@@ -691,7 +689,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 new Construction()
                         .withConstructionId(cursor.getLong(cursor.getColumnIndex(KEY_CONSTRUCTION_ID_PK)))
                         .withConstructionName(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_NAME)))
-                        .withCustomer(getCustomerWithId(cursor.getInt(cursor.getColumnIndex(KEY_CONSTRUCTION_CUSTOMER_ID_FK))))
+                        .withCustomer(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_CUSTOMER_ID_FK)))
                         .withConstructionAddress1(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ADDRESS1)))
                         .withConstructionAddress2(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ADDRESS2)))
                         .withConstructionZip(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ZIP)))

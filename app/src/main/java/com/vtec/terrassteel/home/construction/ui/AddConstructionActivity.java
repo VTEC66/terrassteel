@@ -132,7 +132,6 @@ public class AddConstructionActivity extends AbstractActivity implements SelectC
     private void addNewConstruction() {
         Construction newConstruction = new Construction()
                 .withConstructionName(constructionNameEditText.getText().toString())
-                .withCustomer(selectedCustomer)
                 .withConstructionAddress1(constructionAddress1EditText.getText().toString())
                 .withConstructionAddress2(constructionAddress2EditText.getText().toString())
                 .withConstructionZip(constructionZipEditText.getText().toString())

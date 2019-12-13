@@ -38,7 +38,7 @@ public class ConstructionAdapter extends RecyclerView.Adapter<ConstructionAdapte
         Construction construction = elements.get(position);
 
         holder.constructionNameTextView.setText(construction.getConstructionName());
-        holder.customerTextView.setText(construction.getCustomer().getCustomerName());
+        holder.customerTextView.setText(construction.getCustomer());
         holder.statusIndicatorTextView.setText(construction.getConstructionStatus().getRessourceReference());
 
         switch (construction.getConstructionStatus()){

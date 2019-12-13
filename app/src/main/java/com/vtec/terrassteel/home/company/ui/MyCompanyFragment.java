@@ -17,11 +17,6 @@ import butterknife.OnClick;
 
 public class MyCompanyFragment extends AbstractFragment {
 
-    @OnClick(R.id.customer_management_view)
-    public void onClickCustomerManagement(){
-        startActivity(new Intent(getContext(), ListCustomersActivity.class));
-    }
-
     @OnClick(R.id.employee_management_view)
     public void onClickEmployeeManagement(){
         startActivity(new Intent(getContext(), ListEmployeesActivity.class));

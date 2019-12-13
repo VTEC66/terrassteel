@@ -12,7 +12,7 @@ public class Construction implements Serializable {
     public String constructionCity;
     public ConstructionStatus constructionStatus;
 
-    public Customer customer;
+    public String customer;
 
     public Construction() { }
 
@@ -26,7 +26,7 @@ public class Construction implements Serializable {
         return this;
     }
 
-    public Construction withCustomer(Customer customer) {
+    public Construction withCustomer(String customer) {
         this.customer = customer;
         return this;
     }
@@ -64,20 +64,12 @@ public class Construction implements Serializable {
         return constructionName;
     }
 
-    public Customer getCustomer() {
-        if(customer == null){
-            return new Customer();
-        }
+    public String getCustomer() {
         return customer;
     }
 
     public String getCustomerName() {
-        return getCustomer().getCustomerName();
-        /*if(customer != null){
-            return customer.getCustomerName();
-        }else{
-            return "";
-        }*/
+        return getCustomer();
     }
 
     public long getConstructionId() {
