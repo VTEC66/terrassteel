@@ -70,4 +70,6 @@
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="workorder_close_confirmation_message">Souhaitez-vous fermer ce bon de travail ?</string>
+    <string name="status">Status</string>
+    <string name="unavailable">Indisponible</string>
 </resources>

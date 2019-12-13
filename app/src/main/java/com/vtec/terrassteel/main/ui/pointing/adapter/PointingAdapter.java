@@ -72,6 +72,13 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         callback.addAssignToWorkOrder(assign.getWorkOrder());
                     }
                 });
+
+                headerViewHolder.workorderNameTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.workOrderSelected(assign.getWorkOrder());
+                    }
+                });
                 break;
 
             case ITEM:

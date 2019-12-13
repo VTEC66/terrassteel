@@ -1,6 +1,8 @@
 package com.vtec.terrassteel.common.model;
 
-public class Pointing {
+import java.io.Serializable;
+
+public class Pointing implements Serializable {
 
     public long pointingId;
 
@@ -11,6 +13,8 @@ public class Pointing {
     public long pointingTotalTime;
 
     public long pointingStart;
+
+    public Employee employee;
 
 
     public Pointing() { }
@@ -40,6 +44,11 @@ public class Pointing {
         return this;
     }
 
+    public Pointing withEmployee(Employee employee) {
+        this.employee = employee;
+        return this;
+    }
+
     public long getPointingId() {
         return pointingId;
     }
@@ -58,5 +67,9 @@ public class Pointing {
 
     public long getPointingStart() {
         return pointingStart;
+    }
+
+    public Employee getEmployee() {
+        return employee;
     }
 }

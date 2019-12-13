@@ -741,8 +741,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
         ArrayList<Assign> assigns = new ArrayList<>();
 
         String ASSIGN_SELECT_QUERY =
-                String.format("SELECT * FROM %s",
-                        TABLE_ASSIGN);
+                String.format("SELECT * FROM "+ TABLE_ASSIGN + " assign " +
+                                "INNER JOIN "+ TABLE_WORK_ORDER + " wo " +
+                                "ON wo.workOrderIdPk = assign.workOrderIdFk " +
+                                "WHERE wo.workOrderStatus LIKE '"+ WorkOrderStatus.IN_PROGRESS.name()+"'"
+                            );
 
         Log.e(TAG, ASSIGN_SELECT_QUERY);
 
@@ -1043,7 +1046,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         Log.e(TAG, POINTING_SELECT_QUERY);
 
-
         SQLiteDatabase db = getReadableDatabase();
 
         Cursor cursor = db.rawQuery(POINTING_SELECT_QUERY, null);
@@ -1106,7 +1108,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             values.put(KEY_POINTING_ASSIGN_ID, pointing.getAssign().getAssignId());
             values.put(KEY_POINTING_WORK_ORDER_ID_FK, pointing.getWorkOrder().getWorkOrderId());
             values.put(KEY_POINTING_START, pointing.getPointingStart());
-            //values.put(KEY_POINTING_EMPLOYEE_ID, pointing.getAssign().getEmployee().getEmployeeId());
+            values.put(KEY_POINTING_EMPLOYEE_ID, pointing.getAssign().getEmployee().getEmployeeId());
 
             // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
             db.insertOrThrow(TABLE_POINTING, null, values);
@@ -1158,12 +1160,104 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public int getConsumedTimeForWorkOrder(WorkOrder workOrder) {
         int result = 0;
 
-        //TODO
+        SQLiteDatabase db = getReadableDatabase();
+
+        String SUM_CONSUMED_TIME_QUERY = "SELECT SUM(pointing.pointingTotalTime) " +
+                "FROM "+ TABLE_POINTING  + " pointing " +
+                "INNER JOIN "+ TABLE_WORK_ORDER + " wo " +
+                "ON wo.workOrderIdPk = pointing.pointingWorkOrderIdFk " +
+                "WHERE wo.workOrderIdPk = " + workOrder.getWorkOrderId();
+
+        Log.e(TAG, SUM_CONSUMED_TIME_QUERY);
+
+
+        Cursor cursor = db.rawQuery(SUM_CONSUMED_TIME_QUERY, null);
+        try {
+            if(cursor.moveToFirst()) {
+                result = cursor.getInt(0);
+                Log.e(TAG, "Succesfuly return sum of time consumed from database");
+            }else {
+                result = 0;
+            }
+        }catch (Exception e){
+                Log.e(TAG, "Error while trying to make Sum of time consumed from database : " + e.toString());
+        }finally {
+            if (!cursor.isClosed()) {
+                    cursor.close();
+            }
+        }
 
         return result;
     }
 
-    public void closeWorkOrder(WorkOrder workOrder) {
-        //TODO
+    public void closeWorkOrder(WorkOrder workOrder, DatabaseOperationCallBack<WorkOrder> callBack) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_WORK_ORDER_STATUS, WorkOrderStatus.FINISHED.name());
+
+            db.update(TABLE_WORK_ORDER
+                    , values
+                    , KEY_WORK_ORDER_ID_PK + "=" + workOrder.getWorkOrderId()
+                    ,null);
+
+            db.setTransactionSuccessful();
+
+            workOrder.withworkOrderStatus(WorkOrderStatus.FINISHED);
+
+            Log.d(TAG, "Workorder have been successfuly closed");
+            callBack.onSuccess(workOrder);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to close Workorder : " + e.toString());
+            callBack.onError();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void getImputationsForWorkorder(WorkOrder workOrder, DatabaseOperationCallBack<ArrayList<Pointing>> callBack) {
+        ArrayList<Pointing> imputations = new ArrayList<>();
+
+        String POINTING_SELECT_QUERY = "SELECT * " +
+                "FROM "+ TABLE_POINTING + " pointing " +
+                "INNER JOIN "+ TABLE_WORK_ORDER + " wo " +
+                "ON wo.workOrderIdPk = pointing.pointingWorkOrderIdFk " +
+                "WHERE wo.workOrderIdPk = "+  workOrder.workOrderId ;
+
+
+        Log.e(TAG, POINTING_SELECT_QUERY);
+
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(POINTING_SELECT_QUERY, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Pointing pointing =
+                            new Pointing()
+                                    .withTotalTime(cursor.getLong(cursor.getColumnIndex(KEY_POINTING_TOTAL_TIME)))
+                                    .withEmployee(getEmployeeWithId(cursor.getInt(cursor.getColumnIndex(KEY_POINTING_EMPLOYEE_ID))));
+
+                    imputations.add(pointing);
+
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to get employees from database : " + e.toString());
+            callBack.onError();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        Log.d(TAG, "Database successfully return " + imputations.size() + " imputation.");
+
+
+        callBack.onSuccess(imputations);
     }
 }

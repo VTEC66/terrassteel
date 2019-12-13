@@ -13,6 +13,8 @@ import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.common.model.WorkOrderStatus;
 import com.vtec.terrassteel.common.ui.ActionBar;
 import com.vtec.terrassteel.common.ui.ConfirmationDialog;
+import com.vtec.terrassteel.core.model.DefaultResponse;
+import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
 import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.home.company.customer.ui.SelectCustomerDialogFragment;
@@ -36,6 +38,24 @@ public class DetailWorkOrderActivity extends AbstractActivity {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
+    @BindView(R.id.status_indicator_tv)
+    TextView statusIndicatorTextView;
+
+    @BindView(R.id.status_indicator_container)
+    View statusIndicatorContainer;
+
+    @BindView(R.id.assign_access)
+    View assignAccessView;
+
+    @BindView(R.id.unavailability_indicator)
+    View unavailableIndicatorView;
+
+    @BindView(R.id.product_type_tv)
+    TextView productTypeTV;
+
+    @BindView(R.id.reference_affaire_tv)
+    TextView referenceAffaireTV;
+
     @BindView(R.id.affected_time_textview)
     TextView affectedTimeTextview;
 
@@ -48,6 +68,10 @@ public class DetailWorkOrderActivity extends AbstractActivity {
     @OnClick(R.id.assign_management_view)
     public void clicShowAssign(){
 
+        if(workOrder.getWorkOrderStatus().equals(WorkOrderStatus.FINISHED)){
+            return;
+        }
+
         Intent intent = new Intent(this, AddAssignActivity.class);
 
         Bundle bundle = new Bundle();
@@ -59,14 +83,14 @@ public class DetailWorkOrderActivity extends AbstractActivity {
 
     @OnClick(R.id.pointing_management_view)
     public void clicShowPointing(){
-        /*Intent intent = new Intent(this, AddAssignActivity.class);
+        Intent intent = new Intent(this, ListImputationActivity.class);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(EXTRA_WORK_ORDER, workOrder);
         intent.putExtras(bundle);
 
-        startActivity(intent);*/
-        //TODO
+        startActivity(intent);
+
     }
 
     @OnClick(R.id.close_workorder_button)
@@ -77,7 +101,12 @@ public class DetailWorkOrderActivity extends AbstractActivity {
                         .setCallBack(new ConfirmationDialogCallback() {
                             @Override
                             public void onConfirm() {
-                                DatabaseManager.getInstance(getBaseContext()).closeWorkOrder(workOrder);
+                                DatabaseManager.getInstance(getBaseContext()).closeWorkOrder(workOrder, new DatabaseOperationCallBack<WorkOrder>() {
+                                    @Override
+                                    public void onSuccess(WorkOrder defaultResponse) {
+                                        onResume();
+                                    }
+                                });
                             }
                         })
                         .show(getSupportFragmentManager(), CONFIRMATION_DIALOG);
@@ -125,13 +154,30 @@ public class DetailWorkOrderActivity extends AbstractActivity {
         }
 
         int affected = workOrder.getWorkOrderAllocatedHour();
-        int consummed = DatabaseManager.getInstance(this).getConsumedTimeForWorkOrder(workOrder);
+        int consummed = DatabaseManager.getInstance(this).getConsumedTimeForWorkOrder(workOrder)/3600;
 
         affectedTimeTextview.setText(String.valueOf(affected));
         consumedTimeTextview.setText(String.valueOf(consummed));
 
         progressBar.setMax(affected);
         progressBar.setProgress(consummed);
+
+        statusIndicatorTextView.setText(workOrder.getWorkOrderStatus().getRessourceReference());
+        referenceAffaireTV.setText(workOrder.getWorkOrderReference());
+        productTypeTV.setText(workOrder.getWorkOrderProductType());
+
+        switch (workOrder.getWorkOrderStatus()){
+            case IN_PROGRESS:
+                statusIndicatorContainer.setBackground(getResources().getDrawable(R.drawable.bg_status_indicator_inprogress));
+                unavailableIndicatorView.setVisibility(View.GONE);
+                assignAccessView.setVisibility(View.VISIBLE);
+                break;
+            case FINISHED:
+                statusIndicatorContainer.setBackground(getResources().getDrawable(R.drawable.bg_status_indicator_finished));
+                unavailableIndicatorView.setVisibility(View.VISIBLE);
+                assignAccessView.setVisibility(View.GONE);
+                break;
+        }
     }
 
 }

@@ -18,6 +18,7 @@ import com.vtec.terrassteel.main.ui.assign.ui.AddAssignActivity;
 import com.vtec.terrassteel.main.ui.pointing.adapter.PointingAdapter;
 import com.vtec.terrassteel.main.ui.pointing.callback.PointingCallback;
 import com.vtec.terrassteel.main.ui.workorder.adapter.WorkorderAdapter;
+import com.vtec.terrassteel.main.ui.workorder.ui.DetailWorkOrderActivity;
 
 import java.util.ArrayList;
 
@@ -120,6 +121,19 @@ public class PointingTimeFragment extends AbstractFragment implements PointingCa
         intent.putExtras(bundle);
 
         startActivityForResult(intent, ADD_ASSIGN_INTENT_CODE);
+        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
+    @Override
+    public void workOrderSelected(WorkOrder workOrder) {
+
+        Intent intent = new Intent(getContext(), DetailWorkOrderActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(EXTRA_WORK_ORDER, workOrder);
+        intent.putExtras(bundle);
+
+        startActivity(intent);
         getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 }

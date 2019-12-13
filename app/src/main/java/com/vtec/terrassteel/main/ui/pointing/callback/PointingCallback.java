@@ -8,4 +8,6 @@ public interface PointingCallback {
     void actionPointing();
 
     void addAssignToWorkOrder(WorkOrder workOrder);
+
+    void workOrderSelected(WorkOrder workOrder);
 }

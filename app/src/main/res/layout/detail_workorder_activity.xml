@@ -79,6 +79,103 @@
         android:background="@color/manatee_grey"/>
 
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_standard"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/standard"
+            android:text="@string/status"/>
+
+        <FrameLayout
+            android:id="@+id/status_indicator_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/standard"
+            android:paddingStart="@dimen/small"
+            android:paddingEnd="@dimen/small">
+
+            <com.vtec.terrassteel.common.ui.FontTextView
+                android:id="@+id/status_indicator_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/antracite_grey"
+                android:textSize="@dimen/text_size_standard" />
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/manatee_grey"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_standard"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/standard"
+            android:text="@string/hint_workorder_affaire"/>
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:id="@+id/reference_affaire_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_standard"
+            android:layout_marginEnd="@dimen/standard"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/standard" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/manatee_grey"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_standard"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/standard"
+            android:text="@string/hint_workorder_producttype"/>
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:id="@+id/product_type_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_standard"
+            android:layout_marginEnd="@dimen/standard"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/standard" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/manatee_grey"/>
+
+    <RelativeLayout
         android:id="@+id/assign_management_view"
         android:layout_width="match_parent"
         android:layout_height="80dp">
@@ -92,12 +189,36 @@
             android:text="@string/show_assign"/>
 
         <ImageView
+            android:id="@+id/assign_access"
             android:layout_width="35dp"
             android:layout_height="45dp"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/standard"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_chevron_right"/>
+            android:src="@drawable/ic_chevron_right"
+            android:visibility="gone"/>
+
+        <FrameLayout
+            android:id="@+id/unavailability_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_status_indicator_finished"
+            android:layout_marginEnd="@dimen/standard"
+            android:paddingStart="@dimen/small"
+            android:paddingEnd="@dimen/small"
+            android:visibility="gone">
+
+            <com.vtec.terrassteel.common.ui.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/antracite_grey"
+                android:textSize="@dimen/text_size_standard"
+                android:text="@string/unavailable"/>
+        </FrameLayout>
 
     </RelativeLayout>
     <View
