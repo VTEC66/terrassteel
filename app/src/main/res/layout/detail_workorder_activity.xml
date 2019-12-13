@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:showBackArrow="true"
-        app:showActionButton="false" />
+        app:showActionButton="true"
+        app:actionButtonDrawable="@drawable/ic_cloud_upload"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"

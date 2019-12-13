@@ -1,6 +1,9 @@
 package com.vtec.terrassteel.main.ui.workorder.ui;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -14,6 +17,7 @@ import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.common.model.WorkOrderStatus;
 import com.vtec.terrassteel.common.ui.ActionBar;
 import com.vtec.terrassteel.common.ui.ConfirmationDialog;
+import com.vtec.terrassteel.common.utils.CsvUtil;
 import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
@@ -21,6 +25,10 @@ import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.home.company.customer.ui.SelectCustomerDialogFragment;
 import com.vtec.terrassteel.main.ui.assign.ui.AddAssignActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.annotation.NonNull;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -134,11 +142,20 @@ public class DetailWorkOrderActivity extends AbstractActivity {
 
             @Override
             public void onActionButtonClick() {
+                if (getMissingPermissions().size() > 0) {
+                    askPermission(getMissingPermissions());
+                } else {
+                    makeCSV();
+                }
             }
         });
 
         actionBar.setTitle(getString(R.string.work_order, workOrder.getWorkOrderReference()));
 
+    }
+
+    private void makeCSV() {
+        new CsvUtil().makeCSV(getBaseContext(), workOrder);
     }
 
     @Override
@@ -175,6 +192,49 @@ public class DetailWorkOrderActivity extends AbstractActivity {
                 assignAccessView.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            int approvedPermissions = 0;
+
+            for (int i = 0; i < permissions.length; i++) {
+
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    approvedPermissions = approvedPermissions + 1;
+                }
+            }
+
+            if (approvedPermissions == permissions.length) {
+                makeCSV();
+            }
+        }
+    }
+
+    protected void askPermission(List<String> missingPermissions) {
+        if (Build.VERSION.SDK_INT >= 23 && missingPermissions.size() > 0) {
+
+            List<String> requestPermissions = new ArrayList<>(missingPermissions);
+
+            if (requestPermissions.size() > 0) {
+                requestPermissions(requestPermissions.toArray(new String[0]), AbstractActivity.PERMISSION_REQUEST_CODE);
+            }
+        }
+    }
+
+    protected List<String> getMissingPermissions() {
+        List<String> manifestPermissions = new ArrayList<>();
+
+        if (Build.VERSION.SDK_INT < 23) {
+            return manifestPermissions;
+        }
+
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            manifestPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+
+        return manifestPermissions;
     }
 
 }

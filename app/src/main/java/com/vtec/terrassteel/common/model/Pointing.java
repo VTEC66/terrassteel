@@ -72,4 +72,14 @@ public class Pointing implements Serializable {
     public Employee getEmployee() {
         return employee;
     }
+
+    public long getPointingEnd() {
+        //TODO
+        return 0;
+    }
+
+    public String getObservation() {
+        //TODO
+        return "";
+    }
 }
