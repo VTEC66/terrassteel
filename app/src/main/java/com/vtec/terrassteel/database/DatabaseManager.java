@@ -744,7 +744,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 String.format("SELECT * FROM "+ TABLE_ASSIGN + " assign " +
                                 "INNER JOIN "+ TABLE_WORK_ORDER + " wo " +
                                 "ON wo.workOrderIdPk = assign.workOrderIdFk " +
-                                "WHERE wo.workOrderStatus LIKE '"+ WorkOrderStatus.IN_PROGRESS.name()+"'"
+                                "WHERE wo.workOrderStatus LIKE '"+ WorkOrderStatus.IN_PROGRESS.name()+"' " +
+                                "ORDER BY wo.workOrderIdPk ASC"
                             );
 
         Log.e(TAG, ASSIGN_SELECT_QUERY);

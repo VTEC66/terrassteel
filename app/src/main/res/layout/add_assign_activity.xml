@@ -27,6 +27,18 @@
             android:layout_height="wrap_content"
             style="@style/StandardTextStyle"
             android:text="@string/empty_available_text"/>
+
+        <com.vtec.terrassteel.common.ui.FontButton
+            android:id="@+id/add_employee_button"
+            android:layout_marginTop="@dimen/xlarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_add_circle"
+            android:drawablePadding="@dimen/standard"
+            android:drawableTint="@color/white"
+            style="@style/FullButtonStyle"
+            android:text="@string/add_employee_textbutton"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -75,6 +87,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/StandardTextStyle"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
             android:text="@string/empty_assigned_text"/>
 
     </LinearLayout>

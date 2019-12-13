@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.vtec.terrassteel.BuildConfig;
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.listener.ActionBarListener;
 import com.vtec.terrassteel.common.listener.ConfirmationDialogCallback;
@@ -49,9 +50,6 @@ public class DetailWorkOrderActivity extends AbstractActivity {
 
     @BindView(R.id.unavailability_indicator)
     View unavailableIndicatorView;
-
-    @BindView(R.id.product_type_tv)
-    TextView productTypeTV;
 
     @BindView(R.id.reference_affaire_tv)
     TextView referenceAffaireTV;
@@ -139,7 +137,7 @@ public class DetailWorkOrderActivity extends AbstractActivity {
             }
         });
 
-        actionBar.setTitle(workOrder.getWorkOrderReference());
+        actionBar.setTitle(getString(R.string.work_order, workOrder.getWorkOrderReference()));
 
     }
 
@@ -154,17 +152,16 @@ public class DetailWorkOrderActivity extends AbstractActivity {
         }
 
         int affected = workOrder.getWorkOrderAllocatedHour();
-        int consummed = DatabaseManager.getInstance(this).getConsumedTimeForWorkOrder(workOrder)/3600;
+        int consummed = DatabaseManager.getInstance(this).getConsumedTimeForWorkOrder(workOrder);
 
-        affectedTimeTextview.setText(String.valueOf(affected));
-        consumedTimeTextview.setText(String.valueOf(consummed));
+        affectedTimeTextview.setText(String.valueOf(affected)+ "h");
+        consumedTimeTextview.setText(String.valueOf(consummed/3600)+ "h");
 
-        progressBar.setMax(affected);
-        progressBar.setProgress(consummed);
+        progressBar.setMax(affected*60);
+        progressBar.setProgress(consummed/60);
 
         statusIndicatorTextView.setText(workOrder.getWorkOrderStatus().getRessourceReference());
         referenceAffaireTV.setText(workOrder.getWorkOrderReference());
-        productTypeTV.setText(workOrder.getWorkOrderProductType());
 
         switch (workOrder.getWorkOrderStatus()){
             case IN_PROGRESS:

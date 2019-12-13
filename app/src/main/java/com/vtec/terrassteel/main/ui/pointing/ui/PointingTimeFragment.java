@@ -108,11 +108,6 @@ public class PointingTimeFragment extends AbstractFragment implements PointingCa
 
 
     @Override
-    public void actionPointing() {
-        //TODO
-    }
-
-    @Override
     public void addAssignToWorkOrder(WorkOrder workOrder) {
         Intent intent = new Intent(getContext(), AddAssignActivity.class);
 

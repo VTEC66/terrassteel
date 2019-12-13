@@ -60,7 +60,7 @@
     <string name="workorder_status_finished">Terminé</string>
     <string name="available_employee_title">Employés disponibles</string>
     <string name="assigned_employee_title">Employés assignés</string>
-    <string name="empty_assigned_text">Aucun employé n\'est assigné actuellement</string>
+    <string name="empty_assigned_text">Aucun employé n\'est assigné à ce bon de travail actuellement.</string>
     <string name="empty_available_text">Aucun employé disponible actuellement.</string>
     <string name="show_assign">Voir les affectations</string>
     <string name="show_pointing">Voir les imputations</string>
@@ -72,4 +72,8 @@
     <string name="workorder_close_confirmation_message">Souhaitez-vous fermer ce bon de travail ?</string>
     <string name="status">Status</string>
     <string name="unavailable">Indisponible</string>
+    <string name="empty_imputation">Aucune imputation n\'est enregistrée pour ce bon de travail.</string>
+    <string name="work_order">Bon de travail N°%1$s </string>
+    <string name="qr_wo_notrecognized">Le QR code du Bon de travail n\'a pas été reconnu.</string>
+
 </resources>

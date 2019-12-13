@@ -43,7 +43,7 @@ public class WorkorderAdapter extends RecyclerView.Adapter<WorkorderAdapter.View
 
         WorkOrder workOrder = elements.get(position);
 
-        holder.workorderNameTextView.setText(workOrder.getWorkOrderReference());
+        holder.workorderNameTextView.setText(context.getString(R.string.work_order,workOrder.getWorkOrderReference()));
         holder.workorderaffaireTextView.setText(workOrder.getWorkOrderAffaire());
         holder.statusIndicatorTextView.setText(workOrder.getWorkOrderStatus().getRessourceReference());
 

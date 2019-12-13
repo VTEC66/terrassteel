@@ -147,35 +147,6 @@
         android:background="@color/manatee_grey"/>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp">
-
-        <com.vtec.terrassteel.common.ui.FontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_standard"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/standard"
-            android:text="@string/hint_workorder_producttype"/>
-
-        <com.vtec.terrassteel.common.ui.FontTextView
-            android:id="@+id/product_type_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_standard"
-            android:layout_marginEnd="@dimen/standard"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/standard" />
-
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/manatee_grey"/>
-
-    <RelativeLayout
         android:id="@+id/assign_management_view"
         android:layout_width="match_parent"
         android:layout_height="80dp">

@@ -64,7 +64,7 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case HEADER:
                 HeaderViewHolder headerViewHolder = (HeaderViewHolder)holder;
 
-                headerViewHolder.workorderNameTextView.setText(assign.getWorkOrder().getWorkOrderReference());
+                headerViewHolder.workorderNameTextView.setText(context.getString(R.string.work_order,assign.getWorkOrder().getWorkOrderReference()));
 
                 headerViewHolder.addAsignView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -102,7 +102,6 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             @Override
                             public void onSuccess(DefaultResponse defaultResponse) {
                                 itemViewHolder.isWorking = false;
-                                callback.actionPointing();
                             }
                         });
 

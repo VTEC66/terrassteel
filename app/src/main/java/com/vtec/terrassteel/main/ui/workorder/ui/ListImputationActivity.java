@@ -1,6 +1,7 @@
 package com.vtec.terrassteel.main.ui.workorder.ui;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.listener.ActionBarListener;
@@ -31,6 +32,9 @@ public class ListImputationActivity extends AbstractActivity {
     @BindView(R.id.action_bar)
     ActionBar actionBar;
 
+    @BindView(R.id.empty_view)
+    View emptyView;
+
     @BindView(R.id.imputation_listview)
     RecyclerView imputationrecyclerView;
 
@@ -60,7 +64,7 @@ public class ListImputationActivity extends AbstractActivity {
             }
         });
 
-        actionBar.setTitle(workOrder.getWorkOrderReference());
+        actionBar.setTitle(getString(R.string.work_order, workOrder.getWorkOrderReference()));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
@@ -86,8 +90,20 @@ public class ListImputationActivity extends AbstractActivity {
             public void onSuccess(ArrayList<Pointing> imputations) {
                 imputationAdapter.setData(imputations);
                 imputationAdapter.notifyDataSetChanged();
+
+                setupVisibility(imputations.isEmpty());
             }
         });
+    }
 
+    private void setupVisibility(boolean isDataEmpty) {
+
+        if (isDataEmpty) {
+            emptyView.setVisibility(View.VISIBLE);
+            imputationrecyclerView.setVisibility(View.GONE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+            imputationrecyclerView.setVisibility(View.VISIBLE);
+        }
     }
 }

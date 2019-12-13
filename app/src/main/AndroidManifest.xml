@@ -2,8 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vtec.terrassteel">
 
+    <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".core.VtecApplication"
@@ -79,6 +82,10 @@
             android:launchMode="singleInstance"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullTranslucent"/>
+
+        <activity android:name=".common.ui.ScanActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait"/>
 
     </application>
 

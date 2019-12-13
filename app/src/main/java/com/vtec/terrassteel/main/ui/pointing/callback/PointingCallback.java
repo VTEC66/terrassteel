@@ -5,8 +5,6 @@ import com.vtec.terrassteel.common.model.WorkOrder;
 
 public interface PointingCallback {
 
-    void actionPointing();
-
     void addAssignToWorkOrder(WorkOrder workOrder);
 
     void workOrderSelected(WorkOrder workOrder);

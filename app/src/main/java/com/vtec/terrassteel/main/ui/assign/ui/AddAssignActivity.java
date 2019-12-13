@@ -1,5 +1,6 @@
 package com.vtec.terrassteel.main.ui.assign.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -13,6 +14,7 @@ import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
 import com.vtec.terrassteel.database.DatabaseManager;
+import com.vtec.terrassteel.home.company.employee.ui.EditEmployeeActivity;
 import com.vtec.terrassteel.main.ui.assign.adapter.AssignEmployeeAdapter;
 import com.vtec.terrassteel.main.ui.assign.callback.AssignEmployeeCallback;
 
@@ -23,10 +25,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.vtec.terrassteel.main.ui.pointing.ui.PointingTimeFragment.EXTRA_WORK_ORDER;
 
 public class AddAssignActivity extends AbstractActivity implements AssignEmployeeCallback {
+
+    private static final int ADD_EMPLOYEE_INTENT_CODE = 20;
 
     WorkOrder workOrder;
 
@@ -54,6 +59,12 @@ public class AddAssignActivity extends AbstractActivity implements AssignEmploye
     @BindView(R.id.empty_available_view)
     View emptyAvailableView;
 
+    @OnClick(R.id.add_employee_button)
+    public void onClicAddButton(){
+        startActivityForResult(new Intent(this, EditEmployeeActivity.class), ADD_EMPLOYEE_INTENT_CODE);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +89,7 @@ public class AddAssignActivity extends AbstractActivity implements AssignEmploye
             public void onActionButtonClick() { }
         });
 
-        actionBar.setTitle(workOrder.getWorkOrderReference());
+        actionBar.setTitle(getString(R.string.work_order, workOrder.getWorkOrderReference()));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);

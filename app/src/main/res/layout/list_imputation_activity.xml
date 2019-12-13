@@ -15,6 +15,29 @@
         android:id="@+id/imputation_listview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/StandardTextStyle"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            android:text="@string/empty_imputation"/>
+
+    </LinearLayout>
 
 </LinearLayout>
