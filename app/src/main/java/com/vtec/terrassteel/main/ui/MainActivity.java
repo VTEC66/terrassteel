@@ -8,7 +8,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
 import com.vtec.terrassteel.main.ui.dashboard.ui.DashboardFragment;
-import com.vtec.terrassteel.main.ui.pointing.ui.PointingTimeFragment;
+import com.vtec.terrassteel.main.ui.imputation.ui.ImputationFragment;
 import com.vtec.terrassteel.main.ui.workorder.ui.WorkOrderFragment;
 
 import androidx.annotation.NonNull;
@@ -36,8 +36,8 @@ public class MainActivity extends AbstractActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.action_pointing_time:
-                        showPointingTimeFragment();
+                    case R.id.action_imputation_time:
+                        showImputationTimeFragment();
                         break;
                     case R.id.action_work_order:
                         showWorkingOrderFragment();
@@ -50,7 +50,7 @@ public class MainActivity extends AbstractActivity {
             }
         });
 
-        bottomNavigationView.setSelectedItemId(R.id.action_pointing_time);
+        bottomNavigationView.setSelectedItemId(R.id.action_imputation_time);
     }
 
     private void showFragment(Fragment fragment, String TAG) {
@@ -61,16 +61,16 @@ public class MainActivity extends AbstractActivity {
         transaction.commitAllowingStateLoss();
     }
 
-    private void showPointingTimeFragment() {
-        Log.d(MainActivity.class.getSimpleName(), "Show pointing time Fragment");
+    private void showImputationTimeFragment() {
+        Log.d(MainActivity.class.getSimpleName(), "Show imputation time Fragment");
 
-        PointingTimeFragment fragment = (PointingTimeFragment) getSupportFragmentManager().findFragmentByTag(PointingTimeFragment.TAG);
+        ImputationFragment fragment = (ImputationFragment) getSupportFragmentManager().findFragmentByTag(ImputationFragment.TAG);
 
         if (fragment == null) {
-            fragment = new PointingTimeFragment();
+            fragment = new ImputationFragment();
         }
 
-        showFragment(fragment, PointingTimeFragment.TAG);
+        showFragment(fragment, ImputationFragment.TAG);
     }
 
     private void showDashboardFragment() {

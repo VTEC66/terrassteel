@@ -32,25 +32,6 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/customer_textinputlayout"
-        style="@style/TextInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/standard"
-        android:layout_marginTop="@dimen/standard"
-        android:layout_marginEnd="@dimen/standard">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/customer_edittext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_customer"
-            android:imeOptions="actionNext"
-            android:inputType="text" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/construction_address1_textinputlayout"
         style="@style/TextInputLayout"
         android:layout_width="match_parent"

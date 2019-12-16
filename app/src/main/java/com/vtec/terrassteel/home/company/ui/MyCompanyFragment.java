@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.core.ui.AbstractFragment;
-import com.vtec.terrassteel.home.company.customer.ui.ListCustomersActivity;
 import com.vtec.terrassteel.home.company.employee.ui.ListEmployeesActivity;
 
 import androidx.fragment.app.Fragment;

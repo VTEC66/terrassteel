@@ -10,10 +10,9 @@ import android.util.Log;
 import com.vtec.terrassteel.common.model.Assign;
 import com.vtec.terrassteel.common.model.Construction;
 import com.vtec.terrassteel.common.model.ConstructionStatus;
-import com.vtec.terrassteel.common.model.Customer;
 import com.vtec.terrassteel.common.model.Employee;
 import com.vtec.terrassteel.common.model.Job;
-import com.vtec.terrassteel.common.model.Pointing;
+import com.vtec.terrassteel.common.model.Imputation;
 import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.common.model.WorkOrderStatus;
 import com.vtec.terrassteel.core.model.DefaultResponse;
@@ -35,8 +34,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String TABLE_EMPLOYEES = "employees";
     private static final String TABLE_WORK_ORDER = "work_order";
     private static final String TABLE_ASSIGN = "assign";
-    private static final String TABLE_POINTING = "pointing";
-
+    private static final String TABLE_IMPUTATION = "imputation";
 
 
     // Construction Table Columns
@@ -50,20 +48,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String KEY_CONSTRUCTION_STATUS = "constructionStatus";
 
 
-    // Customer Table Columns
-    private static final String KEY_CUSTOMER_ID_PK = "customerIdPk";
-    private static final String KEY_CUSTOMER_NAME = "customerName";
-    private static final String KEY_CUSTOMER_ADDRESS1 = "customerAddress1";
-    private static final String KEY_CUSTOMER_ADDRESS2 = "customerAddress2";
-    private static final String KEY_CUSTOMER_ZIP = "customerZip";
-    private static final String KEY_CUSTOMER_CITY = "customerCity";
-    private static final String KEY_CUSTOMER_PHONE = "customerPhone";
-    private static final String KEY_CUSTOMER_MAIL = "customerMail";
-
-
     // Employee Table Columns
     private static final String KEY_EMPLOYEE_ID_PK = "employeeIdPk";
     private static final String KEY_EMPLOYEE_NAME = "employeeName";
+    private static final String KEY_EMPLOYEE_CODE = "employeeCode";
     private static final String KEY_EMPLOYEE_JOB = "employeeJob";
     private static final String KEY_EMPLOYEE_ADDRESS1 = "employeeAddress1";
     private static final String KEY_EMPLOYEE_ADDRESS2 = "employeeAddress2";
@@ -90,13 +78,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String KEY_ASSIGN_IS_WORKING = "isWorking";
 
 
-    // Pointing Table
-    private static final String KEY_POINTING_ID_PK = "pointingIdPk";
-    private static final String KEY_POINTING_ASSIGN_ID = "pointingAssignId";
-    private static final String KEY_POINTING_EMPLOYEE_ID = "pointingEmployeeId";
-    private static final String KEY_POINTING_WORK_ORDER_ID_FK = "pointingWorkOrderIdFk";
-    private static final String KEY_POINTING_TOTAL_TIME = "pointingTotalTime";
-    private static final String KEY_POINTING_START = "pointingStart";
+    // Imputation Table
+    private static final String KEY_IMPUTATION_ID_PK = "imputationIdPk";
+    private static final String KEY_IMPUTATION_ASSIGN_ID = "imputationAssignId";
+    private static final String KEY_IMPUTATION_EMPLOYEE_ID = "imputationEmployeeId";
+    private static final String KEY_IMPUTATION_WORK_ORDER_ID_FK = "imputationWorkOrderIdFk";
+    private static final String KEY_IMPUTATION_TOTAL_TIME = "imputationTotalTime";
+    private static final String KEY_IMPUTATION_START_TIME = "imputationStart";
+    private static final String KEY_IMPUTATION_END_TIME = "imputationEnd";
+
 
 
 
@@ -139,22 +129,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 KEY_CONSTRUCTION_STATUS + " TEXT" +
                 ")";
 
-        String CREATE_CUSTOMERS_TABLE = "CREATE TABLE " + TABLE_CUSTOMERS +
-                "(" +
-                KEY_CUSTOMER_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                KEY_CUSTOMER_NAME + " TEXT," +
-                KEY_CUSTOMER_ADDRESS1 + " TEXT," +
-                KEY_CUSTOMER_ADDRESS2 + " TEXT," +
-                KEY_CUSTOMER_ZIP + " TEXT," +
-                KEY_CUSTOMER_CITY + " TEXT," +
-                KEY_CUSTOMER_PHONE + " TEXT," +
-                KEY_CUSTOMER_MAIL + " TEXT" +
-                ")";
 
         String CREATE_EMPLOYEES_TABLE = "CREATE TABLE " + TABLE_EMPLOYEES +
                 "(" +
                 KEY_EMPLOYEE_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 KEY_EMPLOYEE_NAME + " TEXT," +
+                KEY_EMPLOYEE_CODE + " TEXT," +
                 KEY_EMPLOYEE_JOB + " TEXT," +
                 KEY_EMPLOYEE_ADDRESS1 + " TEXT," +
                 KEY_EMPLOYEE_ADDRESS2 + " TEXT," +
@@ -183,22 +163,22 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 KEY_ASSIGN_IS_WORKING + " INTEGER" +
                 ")";
 
-        String CREATE_POINTING_TABLE = "CREATE TABLE " + TABLE_POINTING +
+        String CREATE_IMPUTATION_TABLE = "CREATE TABLE " + TABLE_IMPUTATION +
                 "(" +
-                KEY_POINTING_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                KEY_POINTING_ASSIGN_ID + " INTEGER," +
-                KEY_POINTING_WORK_ORDER_ID_FK + " INTEGER REFERENCES " + TABLE_WORK_ORDER + "," + // Define a foreign key
-                KEY_POINTING_EMPLOYEE_ID + " INTEGER," + // Define a foreign key
-                KEY_POINTING_START + " INTEGER," +
-                KEY_POINTING_TOTAL_TIME + " INTEGER" +
+                KEY_IMPUTATION_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                KEY_IMPUTATION_ASSIGN_ID + " INTEGER," +
+                KEY_IMPUTATION_WORK_ORDER_ID_FK + " INTEGER REFERENCES " + TABLE_WORK_ORDER + "," + // Define a foreign key
+                KEY_IMPUTATION_EMPLOYEE_ID + " INTEGER," + // Define a foreign key
+                KEY_IMPUTATION_START_TIME + " INTEGER," +
+                KEY_IMPUTATION_END_TIME + " INTEGER," +
+                KEY_IMPUTATION_TOTAL_TIME + " INTEGER" +
                 ")";
 
         db.execSQL(CREATE_CONSTRUCTIONS_TABLE);
-        db.execSQL(CREATE_CUSTOMERS_TABLE);
         db.execSQL(CREATE_EMPLOYEES_TABLE);
         db.execSQL(CREATE_WORK_ORDER_TABLE);
         db.execSQL(CREATE_ASSIGN_TABLE);
-        db.execSQL(CREATE_POINTING_TABLE);
+        db.execSQL(CREATE_IMPUTATION_TABLE);
     }
 
     @Override
@@ -219,7 +199,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_EMPLOYEES);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_WORK_ORDER);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSIGN);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_POINTING);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMPUTATION);
 
             onCreate(db);
         }
@@ -256,59 +236,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
-    }
-
-    public long addOrUpdateCustomer(Customer customer) {
-        // The database connection is cached so it's not expensive to call getWriteableDatabase() multiple times.
-        SQLiteDatabase db = getWritableDatabase();
-        long userId = -1;
-
-        db.beginTransaction();
-        try {
-            ContentValues values = new ContentValues();
-            values.put(KEY_CUSTOMER_NAME, customer.getCustomerName());
-            values.put(KEY_CUSTOMER_ADDRESS1, customer.getCustomerAddress1());
-            values.put(KEY_CUSTOMER_ADDRESS2, customer.getCustomerAddress2());
-            values.put(KEY_CUSTOMER_ZIP, customer.getCustomerZip());
-            values.put(KEY_CUSTOMER_CITY, customer.getCustomerCity());
-            values.put(KEY_CUSTOMER_PHONE, customer.getCustomerPhone());
-            values.put(KEY_CUSTOMER_MAIL, customer.getCustomerEmail());
-
-
-            // First try to update the user in case the user already exists in the database
-            // This assumes userNames are unique
-            int rows = db.update(TABLE_CUSTOMERS, values, KEY_CUSTOMER_NAME + "= ?", new String[]{customer.getCustomerName()});
-
-            // Check if update succeeded
-            if (rows == 1) {
-                // Get the primary key of the user we just updated
-                String usersSelectQuery = String.format("SELECT %s FROM %s WHERE %s = ?",
-                        KEY_CUSTOMER_ID_PK, TABLE_CUSTOMERS, KEY_CUSTOMER_NAME);
-
-                Cursor cursor = db.rawQuery(usersSelectQuery, new String[]{String.valueOf(customer.getCustomerName())});
-                try {
-                    if (cursor.moveToFirst()) {
-                        userId = cursor.getInt(0);
-                        db.setTransactionSuccessful();
-                    }
-                } finally {
-                    if (cursor != null && !cursor.isClosed()) {
-                        cursor.close();
-                    }
-                }
-            } else {
-                // user with this userName did not already exist, so insert new user
-                userId = db.insertOrThrow(TABLE_CUSTOMERS, null, values);
-                db.setTransactionSuccessful();
-                Log.d(TAG, "New Customer successfuly added into database");
-
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error while trying to add or update customer : " + e.toString());
-        } finally {
-            db.endTransaction();
-        }
-        return userId;
     }
 
 
@@ -355,104 +282,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         callBack.onSuccess(constructions);
     }
 
-    private Customer getCustomerWithId(int customerId) throws Exception{
-        SQLiteDatabase db = getWritableDatabase();
 
-        String CUSTOMERS_SELECT_QUERY =
-                String.format("SELECT * FROM %s WHERE " + KEY_CUSTOMER_ID_PK + " = %d",
-                        TABLE_CUSTOMERS, customerId);
 
-        Cursor cursor = db.rawQuery(CUSTOMERS_SELECT_QUERY, null);
-        cursor.moveToFirst();
-
-        Customer newCustomer =
-                        new Customer()
-                                .withCustomerId(cursor.getLong(cursor.getColumnIndex(KEY_CUSTOMER_ID_PK)))
-                                .withCustomerName(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_NAME)))
-                                .withCustomerAddress1(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ADDRESS1)))
-                                .withCustomerAddress2(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ADDRESS2)))
-                                .withCustomerZip(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ZIP)))
-                                .withCustomerCity(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_CITY)))
-                                .withCustomerPhone(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_PHONE)))
-                                .withCustomerEmail(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_MAIL)));
-
-        if (!cursor.isClosed()) {
-            cursor.close();
-        }
-
-        return newCustomer;
-
-    }
-
-    public void addCustomer(Customer customer, DatabaseOperationCallBack<DefaultResponse> callBack) {
-        SQLiteDatabase db = getWritableDatabase();
-        db.beginTransaction();
-        try {
-
-            ContentValues values = new ContentValues();
-
-            values.put(KEY_CUSTOMER_NAME, customer.getCustomerName());
-            values.put(KEY_CUSTOMER_ADDRESS1, customer.getCustomerAddress1());
-            values.put(KEY_CUSTOMER_ADDRESS2, customer.getCustomerAddress2());
-            values.put(KEY_CUSTOMER_ZIP, customer.getCustomerZip());
-            values.put(KEY_CUSTOMER_CITY, customer.getCustomerCity());
-            values.put(KEY_CUSTOMER_PHONE, customer.getCustomerPhone());
-            values.put(KEY_CUSTOMER_MAIL, customer.getCustomerEmail());
-
-            // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
-            db.insertOrThrow(TABLE_CUSTOMERS, null, values);
-            db.setTransactionSuccessful();
-
-            Log.d(TAG, "New Customer successfuly added into database");
-            callBack.onSuccess(new DefaultResponse());
-
-        } catch (Exception e) {
-            Log.e(TAG, "Error while trying to add Customer into database : " + e.toString());
-            callBack.onError();
-        } finally {
-            db.endTransaction();
-        }
-    }
-
-    public void getAllCustomers(DatabaseOperationCallBack<ArrayList<Customer>> callBack) {
-        ArrayList<Customer> customers = new ArrayList<>();
-
-        String CUSTOMERS_SELECT_QUERY =
-                String.format("SELECT * FROM %s",
-                        TABLE_CUSTOMERS);
-
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery(CUSTOMERS_SELECT_QUERY, null);
-        try {
-            if (cursor.moveToFirst()) {
-                do {
-                    Customer newCustomer =
-                            new Customer()
-                                    .withCustomerId(cursor.getLong(cursor.getColumnIndex(KEY_CUSTOMER_ID_PK)))
-                                    .withCustomerName(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_NAME)))
-                                    .withCustomerAddress1(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ADDRESS1)))
-                                    .withCustomerAddress2(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ADDRESS2)))
-                                    .withCustomerZip(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_ZIP)))
-                                    .withCustomerCity(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_CITY)))
-                                    .withCustomerPhone(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_PHONE)))
-                                    .withCustomerEmail(cursor.getString(cursor.getColumnIndex(KEY_CUSTOMER_MAIL)));
-
-                    customers.add(newCustomer);
-
-                } while(cursor.moveToNext());
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error while trying to get customers from database : " + e.toString());
-            callBack.onError();
-        } finally {
-            if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
-            }
-        }
-
-        Log.d(TAG, "Database successfully return " + customers.size() + " customers.");
-        callBack.onSuccess(customers);
-    }
 
     public void addEmployee(Employee employee, DatabaseOperationCallBack<DefaultResponse> callBack) {
         SQLiteDatabase db = getWritableDatabase();
@@ -463,6 +294,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             values.put(KEY_EMPLOYEE_NAME, employee.getEmployeeName());
             values.put(KEY_EMPLOYEE_JOB, employee.getEmployeeJob().name());
+            values.put(KEY_EMPLOYEE_CODE, employee.getEmployeeCode());
             values.put(KEY_EMPLOYEE_ADDRESS1, employee.getEmployeeAddress1());
             values.put(KEY_EMPLOYEE_ADDRESS2, employee.getEmployeeAddress2());
             values.put(KEY_EMPLOYEE_ZIP, employee.getEmployeeZip());
@@ -501,6 +333,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                             new Employee()
                                     .withEmployeeId(cursor.getLong(cursor.getColumnIndex(KEY_EMPLOYEE_ID_PK)))
                                     .withEmployeeName(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_NAME)))
+                                    .withEmployeeCode(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_CODE)))
                                     .withEmployeeJob(Job.valueOf(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_JOB))))
                                     .withEmployeeAddress1(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ADDRESS1)))
                                     .withEmployeeAddress2(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ADDRESS2)))
@@ -526,41 +359,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         callBack.onSuccess(employees);
     }
 
-    public void editCustomer(Customer customerToEdit, DatabaseOperationCallBack<DefaultResponse> callBack) {
-
-        SQLiteDatabase db = getWritableDatabase();
-        db.beginTransaction();
-        try {
-
-            ContentValues values = new ContentValues();
-
-            values.put(KEY_CUSTOMER_NAME, customerToEdit.getCustomerName());
-            values.put(KEY_CUSTOMER_ADDRESS1, customerToEdit.getCustomerAddress1());
-            values.put(KEY_CUSTOMER_ADDRESS2, customerToEdit.getCustomerAddress2());
-            values.put(KEY_CUSTOMER_ZIP, customerToEdit.getCustomerZip());
-            values.put(KEY_CUSTOMER_CITY, customerToEdit.getCustomerCity());
-            values.put(KEY_CUSTOMER_PHONE, customerToEdit.getCustomerPhone());
-            values.put(KEY_CUSTOMER_MAIL, customerToEdit.getCustomerEmail());
-
-            db.update(TABLE_CUSTOMERS
-                    , values
-                    , KEY_CUSTOMER_ID_PK + "=" + customerToEdit.getCustomerId()
-                    ,null);
-
-            db.setTransactionSuccessful();
-
-            Log.d(TAG, "Customer have been successfuly edited into database");
-            callBack.onSuccess(new DefaultResponse());
-
-        } catch (Exception e) {
-            Log.e(TAG, "Error while trying to edit Customer into database : " + e.toString());
-            callBack.onError();
-        } finally {
-            db.endTransaction();
-        }
-
-    }
-
     public void editEmployee(Employee employee, DatabaseOperationCallBack<DefaultResponse> callBack) {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -570,6 +368,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             values.put(KEY_EMPLOYEE_NAME, employee.getEmployeeName());
             values.put(KEY_EMPLOYEE_JOB, employee.getEmployeeJob().name());
+            values.put(KEY_EMPLOYEE_CODE, employee.getEmployeeCode());
             values.put(KEY_EMPLOYEE_ADDRESS1, employee.getEmployeeAddress1());
             values.put(KEY_EMPLOYEE_ADDRESS2, employee.getEmployeeAddress2());
             values.put(KEY_EMPLOYEE_ZIP, employee.getEmployeeZip());
@@ -1008,17 +807,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             db.execSQL(DELETE_ASSIGN_QUERY);
 
-            Pointing pointing = getPointingForAssign(assign.getAssignId());
+            Imputation imputation = getImputationForAssign(assign.getAssignId());
 
-            if(pointing != null){
-                pointing
-                        .withTotalTime((System.currentTimeMillis()/1000 - pointing.getPointingStart()) + pointing.pointingTotalTime)
-                        .withPointingStart(0);
+            if(imputation != null){
+                imputation
+                        .withTotalTime((System.currentTimeMillis()/1000 - imputation.getImputationStart()) + imputation.imputationTotalTime)
+                        .withImputationStart(0);
 
-                updatePointing(pointing, new DatabaseOperationCallBack<DefaultResponse>() {
+                updateImputation(imputation, new DatabaseOperationCallBack<DefaultResponse>() {
                     @Override
                     public void onSuccess(DefaultResponse defaultResponse) {
-                        Log.e(TAG, "Pointing successfuly deleted for AssignId : " + assign.getAssignId());
+                        Log.e(TAG, "Imputation successfuly deleted for AssignId : " + assign.getAssignId());
                     }
                 });
             }
@@ -1035,67 +834,67 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 
 
-    public Pointing getPointingForAssign(long assignId) {
+    public Imputation getImputationForAssign(long assignId) {
 
-        Pointing pointing = null;
+        Imputation imputation = null;
 
-        String POINTING_SELECT_QUERY = "SELECT * " +
-                "FROM "+ TABLE_POINTING  +
-                " WHERE pointingAssignId = "+  assignId;
+        String IMPUTATION_SELECT_QUERY = "SELECT * " +
+                "FROM "+ TABLE_IMPUTATION  +
+                " WHERE imputationAssignId = "+  assignId;
 
-        Log.e(TAG, POINTING_SELECT_QUERY);
+        Log.e(TAG, IMPUTATION_SELECT_QUERY);
 
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.rawQuery(POINTING_SELECT_QUERY, null);
+        Cursor cursor = db.rawQuery(IMPUTATION_SELECT_QUERY, null);
 
         try {
             if (cursor.getCount() > 0) {
 
                 cursor.moveToFirst();
 
-                pointing = new Pointing()
-                        .withPointingId(cursor.getLong(cursor.getColumnIndex(KEY_POINTING_ID_PK)))
-                        .withTotalTime(cursor.getInt(cursor.getColumnIndex(KEY_POINTING_TOTAL_TIME)))
-                        .withPointingStart(cursor.getInt(cursor.getColumnIndex(KEY_POINTING_START)));
+                imputation = new Imputation()
+                        .withImputationId(cursor.getLong(cursor.getColumnIndex(KEY_IMPUTATION_ID_PK)))
+                        .withTotalTime(cursor.getInt(cursor.getColumnIndex(KEY_IMPUTATION_TOTAL_TIME)))
+                        .withImputationStart(cursor.getInt(cursor.getColumnIndex(KEY_IMPUTATION_START_TIME)));
 
-                Log.e(TAG, "One pointing data have been return for Work order assign with total time : " + pointing.getPointingTotalTime());
+                Log.e(TAG, "One imputation data have been return for Work order assign with total time : " + imputation.getImputationTotalTime());
 
             }else{
-                Log.e(TAG, "No pointing data for Work order assign");
+                Log.e(TAG, "No imputation data for Work order assign");
             }
 
         }catch (Exception e){
-            Log.e(TAG, "Error while trying to get pointing from database : " + e.toString());
+            Log.e(TAG, "Error while trying to get imputation from database : " + e.toString());
         }finally {
             if (!cursor.isClosed()) {
                 cursor.close();
             }
         }
 
-        return pointing;
+        return imputation;
     }
 
-    public void startPointing(Assign assign, DatabaseOperationCallBack<DefaultResponse> callBack) {
-        Pointing pointing = getPointingForAssign(assign.getAssignId());
+    public void startImputation(Assign assign, DatabaseOperationCallBack<DefaultResponse> callBack) {
+        Imputation imputation = getImputationForAssign(assign.getAssignId());
 
-        if(pointing == null){
-            pointing = new Pointing()
+        if(imputation == null){
+            imputation = new Imputation()
                     .withAssign(assign)
                     .withWorkOrder(assign.getWorkOrder())
-                    .withPointingStart(System.currentTimeMillis()/1000);
+                    .withImputationStart(System.currentTimeMillis()/1000);
 
-            addPointing(pointing, callBack);
+            addImputation(imputation, callBack);
         }else{
-            pointing
-                   .withPointingStart(System.currentTimeMillis()/1000);
+            imputation
+                   .withImputationStart(System.currentTimeMillis()/1000);
 
-            updatePointing(pointing, callBack);
+            updateImputation(imputation, callBack);
         }
     }
 
 
-    public void addPointing(Pointing pointing, DatabaseOperationCallBack<DefaultResponse> callBack) {
+    public void addImputation(Imputation imputation, DatabaseOperationCallBack<DefaultResponse> callBack) {
 
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -1104,21 +903,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             ContentValues values = new ContentValues();
 
-            values.put(KEY_POINTING_ASSIGN_ID, pointing.getAssign().getAssignId());
-            values.put(KEY_POINTING_WORK_ORDER_ID_FK, pointing.getWorkOrder().getWorkOrderId());
-            values.put(KEY_POINTING_START, pointing.getPointingStart());
-            values.put(KEY_POINTING_EMPLOYEE_ID, pointing.getAssign().getEmployee().getEmployeeId());
+            values.put(KEY_IMPUTATION_ASSIGN_ID, imputation.getAssign().getAssignId());
+            values.put(KEY_IMPUTATION_WORK_ORDER_ID_FK, imputation.getWorkOrder().getWorkOrderId());
+            values.put(KEY_IMPUTATION_START_TIME, imputation.getImputationStart());
+            values.put(KEY_IMPUTATION_EMPLOYEE_ID, imputation.getAssign().getEmployee().getEmployeeId());
 
             // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
-            db.insertOrThrow(TABLE_POINTING, null, values);
+            db.insertOrThrow(TABLE_IMPUTATION, null, values);
             db.setTransactionSuccessful();
 
-            Log.d(TAG, "New pointing successfuly added into database");
+            Log.d(TAG, "New imputation successfuly added into database");
 
             callBack.onSuccess(new DefaultResponse());
 
         } catch (Exception e) {
-            Log.e(TAG, "Error while trying to add pointing into database : " + e.toString());
+            Log.e(TAG, "Error while trying to add imputation into database : " + e.toString());
             callBack.onError();
         } finally {
             db.endTransaction();
@@ -1126,30 +925,30 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     }
 
-    public void updatePointing(Pointing pointing, DatabaseOperationCallBack<DefaultResponse> callBack) {
+    public void updateImputation(Imputation imputation, DatabaseOperationCallBack<DefaultResponse> callBack) {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
         try {
 
             ContentValues values = new ContentValues();
 
-            values.put(KEY_POINTING_START, pointing.getPointingStart());
-            values.put(KEY_POINTING_TOTAL_TIME, pointing.getPointingTotalTime());
+            values.put(KEY_IMPUTATION_START_TIME, imputation.getImputationStart());
+            values.put(KEY_IMPUTATION_TOTAL_TIME, imputation.getImputationTotalTime());
 
 
-            db.update(TABLE_POINTING
+            db.update(TABLE_IMPUTATION
                     , values
-                    , KEY_POINTING_ID_PK + "=" + pointing.getPointingId()
+                    , KEY_IMPUTATION_ID_PK + "=" + imputation.getImputationId()
                     ,null);
 
             db.setTransactionSuccessful();
 
-            Log.d(TAG, "Pointing have been successfuly edited into database");
+            Log.d(TAG, "Imputation have been successfuly edited into database");
 
             callBack.onSuccess(new DefaultResponse());
 
         } catch (Exception e) {
-            Log.e(TAG, "Error while trying to edit Pointing into database : " + e.toString());
+            Log.e(TAG, "Error while trying to edit Imputation into database : " + e.toString());
             callBack.onError();
         } finally {
             db.endTransaction();
@@ -1161,10 +960,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
 
-        String SUM_CONSUMED_TIME_QUERY = "SELECT SUM(pointing.pointingTotalTime) " +
-                "FROM "+ TABLE_POINTING  + " pointing " +
+        String SUM_CONSUMED_TIME_QUERY = "SELECT SUM(imputation.imputationTotalTime) " +
+                "FROM "+ TABLE_IMPUTATION  + " imputation " +
                 "INNER JOIN "+ TABLE_WORK_ORDER + " wo " +
-                "ON wo.workOrderIdPk = pointing.pointingWorkOrderIdFk " +
+                "ON wo.workOrderIdPk = imputation.imputationWorkOrderIdFk " +
                 "WHERE wo.workOrderIdPk = " + workOrder.getWorkOrderId();
 
         Log.e(TAG, SUM_CONSUMED_TIME_QUERY);
@@ -1218,30 +1017,30 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
     }
 
-    public void getImputationsForWorkorder(WorkOrder workOrder, DatabaseOperationCallBack<ArrayList<Pointing>> callBack) {
-        ArrayList<Pointing> imputations = new ArrayList<>();
+    public void getImputationsForWorkorder(WorkOrder workOrder, DatabaseOperationCallBack<ArrayList<Imputation>> callBack) {
+        ArrayList<Imputation> imputations = new ArrayList<>();
 
-        String POINTING_SELECT_QUERY = "SELECT * " +
-                "FROM "+ TABLE_POINTING + " pointing " +
+        String IMPUTATION_SELECT_QUERY = "SELECT * " +
+                "FROM "+ TABLE_IMPUTATION + " imputation " +
                 "INNER JOIN "+ TABLE_WORK_ORDER + " wo " +
-                "ON wo.workOrderIdPk = pointing.pointingWorkOrderIdFk " +
+                "ON wo.workOrderIdPk = imputation.imputationWorkOrderIdFk " +
                 "WHERE wo.workOrderIdPk = "+  workOrder.workOrderId ;
 
 
-        Log.e(TAG, POINTING_SELECT_QUERY);
+        Log.e(TAG, IMPUTATION_SELECT_QUERY);
 
 
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery(POINTING_SELECT_QUERY, null);
+        Cursor cursor = db.rawQuery(IMPUTATION_SELECT_QUERY, null);
         try {
             if (cursor.moveToFirst()) {
                 do {
-                    Pointing pointing =
-                            new Pointing()
-                                    .withTotalTime(cursor.getLong(cursor.getColumnIndex(KEY_POINTING_TOTAL_TIME)))
-                                    .withEmployee(getEmployeeWithId(cursor.getInt(cursor.getColumnIndex(KEY_POINTING_EMPLOYEE_ID))));
+                    Imputation imputation =
+                            new Imputation()
+                                    .withTotalTime(cursor.getLong(cursor.getColumnIndex(KEY_IMPUTATION_TOTAL_TIME)))
+                                    .withEmployee(getEmployeeWithId(cursor.getInt(cursor.getColumnIndex(KEY_IMPUTATION_EMPLOYEE_ID))));
 
-                    imputations.add(pointing);
+                    imputations.add(imputation);
 
                 } while (cursor.moveToNext());
             }

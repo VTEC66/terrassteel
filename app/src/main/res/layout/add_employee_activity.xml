@@ -60,6 +60,25 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/employee_code_til"
+                style="@style/TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/standard"
+                android:layout_marginTop="@dimen/xlarge"
+                android:layout_marginEnd="@dimen/standard">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/employee_code_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_employee_code"
+                    android:imeOptions="actionNext"
+                    android:inputType="text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/employee_address1_textinputlayout"
                 style="@style/TextInputLayout"
                 android:layout_width="match_parent"

@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_pointing_time"
+        android:id="@+id/action_imputation_time"
         android:enabled="true"
         android:icon="@drawable/ic_timer"
-        android:title="@string/pointing_time_menu"
+        android:title="@string/imputation_time_menu"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_work_order"

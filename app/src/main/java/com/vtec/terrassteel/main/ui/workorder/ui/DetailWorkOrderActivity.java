@@ -22,7 +22,6 @@ import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
 import com.vtec.terrassteel.database.DatabaseManager;
-import com.vtec.terrassteel.home.company.customer.ui.SelectCustomerDialogFragment;
 import com.vtec.terrassteel.main.ui.assign.ui.AddAssignActivity;
 
 import java.util.ArrayList;
@@ -33,7 +32,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.vtec.terrassteel.main.ui.pointing.ui.PointingTimeFragment.EXTRA_WORK_ORDER;
+import static com.vtec.terrassteel.main.ui.workorder.ui.WorkOrderFragment.EXTRA_WORK_ORDER;
+
 
 public class DetailWorkOrderActivity extends AbstractActivity {
 
@@ -87,8 +87,8 @@ public class DetailWorkOrderActivity extends AbstractActivity {
         startActivity(intent);
     }
 
-    @OnClick(R.id.pointing_management_view)
-    public void clicShowPointing(){
+    @OnClick(R.id.imputation_management_view)
+    public void clicShowImputation(){
         Intent intent = new Intent(this, ListImputationActivity.class);
 
         Bundle bundle = new Bundle();

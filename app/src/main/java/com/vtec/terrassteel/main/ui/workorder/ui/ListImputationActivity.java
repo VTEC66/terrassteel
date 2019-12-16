@@ -6,7 +6,7 @@ import android.view.View;
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.listener.ActionBarListener;
 import com.vtec.terrassteel.common.model.Employee;
-import com.vtec.terrassteel.common.model.Pointing;
+import com.vtec.terrassteel.common.model.Imputation;
 import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.common.ui.ActionBar;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
@@ -23,7 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.vtec.terrassteel.main.ui.pointing.ui.PointingTimeFragment.EXTRA_WORK_ORDER;
+import static com.vtec.terrassteel.main.ui.imputation.ui.ImputationFragment.EXTRA_WORK_ORDER;
+
 
 public class ListImputationActivity extends AbstractActivity {
 
@@ -85,9 +86,9 @@ public class ListImputationActivity extends AbstractActivity {
     public void onResume() {
         super.onResume();
 
-        DatabaseManager.getInstance(this).getImputationsForWorkorder(workOrder, new DatabaseOperationCallBack<ArrayList<Pointing>>() {
+        DatabaseManager.getInstance(this).getImputationsForWorkorder(workOrder, new DatabaseOperationCallBack<ArrayList<Imputation>>() {
             @Override
-            public void onSuccess(ArrayList<Pointing> imputations) {
+            public void onSuccess(ArrayList<Imputation> imputations) {
                 imputationAdapter.setData(imputations);
                 imputationAdapter.notifyDataSetChanged();
 

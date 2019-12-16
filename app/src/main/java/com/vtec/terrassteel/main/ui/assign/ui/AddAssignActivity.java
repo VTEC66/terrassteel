@@ -27,7 +27,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.vtec.terrassteel.main.ui.pointing.ui.PointingTimeFragment.EXTRA_WORK_ORDER;
+import static com.vtec.terrassteel.main.ui.imputation.ui.ImputationFragment.EXTRA_WORK_ORDER;
+
 
 public class AddAssignActivity extends AbstractActivity implements AssignEmployeeCallback {
 

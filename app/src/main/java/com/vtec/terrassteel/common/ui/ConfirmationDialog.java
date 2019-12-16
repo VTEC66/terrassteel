@@ -1,6 +1,5 @@
 package com.vtec.terrassteel.common.ui;
 
-import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -12,8 +11,6 @@ import android.widget.TextView;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.listener.ConfirmationDialogCallback;
-import com.vtec.terrassteel.home.company.customer.ui.SelectCustomerDialogFragment;
-import com.vtec.terrassteel.home.construction.callback.SelectCustomerDialogCallback;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;

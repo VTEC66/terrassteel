@@ -1,7 +1,6 @@
 package com.vtec.terrassteel.home.construction.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -20,9 +19,6 @@ import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
-import com.vtec.terrassteel.home.company.customer.ui.EditCustomerActivity;
-import com.vtec.terrassteel.home.company.customer.ui.SelectCustomerDialogFragment;
-import com.vtec.terrassteel.home.construction.callback.SelectCustomerDialogCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,15 +27,12 @@ import butterknife.OnClick;
 import static com.vtec.terrassteel.core.Const.NO_ERROR_CODE;
 import static com.vtec.terrassteel.core.Const.VIBRATION_DURATION;
 
-public class AddConstructionActivity extends AbstractActivity implements SelectCustomerDialogCallback {
+public class AddConstructionActivity extends AbstractActivity  {
 
 
     private static final String SELECT_CUSTOMER_DIALOG = "SELECT_CUSTOMER_DIALOG" ;
 
     private static final int ERROR_EMPTY_CONSTRUCTION_NAME_FIELD = 1;
-    private static final int ERROR_EMPTY_CUSTOMER_FIELD = 2;
-
-    private static final int ADD_CUSTOMER_INTENT_CODE = 17;
 
     private Customer selectedCustomer;
 
@@ -76,12 +69,6 @@ public class AddConstructionActivity extends AbstractActivity implements SelectC
     @BindView(R.id.construction_name_edittext)
     EditText constructionNameEditText;
 
-    @BindView(R.id.customer_edittext)
-    EditText customerEditText;
-
-    @BindView(R.id.customer_textinputlayout)
-    View customerTIL;
-
     @BindView(R.id.construction_address1_edittext)
     EditText constructionAddress1EditText;
 
@@ -94,9 +81,7 @@ public class AddConstructionActivity extends AbstractActivity implements SelectC
     @BindView(R.id.construction_city_edittext)
     EditText constructionCityEditText;
 
-    final SelectCustomerDialogFragment selectCustomerDialogFragment =
-            new SelectCustomerDialogFragment()
-                    .setCallBack(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,15 +101,6 @@ public class AddConstructionActivity extends AbstractActivity implements SelectC
             public void onActionButtonClick() { }
         });
 
-        customerEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                customerEditText.setCursorVisible(true);
-                if(hasFocus) {
-                    selectCustomerDialogFragment.show(getSupportFragmentManager(), SELECT_CUSTOMER_DIALOG);
-                }
-            }
-        });
     }
 
 
@@ -153,29 +129,16 @@ public class AddConstructionActivity extends AbstractActivity implements SelectC
         });
     }
 
-    @Override
-    public void onCustomerSelected(Customer customer) {
-        this.selectedCustomer = customer;
-        customerEditText.setText(customer.getCustomerName());
-        selectCustomerDialogFragment.dismiss();
-        customerEditText.clearFocus();
-    }
 
-    @Override
-    public void onSelectAddCustomer() {
-        startActivityForResult(new Intent(this, EditCustomerActivity.class), ADD_CUSTOMER_INTENT_CODE);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        customerEditText.clearFocus();
-    }
+
+
 
     private int controlField() {
         if (constructionNameEditText.getText().length() == 0) {
             return ERROR_EMPTY_CONSTRUCTION_NAME_FIELD;
         }
 
-        if (customerEditText.getText().length() == 0) {
-            return ERROR_EMPTY_CUSTOMER_FIELD;
-        }
+
 
         return NO_ERROR_CODE;
     }
@@ -186,16 +149,12 @@ public class AddConstructionActivity extends AbstractActivity implements SelectC
                 constructionNameTIL.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
                 constructionNameEditText.setError(getString(R.string.standard_mandatory_field_message));
                 break;
-            case ERROR_EMPTY_CUSTOMER_FIELD:
-                customerTIL.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
-                customerEditText.setError(getString(R.string.customer_mandatory_field_message));
-                break;
+
         }
     }
 
     private void clearHighlightErrors() {
         constructionNameEditText.setError(null);
-        customerEditText.setError(null);
     }
 
 }

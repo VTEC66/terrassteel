@@ -1,9 +1,9 @@
-package com.vtec.terrassteel.main.ui.pointing.callback;
+package com.vtec.terrassteel.main.ui.imputation.callback;
 
 import com.vtec.terrassteel.common.model.Assign;
 import com.vtec.terrassteel.common.model.WorkOrder;
 
-public interface PointingCallback {
+public interface ImputationCallback {
 
     void addAssignToWorkOrder(WorkOrder workOrder);
 

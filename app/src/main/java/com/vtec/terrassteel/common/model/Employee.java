@@ -7,6 +7,7 @@ public class Employee implements Serializable {
     public long employeeId;
     public String employeeName;
     public Job employeeJob;
+    public String employeeCode;
     public String employeeAddress1;
     public String employeeAddress2;
     public String employeeZip;
@@ -26,6 +27,11 @@ public class Employee implements Serializable {
 
     public Employee withEmployeeJob(Job employeeJob){
         this.employeeJob = employeeJob;
+        return this;
+    }
+
+    public Employee withEmployeeCode(String employeeCode){
+        this.employeeCode = employeeCode;
         return this;
     }
 
@@ -95,4 +101,6 @@ public class Employee implements Serializable {
     public String getEmployeeEmail() {
         return employeeEmail;
     }
+
+    public String getEmployeeCode() { return employeeCode; }
 }

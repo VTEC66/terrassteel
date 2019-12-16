@@ -1,4 +1,4 @@
-package com.vtec.terrassteel.main.ui.pointing.adapter;
+package com.vtec.terrassteel.main.ui.imputation.adapter;
 
 import android.content.Context;
 import android.os.SystemClock;
@@ -11,11 +11,11 @@ import android.widget.TextView;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.model.Assign;
-import com.vtec.terrassteel.common.model.Pointing;
+import com.vtec.terrassteel.common.model.Imputation;
 import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.database.DatabaseManager;
-import com.vtec.terrassteel.main.ui.pointing.callback.PointingCallback;
+import com.vtec.terrassteel.main.ui.imputation.callback.ImputationCallback;
 
 import java.util.ArrayList;
 
@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ImputationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     private static final int HEADER = 1;
@@ -33,9 +33,9 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private Context context;
     private ArrayList<Assign> elements = new ArrayList<>();
-    private PointingCallback callback;
+    private ImputationCallback callback;
 
-    public PointingAdapter(Context context) {
+    public ImputationAdapter(Context context) {
         this.context = context;
     }
 
@@ -46,10 +46,10 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case HEADER:
             default:
                 return new HeaderViewHolder(
-                        LayoutInflater.from(parent.getContext()).inflate(R.layout.pointing_header_itemview, parent, false));
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.imputation_header_itemview, parent, false));
             case ITEM:
                 return new ItemViewHolder(
-                        LayoutInflater.from(parent.getContext()).inflate(R.layout.pointing_item_itemview, parent, false));
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.imputation_item_itemview, parent, false));
         }
     }
 
@@ -94,11 +94,11 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if(itemViewHolder.isWorking){
 
                         itemViewHolder.chronometer.stop();
-                        itemViewHolder.pointing
-                                .withTotalTime((System.currentTimeMillis()/1000 - itemViewHolder.pointing.getPointingStart()) + itemViewHolder.pointing.pointingTotalTime)
-                                .withPointingStart(0);
+                        itemViewHolder.imputation
+                                .withTotalTime((System.currentTimeMillis()/1000 - itemViewHolder.imputation.getImputationStart()) + itemViewHolder.imputation.imputationTotalTime)
+                                .withImputationStart(0);
 
-                        DatabaseManager.getInstance(context).updatePointing(itemViewHolder.pointing, new DatabaseOperationCallBack<DefaultResponse>() {
+                        DatabaseManager.getInstance(context).updateImputation(itemViewHolder.imputation, new DatabaseOperationCallBack<DefaultResponse>() {
                             @Override
                             public void onSuccess(DefaultResponse defaultResponse) {
                                 itemViewHolder.isWorking = false;
@@ -107,7 +107,7 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     }else{
 
-                        DatabaseManager.getInstance(context).startPointing(assign, new DatabaseOperationCallBack<DefaultResponse>() {
+                        DatabaseManager.getInstance(context).startImputation(assign, new DatabaseOperationCallBack<DefaultResponse>() {
                             @Override
                             public void onSuccess(DefaultResponse defaultResponse) {
                                 itemViewHolder.isWorking = true;
@@ -142,7 +142,7 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return 0;
     }
 
-    public void setCallback(PointingCallback callback) {
+    public void setCallback(ImputationCallback callback) {
         this.callback = callback;
     }
 
@@ -178,14 +178,14 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @BindView(R.id.action_view)
         ImageView actionView;
 
-        Pointing pointing;
+        Imputation imputation;
         boolean isWorking;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            pointing = null;
+            imputation = null;
         }
 
         public void setDrawableForActionView(){
@@ -198,12 +198,12 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public void setupChronometer(Assign assign) {
 
-            pointing = DatabaseManager.getInstance(context).getPointingForAssign(assign.getAssignId());
+            imputation = DatabaseManager.getInstance(context).getImputationForAssign(assign.getAssignId());
 
             chronometer.setBase(getBaseTime());
 
-            if(pointing != null){
-                if(pointing.getPointingStart() > 0){
+            if(imputation != null){
+                if(imputation.getImputationStart() > 0){
                     this.isWorking = true;
                     chronometer.start();
                 }else{
@@ -215,14 +215,14 @@ public class PointingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         private long getBaseTime(){
-            if(pointing == null){
+            if(imputation == null){
                 return SystemClock.elapsedRealtime();
             }else{
-                if(pointing.getPointingStart() > 0){
-                    long time = (System.currentTimeMillis()/1000 - pointing.getPointingStart()) + pointing.pointingTotalTime;
+                if(imputation.getImputationStart() > 0){
+                    long time = (System.currentTimeMillis()/1000 - imputation.getImputationStart()) + imputation.imputationTotalTime;
                     return SystemClock.elapsedRealtime() - time * 1000;
                 }
-                return SystemClock.elapsedRealtime() - pointing.pointingTotalTime * 1000;
+                return SystemClock.elapsedRealtime() - imputation.imputationTotalTime * 1000;
             }
         }
     }

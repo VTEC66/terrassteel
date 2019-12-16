@@ -44,7 +44,7 @@
     <string name="add_customer_textbutton">Ajouter un client</string>
     <string name="edit_customer_title">Edition d\'un client</string>
     <string name="edit_employee_title">Edition d\'un employé</string>
-    <string name="pointing_time_menu">Pointage</string>
+    <string name="imputation_time_menu">Pointage</string>
     <string name="work_order_menu">Bons de travail</string>
     <string name="dashboard_menu">Tableau de bord</string>
     <string name="point_time_title">Pointage</string>
@@ -63,7 +63,7 @@
     <string name="empty_assigned_text">Aucun employé n\'est assigné à ce bon de travail actuellement.</string>
     <string name="empty_available_text">Aucun employé disponible actuellement.</string>
     <string name="show_assign">Voir les affectations</string>
-    <string name="show_pointing">Voir les imputations</string>
+    <string name="show_imputation">Voir les imputations</string>
     <string name="close_workorder_textbutton">Fermer le bon de travail</string>
     <string name="consumed_time">Consommé</string>
     <string name="affected_time">Alloué</string>
@@ -76,5 +76,6 @@
     <string name="work_order">Bon de travail N°%1$s </string>
     <string name="qr_wo_notrecognized">Le QR code du Bon de travail n\'a pas été reconnu.</string>
     <string name="qr_construction_notrecognized">Le QR code chantier n\'à pas été reconnu.</string>
+    <string name="hint_employee_code">Code employé</string>
 
 </resources>

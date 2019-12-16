@@ -199,7 +199,7 @@
         android:background="@color/manatee_grey"/>
 
     <RelativeLayout
-        android:id="@+id/pointing_management_view"
+        android:id="@+id/imputation_management_view"
         android:layout_width="match_parent"
         android:layout_height="80dp">
 
@@ -209,7 +209,7 @@
             android:textSize="@dimen/text_size_standard"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/standard"
-            android:text="@string/show_pointing"/>
+            android:text="@string/show_imputation"/>
 
         <ImageView
             android:layout_width="35dp"

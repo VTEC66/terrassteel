@@ -1,4 +1,4 @@
-package com.vtec.terrassteel.main.ui.pointing.ui;
+package com.vtec.terrassteel.main.ui.imputation.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,10 +13,9 @@ import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractFragment;
 import com.vtec.terrassteel.database.DatabaseManager;
-import com.vtec.terrassteel.home.company.customer.ui.EditCustomerActivity;
 import com.vtec.terrassteel.main.ui.assign.ui.AddAssignActivity;
-import com.vtec.terrassteel.main.ui.pointing.adapter.PointingAdapter;
-import com.vtec.terrassteel.main.ui.pointing.callback.PointingCallback;
+import com.vtec.terrassteel.main.ui.imputation.adapter.ImputationAdapter;
+import com.vtec.terrassteel.main.ui.imputation.callback.ImputationCallback;
 import com.vtec.terrassteel.main.ui.workorder.adapter.WorkorderAdapter;
 import com.vtec.terrassteel.main.ui.workorder.ui.DetailWorkOrderActivity;
 
@@ -30,47 +29,46 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.vtec.terrassteel.home.company.customer.ui.EditCustomerActivity.EXTRA_CUSTOMER;
 
-public class PointingTimeFragment extends AbstractFragment implements PointingCallback {
+public class ImputationFragment extends AbstractFragment implements ImputationCallback {
 
-    public static final String TAG = PointingTimeFragment.class.getSimpleName();
+    public static final String TAG = ImputationFragment.class.getSimpleName();
     public static final String EXTRA_WORK_ORDER = "EXTRA_WORK_ORDER";
     private static final int ADD_ASSIGN_INTENT_CODE = 20;
 
-    @BindView(R.id.pointing_time_listview)
-    RecyclerView pointingTimeRecyclerView;
+    @BindView(R.id.imputation_time_listview)
+    RecyclerView imputationTimeRecyclerView;
 
-    @BindView(R.id.pointing_time_view)
-    View pointingView;
+    @BindView(R.id.imputation_time_view)
+    View imputationView;
 
     @BindView(R.id.empty_view)
     View emptyView;
 
-    private PointingAdapter pointingAdapter;
+    private ImputationAdapter imputationAdapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View thisView = inflater.inflate(R.layout.pointing_time_fragment, container, false);
+        View thisView = inflater.inflate(R.layout.imputation_fragment, container, false);
 
         ButterKnife.bind(this, thisView);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
 
-        pointingTimeRecyclerView.setLayoutManager(linearLayoutManager);
+        imputationTimeRecyclerView.setLayoutManager(linearLayoutManager);
 
-        pointingAdapter = new PointingAdapter(getContext());
-        pointingAdapter.setCallback(this);
+        imputationAdapter = new ImputationAdapter(getContext());
+        imputationAdapter.setCallback(this);
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(pointingTimeRecyclerView.getContext(),
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(imputationTimeRecyclerView.getContext(),
                 linearLayoutManager.getOrientation());
 
-        pointingTimeRecyclerView.addItemDecoration(dividerItemDecoration);
-        pointingTimeRecyclerView.setAdapter(pointingAdapter);
+        imputationTimeRecyclerView.addItemDecoration(dividerItemDecoration);
+        imputationTimeRecyclerView.setAdapter(imputationAdapter);
 
 
         return thisView;
@@ -85,8 +83,8 @@ public class PointingTimeFragment extends AbstractFragment implements PointingCa
             public void onSuccess(ArrayList<Assign> assigns) {
 
                         setupVisibility(assigns.isEmpty());
-                        pointingAdapter.setData(assigns);
-                        pointingAdapter.notifyDataSetChanged();
+                        imputationAdapter.setData(assigns);
+                        imputationAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -99,10 +97,10 @@ public class PointingTimeFragment extends AbstractFragment implements PointingCa
     private void setupVisibility(boolean isDataEmpty) {
         if(isDataEmpty){
             emptyView.setVisibility(View.VISIBLE);
-            pointingView.setVisibility(View.GONE);
+            imputationView.setVisibility(View.GONE);
         }else{
             emptyView.setVisibility(View.GONE);
-            pointingView.setVisibility(View.VISIBLE);
+            imputationView.setVisibility(View.VISIBLE);
         }
     }
 

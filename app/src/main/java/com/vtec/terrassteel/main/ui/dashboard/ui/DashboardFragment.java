@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.ui.ActionBar;
 import com.vtec.terrassteel.core.ui.AbstractFragment;
-import com.vtec.terrassteel.main.ui.pointing.ui.PointingTimeFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

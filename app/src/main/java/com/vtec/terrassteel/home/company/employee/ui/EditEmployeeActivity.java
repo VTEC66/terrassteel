@@ -37,6 +37,8 @@ public class EditEmployeeActivity extends AbstractActivity implements SelectJobC
 
     private static final int ERROR_EMPTY_EMPLOYEE_NAME_FIELD = 2;
     private static final int ERROR_EMPTY_JOB_FIELD = 3;
+    private static final int ERROR_EMPTY_EMPLOYEE_CODE_FIELD = 4;
+
 
     private Employee employeeToEdit;
 
@@ -86,6 +88,12 @@ public class EditEmployeeActivity extends AbstractActivity implements SelectJobC
     @BindView(R.id.employee_job_edittext)
     EditText employeeJobEditText;
 
+    @BindView(R.id.employee_code_til)
+    TextInputLayout employeeCodeTIL;
+
+    @BindView(R.id.employee_code_edittext)
+    EditText employeeCodeEditText;
+
     @BindView(R.id.employee_address1_edittext)
     EditText employeeAddress1EditText;
 
@@ -116,8 +124,6 @@ public class EditEmployeeActivity extends AbstractActivity implements SelectJobC
 
         setContentView(R.layout.add_employee_activity);
         ButterKnife.bind(this);
-
-
 
         if (getIntent() != null && getIntent().hasExtra(EXTRA_EMPLOYEE)) {
             Bundle bundle = getIntent().getExtras();
@@ -154,6 +160,7 @@ public class EditEmployeeActivity extends AbstractActivity implements SelectJobC
 
         employeeNameEditText.setText(employeeToEdit.getEmployeeName());
         employeeJobEditText.setText(employeeToEdit.getEmployeeJob().getRessourceReference());
+        employeeCodeEditText.setText(employeeToEdit.getEmployeeCode());
         employeeAddress1EditText.setText(employeeToEdit.getEmployeeAddress1());
         employeeAddress2EditText.setText(employeeToEdit.getEmployeeAddress2());
         employeeZipEditText.setText(employeeToEdit.getEmployeeZip());
@@ -183,6 +190,10 @@ public class EditEmployeeActivity extends AbstractActivity implements SelectJobC
             return ERROR_EMPTY_JOB_FIELD;
         }
 
+        if (employeeCodeEditText.getText().length() == 0) {
+            return ERROR_EMPTY_EMPLOYEE_CODE_FIELD;
+        }
+
         return NO_ERROR_CODE;
     }
 
@@ -196,12 +207,17 @@ public class EditEmployeeActivity extends AbstractActivity implements SelectJobC
                 employeeJobTIL.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
                 employeeJobEditText.setError(getString(R.string.customer_mandatory_field_message));
                 break;
+            case ERROR_EMPTY_EMPLOYEE_CODE_FIELD:
+                employeeCodeTIL.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
+                employeeCodeEditText.setError(getString(R.string.standard_mandatory_field_message));
+                break;
         }
     }
 
     private void clearHighlightErrors() {
         employeeNameEditText.setError(null);
         employeeJobEditText.setError(null);
+        employeeCityEditText.setError(null);
     }
 
 
@@ -210,6 +226,7 @@ public class EditEmployeeActivity extends AbstractActivity implements SelectJobC
         Employee newEmployee = new Employee()
                 .withEmployeeName(employeeNameEditText.getText().toString())
                 .withEmployeeJob(selectedJob)
+                .withEmployeeCode(employeeCodeEditText.getText().toString())
                 .withEmployeeAddress1(employeeAddress1EditText.getText().toString())
                 .withEmployeeAddress2(employeeAddress2EditText.getText().toString())
                 .withEmployeeZip(employeeZipEditText.getText().toString())
@@ -237,6 +254,7 @@ public class EditEmployeeActivity extends AbstractActivity implements SelectJobC
         employeeToEdit
                 .withEmployeeName(employeeNameEditText.getText().toString())
                 .withEmployeeJob( (selectedJob!=null) ? selectedJob : employeeToEdit.getEmployeeJob())
+                .withEmployeeCode(employeeCodeEditText.getText().toString())
                 .withEmployeeAddress1(employeeAddress1EditText.getText().toString())
                 .withEmployeeAddress2(employeeAddress2EditText.getText().toString())
                 .withEmployeeZip(employeeZipEditText.getText().toString())

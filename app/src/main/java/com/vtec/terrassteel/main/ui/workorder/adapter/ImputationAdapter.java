@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.model.Employee;
-import com.vtec.terrassteel.common.model.Pointing;
+import com.vtec.terrassteel.common.model.Imputation;
 import com.vtec.terrassteel.home.company.employee.adapter.EmployeesAdapter;
 
 import java.text.DateFormat;
@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 
 public class ImputationAdapter extends RecyclerView.Adapter<ImputationAdapter.ViewHolder> {
 
-    private ArrayList<Pointing> elements = new ArrayList<>();
+    private ArrayList<Imputation> elements = new ArrayList<>();
 
     @NonNull
     @Override
@@ -33,13 +33,13 @@ public class ImputationAdapter extends RecyclerView.Adapter<ImputationAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Pointing pointing = elements.get(position);
+        Imputation imputation = elements.get(position);
 
 
 
-        holder.imputationTimeTextView.setText(calculateTime(pointing.getPointingTotalTime()));//String.valueOf(pointing.getPointingTotalTime()));
-        holder.imputationEmployeeTextView.setText(pointing.getEmployee().getEmployeeName());
-        holder.imputationEmployeeJobTextView.setText(pointing.getEmployee().getEmployeeJob().getRessourceReference());
+        holder.imputationTimeTextView.setText(calculateTime(imputation.getImputationTotalTime()));//String.valueOf(imputation.getImputationTotalTime()));
+        holder.imputationEmployeeTextView.setText(imputation.getEmployee().getEmployeeName());
+        holder.imputationEmployeeJobTextView.setText(imputation.getEmployee().getEmployeeJob().getRessourceReference());
 
     }
 
@@ -50,7 +50,7 @@ public class ImputationAdapter extends RecyclerView.Adapter<ImputationAdapter.Vi
         return 0;
     }
 
-    public void setData(ArrayList<Pointing> imputations) {
+    public void setData(ArrayList<Imputation> imputations) {
         this.elements = imputations;
     }
 

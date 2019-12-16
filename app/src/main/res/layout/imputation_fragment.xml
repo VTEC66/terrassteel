@@ -14,14 +14,14 @@
         app:title="@string/point_time_title" />
 
     <LinearLayout
-        android:id="@+id/pointing_time_view"
+        android:id="@+id/imputation_time_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="gone">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/pointing_time_listview"
+            android:id="@+id/imputation_time_listview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"/>

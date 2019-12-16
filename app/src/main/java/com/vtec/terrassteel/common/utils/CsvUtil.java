@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
-import com.vtec.terrassteel.common.model.Pointing;
+import com.vtec.terrassteel.common.model.Imputation;
 import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.database.DatabaseManager;
@@ -32,21 +32,21 @@ public class CsvUtil {
 
             writeCsvLine(Arrays.asList(headerArray));
 
-            DatabaseManager.getInstance(context).getImputationsForWorkorder(workOrder, new DatabaseOperationCallBack<ArrayList<Pointing>>() {
+            DatabaseManager.getInstance(context).getImputationsForWorkorder(workOrder, new DatabaseOperationCallBack<ArrayList<Imputation>>() {
                 @Override
-                public void onSuccess(ArrayList<Pointing> pointings)  {
+                public void onSuccess(ArrayList<Imputation> imputations)  {
 
-                    for(Pointing pointing : pointings){
+                    for(Imputation imputation : imputations){
 
                         ArrayList<String> line = new ArrayList<>();
 
                         line.add(workOrder.getWorkOrderAffaire());
                         line.add(workOrder.getWorkOrderReference());
-                        line.add(String.valueOf(pointing.getEmployee().getEmployeeId()));
-                        line.add(String.valueOf(pointing.getPointingStart())); //Get Only Date JJMMAAA
-                        line.add(String.valueOf(pointing.getPointingStart())); //Get Only Date HHMM
-                        line.add(String.valueOf(pointing.getPointingEnd())); //Get Only Date HHMM
-                        line.add(pointing.getObservation());
+                        line.add(String.valueOf(imputation.getEmployee().getEmployeeId()));
+                        line.add(String.valueOf(imputation.getImputationStart())); //Get Only Date JJMMAAA
+                        line.add(String.valueOf(imputation.getImputationStart())); //Get Only Date HHMM
+                        line.add(String.valueOf(imputation.getImputationEnd())); //Get Only Date HHMM
+                        line.add(imputation.getObservation());
                         line.add("N");
                         line.add(String.valueOf(0));
                         line.add("POSE");
