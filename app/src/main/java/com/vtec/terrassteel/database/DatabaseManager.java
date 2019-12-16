@@ -15,6 +15,7 @@ import com.vtec.terrassteel.common.model.Job;
 import com.vtec.terrassteel.common.model.Imputation;
 import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.common.model.WorkOrderStatus;
+import com.vtec.terrassteel.core.manager.SessionManager;
 import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 
@@ -39,12 +40,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     // Construction Table Columns
     private static final String KEY_CONSTRUCTION_ID_PK = "constructionIdPk";
-    private static final String KEY_CONSTRUCTION_CUSTOMER_ID_FK = "customerIdFk";
+    private static final String KEY_CONSTRUCTION_CUSTOMER = "customerIdFk";
     private static final String KEY_CONSTRUCTION_NAME = "constructionName";
-    private static final String KEY_CONSTRUCTION_ADDRESS1 = "constructionAddress1";
-    private static final String KEY_CONSTRUCTION_ADDRESS2 = "constructionAddress2";
-    private static final String KEY_CONSTRUCTION_ZIP = "constructionZip";
-    private static final String KEY_CONSTRUCTION_CITY = "constructionCity";
     private static final String KEY_CONSTRUCTION_STATUS = "constructionStatus";
 
 
@@ -119,12 +116,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         String CREATE_CONSTRUCTIONS_TABLE = "CREATE TABLE " + TABLE_CONSTRUCTIONS +
                 "(" +
                 KEY_CONSTRUCTION_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                KEY_CONSTRUCTION_CUSTOMER_ID_FK + " TEXT," + // Define a foreign key
+                KEY_CONSTRUCTION_CUSTOMER + " TEXT," + // Define a foreign key
                 KEY_CONSTRUCTION_NAME + " TEXT," +
-                KEY_CONSTRUCTION_ADDRESS1 + " TEXT," +
-                KEY_CONSTRUCTION_ADDRESS2 + " TEXT," +
-                KEY_CONSTRUCTION_ZIP + " TEXT," +
-                KEY_CONSTRUCTION_CITY + " TEXT," +
                 KEY_CONSTRUCTION_STATUS + " TEXT" +
                 ")";
 
@@ -212,12 +205,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             ContentValues values = new ContentValues();
 
-            values.put(KEY_CONSTRUCTION_CUSTOMER_ID_FK, construction.getCustomer());
+            values.put(KEY_CONSTRUCTION_CUSTOMER, construction.getCustomer());
             values.put(KEY_CONSTRUCTION_NAME, construction.getConstructionName());
-            values.put(KEY_CONSTRUCTION_ADDRESS1, construction.getConstructionAddress1());
-            values.put(KEY_CONSTRUCTION_ADDRESS2, construction.getConstructionAddress2());
-            values.put(KEY_CONSTRUCTION_ZIP, construction.getConstructionZip());
-            values.put(KEY_CONSTRUCTION_CITY, construction.getConstructionZip());
+            values.put(KEY_CONSTRUCTION_CUSTOMER, construction.getCustomer());
             values.put(KEY_CONSTRUCTION_STATUS, construction.getConstructionStatus().name());
 
 
@@ -253,11 +243,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                             new Construction()
                                     .withConstructionId(cursor.getLong(cursor.getColumnIndex(KEY_CONSTRUCTION_ID_PK)))
                                     .withConstructionName(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_NAME)))
-                                    .withCustomer(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_CUSTOMER_ID_FK)))
-                                    .withConstructionAddress1(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ADDRESS1)))
-                                    .withConstructionAddress2(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ADDRESS2)))
-                                    .withConstructionZip(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ZIP)))
-                                    .withConstructionCity(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_CITY)))
+                                    .withCustomer(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_CUSTOMER)))
                                     .withConstructionStatus(ConstructionStatus.valueOf(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_STATUS))));
 
                     constructions.add(newConstruction);
@@ -402,7 +388,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             values.put(KEY_WORK_ORDER_REFERENCE, workOrder.getWorkOrderReference());
             values.put(KEY_WORK_ORDER_AFFAIRE, workOrder.getWorkOrderAffaire());
-            values.put(KEY_WORK_ORDER_PRODUCT_TYPE, workOrder.getWorkOrderProductType());
             values.put(KEY_WORK_ORDER_ALLOCATED_TIME, workOrder.getWorkOrderAllocatedHour());
             values.put(KEY_WORK_ORDER_STATUS, workOrder.getWorkOrderStatus().name());
             values.put(KEY_WORK_ORDER_CONSTRUCTION_ID_FK, workOrder.getConstruction().getConstructionId());
@@ -446,7 +431,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
                                     .withWorkOrderId(cursor.getLong(cursor.getColumnIndex(KEY_WORK_ORDER_ID_PK)))
                                     .withWorkOrderReference(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_REFERENCE)))
                                     .withWorkOrderAffaire(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_AFFAIRE)))
-                                    .withWorkOrderProductType(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_PRODUCT_TYPE)))
                                     .withWorkOrderAllocatedHour(cursor.getInt(cursor.getColumnIndex(KEY_WORK_ORDER_ALLOCATED_TIME)))
                                     .withworkOrderStatus(WorkOrderStatus.valueOf(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_STATUS))))
                                     .withConstruction(getConstructionWithId(cursor.getInt(cursor.getColumnIndex(KEY_WORK_ORDER_CONSTRUCTION_ID_FK))));
@@ -486,11 +470,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 new Construction()
                         .withConstructionId(cursor.getLong(cursor.getColumnIndex(KEY_CONSTRUCTION_ID_PK)))
                         .withConstructionName(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_NAME)))
-                        .withCustomer(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_CUSTOMER_ID_FK)))
-                        .withConstructionAddress1(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ADDRESS1)))
-                        .withConstructionAddress2(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ADDRESS2)))
-                        .withConstructionZip(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_ZIP)))
-                        .withConstructionCity(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_CITY)))
+                        .withCustomer(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_CUSTOMER)))
                         .withConstructionStatus(ConstructionStatus.valueOf(cursor.getString(cursor.getColumnIndex(KEY_CONSTRUCTION_STATUS))));
 
 
@@ -531,7 +511,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
 
-    public void getAllAssign(DatabaseOperationCallBack<ArrayList<Assign>> callBack) {
+    public void getAllAssignForConstruction(Construction consrtrucion, DatabaseOperationCallBack<ArrayList<Assign>> callBack) {
 
         ArrayList<Assign> assigns = new ArrayList<>();
 
@@ -540,7 +520,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                                 "INNER JOIN "+ TABLE_WORK_ORDER + " wo " +
                                 "ON wo.workOrderIdPk = assign.workOrderIdFk " +
                                 "WHERE wo.workOrderStatus LIKE '"+ WorkOrderStatus.IN_PROGRESS.name()+"' " +
-                                "ORDER BY wo.workOrderIdPk ASC"
+                                "AND wo.constructionIdFk = " + consrtrucion.getConstructionId() +
+                                " ORDER BY wo.workOrderIdPk ASC"
                             );
 
         Log.e(TAG, ASSIGN_SELECT_QUERY);
@@ -594,6 +575,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                             .withEmployeeId(cursor.getLong(cursor.getColumnIndex(KEY_EMPLOYEE_ID_PK)))
                             .withEmployeeName(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_NAME)))
                             .withEmployeeJob(Job.valueOf(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_JOB))))
+                            .withEmployeeCode(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_CODE)))
                             .withEmployeeAddress1(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ADDRESS1)))
                             .withEmployeeAddress2(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ADDRESS2)))
                             .withEmployeeZip(cursor.getString(cursor.getColumnIndex(KEY_EMPLOYEE_ZIP)))
@@ -627,7 +609,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
                         .withWorkOrderId(cursor.getLong(cursor.getColumnIndex(KEY_WORK_ORDER_ID_PK)))
                         .withWorkOrderReference(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_REFERENCE)))
                         .withWorkOrderAffaire(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_AFFAIRE)))
-                        .withWorkOrderProductType(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_PRODUCT_TYPE)))
                         .withWorkOrderAllocatedHour(cursor.getInt(cursor.getColumnIndex(KEY_WORK_ORDER_ALLOCATED_TIME)))
                         .withworkOrderStatus(WorkOrderStatus.valueOf(cursor.getString(cursor.getColumnIndex(KEY_WORK_ORDER_STATUS))))
                         .withConstruction(getConstructionWithId(cursor.getInt(cursor.getColumnIndex(KEY_WORK_ORDER_CONSTRUCTION_ID_FK))));

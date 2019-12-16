@@ -18,6 +18,7 @@ import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractFragment;
 import com.vtec.terrassteel.database.DatabaseManager;
+import com.vtec.terrassteel.home.construction.ui.AddConstructionActivity;
 import com.vtec.terrassteel.main.ui.workorder.adapter.WorkorderAdapter;
 import com.vtec.terrassteel.main.ui.workorder.callback.WorkorderCallback;
 
@@ -35,16 +36,17 @@ import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
 import static com.vtec.terrassteel.common.ui.ScanActivity.CODE;
+import static com.vtec.terrassteel.common.ui.ScanActivity.MANUAL;
 import static com.vtec.terrassteel.core.ui.AbstractActivity.PERMISSION_REQUEST_CODE;
 
 public class WorkOrderFragment extends AbstractFragment implements WorkorderCallback {
 
-    private static  final int ADD_CUSTOMER_INTENT_CODE = 19;
     private static final int SCAN_QR_REQUEST_CODE = 23;
 
     public static final String EXTRA_WORK_ORDER = "EXTRA_WORK_ORDER";
 
     public static final String TAG = WorkOrderFragment.class.getSimpleName();
+    private static final int ADD_MANUAL_WORKORDER_REQUEST_CODE = 20;
 
     @BindView(R.id.workorder_listview)
     RecyclerView workorderRecyclerView;
@@ -159,32 +161,43 @@ public class WorkOrderFragment extends AbstractFragment implements WorkorderCall
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == SCAN_QR_REQUEST_CODE &&
-                resultCode == RESULT_OK) {
-            if(!TextUtils.isEmpty(data.getStringExtra(CODE))){
-                String extractedData = data.getStringExtra(CODE);
-                String[] parts = extractedData.replace("\"","").trim().split(";");
+        if (requestCode == SCAN_QR_REQUEST_CODE){
+            switch (resultCode) {
+                case RESULT_OK:
+                    if(!TextUtils.isEmpty(data.getStringExtra(CODE))){
+                        String extractedData = data.getStringExtra(CODE);
+                        String[] parts = extractedData.replace("\"","").trim().split(";");
 
-                if(parts.length!=3){
-                    showError(getString(R.string.qr_wo_notrecognized));
-                }else{
-                    WorkOrder newWorkOrder = new WorkOrder()
-                            .withConstruction(sessionManager.getContruction())
-                            .withworkOrderStatus(WorkOrderStatus.IN_PROGRESS)
-                            .withWorkOrderReference(parts[1])
-                            .withWorkOrderAffaire(parts[0])
-                            .withWorkOrderAllocatedHour(Integer.parseInt(parts[2]));
+                        if(parts.length!=3){
+                            showError(getString(R.string.qr_wo_notrecognized));
+                        }else{
+                            WorkOrder newWorkOrder = new WorkOrder()
+                                    .withConstruction(sessionManager.getContruction())
+                                    .withworkOrderStatus(WorkOrderStatus.IN_PROGRESS)
+                                    .withWorkOrderReference(parts[1])
+                                    .withWorkOrderAffaire(parts[0])
+                                    .withWorkOrderAllocatedHour(Integer.parseInt(parts[2]));
 
-                    DatabaseManager.getInstance(getContext())
-                            .addWorkOrder(newWorkOrder, new DatabaseOperationCallBack<DefaultResponse>() {
-                                @Override
-                                public void onSuccess(DefaultResponse defaultResponse) {
-                                    onResume();
-                                }
-                            });
-                }
+                            DatabaseManager.getInstance(getContext())
+                                    .addWorkOrder(newWorkOrder, new DatabaseOperationCallBack<DefaultResponse>() {
+                                        @Override
+                                        public void onSuccess(DefaultResponse defaultResponse) {
+                                            onResume();
+                                        }
+                                    });
+                        }
+                    }
+                    break;
+                case MANUAL:
+                    startActivityForResult(new Intent(getActivity(), AddWorkOrderActivity.class), ADD_MANUAL_WORKORDER_REQUEST_CODE);
+                    break;
+
             }
+        }else if(requestCode == ADD_MANUAL_WORKORDER_REQUEST_CODE && resultCode == RESULT_OK){
+            onResume();
+
         }
+
     }
 
     @Override

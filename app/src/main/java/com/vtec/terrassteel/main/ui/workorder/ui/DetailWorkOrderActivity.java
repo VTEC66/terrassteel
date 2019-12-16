@@ -151,11 +151,20 @@ public class DetailWorkOrderActivity extends AbstractActivity {
         });
 
         actionBar.setTitle(getString(R.string.work_order, workOrder.getWorkOrderReference()));
-
     }
 
     private void makeCSV() {
-        new CsvUtil().makeCSV(getBaseContext(), workOrder);
+        new CsvUtil().makeCSV(getBaseContext(), workOrder, new CsvUtil.CsvCallback() {
+            @Override
+            public void onSuccess() {
+                showSuccessDialog(getString(R.string.export_file_generated));
+            }
+
+            @Override
+            public void onFail() {
+                showError(getString(R.string.export_file_generation_fail));
+            }
+        });
     }
 
     @Override

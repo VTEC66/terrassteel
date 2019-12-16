@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.model.Assign;
-import com.vtec.terrassteel.common.model.Employee;
 import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractFragment;
@@ -16,7 +15,6 @@ import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.main.ui.assign.ui.AddAssignActivity;
 import com.vtec.terrassteel.main.ui.imputation.adapter.ImputationAdapter;
 import com.vtec.terrassteel.main.ui.imputation.callback.ImputationCallback;
-import com.vtec.terrassteel.main.ui.workorder.adapter.WorkorderAdapter;
 import com.vtec.terrassteel.main.ui.workorder.ui.DetailWorkOrderActivity;
 
 import java.util.ArrayList;
@@ -78,7 +76,7 @@ public class ImputationFragment extends AbstractFragment implements ImputationCa
     public void onResume() {
         super.onResume();
 
-        DatabaseManager.getInstance(getContext()).getAllAssign(new DatabaseOperationCallBack<ArrayList<Assign>>() {
+        DatabaseManager.getInstance(getContext()).getAllAssignForConstruction(sessionManager.getContruction(), new DatabaseOperationCallBack<ArrayList<Assign>>() {
             @Override
             public void onSuccess(ArrayList<Assign> assigns) {
 

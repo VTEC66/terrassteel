@@ -32,7 +32,6 @@ public class AddWorkOrderActivity extends AbstractActivity {
 
     private static final int ERROR_EMPTY_WORK_ORDER_REFERENCE_FIELD = 2;
     private static final int ERROR_EMPTY_AFFAIRE_REFERENCE_FIELD = 3;
-    private static final int ERROR_EMPTY_PRODUCT_TYPE_FIELD = 4;
     private static final int ERROR_EMPTY_WORK_ORDER_HOUR_FIELD = 5;
 
     @OnClick(R.id.validate_button)
@@ -70,12 +69,6 @@ public class AddWorkOrderActivity extends AbstractActivity {
     @BindView(R.id.workorder_affaire_edittext)
     EditText workOrderAffaireEdittext;
 
-    @BindView(R.id.workorder_producttype_textinputlayout)
-    View workOrderProductTypeTil;
-
-    @BindView(R.id.workorder_producttype_edittext)
-    EditText workOrderProductTypeEdittext;
-
     @BindView(R.id.workorder_hours_textinputlayout)
     View workOrderHoursTil;
 
@@ -101,10 +94,6 @@ public class AddWorkOrderActivity extends AbstractActivity {
             return ERROR_EMPTY_AFFAIRE_REFERENCE_FIELD;
         }
 
-        if (workOrderProductTypeEdittext.getText().length() == 0) {
-            return ERROR_EMPTY_PRODUCT_TYPE_FIELD;
-        }
-
         if (workOrderHoursEdittext.getText().length() == 0) {
             return ERROR_EMPTY_WORK_ORDER_HOUR_FIELD;
         }
@@ -122,10 +111,6 @@ public class AddWorkOrderActivity extends AbstractActivity {
                 workOrderAffaireTil.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
                 workOrderAffaireEdittext.setError(getString(R.string.customer_mandatory_field_message));
                 break;
-            case ERROR_EMPTY_PRODUCT_TYPE_FIELD:
-                workOrderProductTypeTil.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
-                workOrderProductTypeEdittext.setError(getString(R.string.standard_mandatory_field_message));
-                break;
             case ERROR_EMPTY_WORK_ORDER_HOUR_FIELD:
                 workOrderHoursTil.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
                 workOrderHoursEdittext.setError(getString(R.string.customer_mandatory_field_message));
@@ -136,7 +121,6 @@ public class AddWorkOrderActivity extends AbstractActivity {
     private void clearHighlightErrors() {
         workOrderReferenceEdittext.setError(null);
         workOrderAffaireEdittext.setError(null);
-        workOrderProductTypeEdittext.setError(null);
         workOrderHoursEdittext.setError(null);
     }
 
@@ -144,7 +128,6 @@ public class AddWorkOrderActivity extends AbstractActivity {
         WorkOrder newWorkOrder = new WorkOrder()
                 .withWorkOrderReference(workOrderReferenceEdittext.getText().toString())
                 .withWorkOrderAffaire(workOrderAffaireEdittext.getText().toString())
-                .withWorkOrderProductType(workOrderProductTypeEdittext.getText().toString())
                 .withWorkOrderAllocatedHour(Integer.parseInt(workOrderHoursEdittext.getText().toString()))
                 .withworkOrderStatus(WorkOrderStatus.IN_PROGRESS)
                 .withConstruction(sessionManager.getContruction());

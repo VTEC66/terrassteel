@@ -51,25 +51,6 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/workorder_producttype_textinputlayout"
-        style="@style/TextInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/standard"
-        android:layout_marginTop="@dimen/standard"
-        android:layout_marginEnd="@dimen/standard">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/workorder_producttype_edittext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_workorder_producttype"
-            android:imeOptions="actionNext"
-            android:inputType="text" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/workorder_hours_textinputlayout"
         style="@style/TextInputLayout"
         android:layout_width="match_parent"

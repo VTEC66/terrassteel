@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.opencsv.CSVWriter;
 import com.vtec.terrassteel.common.model.Imputation;
 import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
@@ -12,6 +13,8 @@ import com.vtec.terrassteel.database.DatabaseManager;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,17 +23,27 @@ public class CsvUtil {
 
     static FileWriter writer;
 
-    File root = Environment.getExternalStorageDirectory();
-    private File gpxfile = new File(root, "mydata.csv");
+    DateFormat dateFormater = new SimpleDateFormat("ddMMyyyy");
+    DateFormat timeFormater = new SimpleDateFormat("HHmm");
 
-    public void makeCSV(Context context, WorkOrder workOrder){
 
-        try {
-            writer = new FileWriter(gpxfile);
 
+    public void makeCSV(Context context, WorkOrder workOrder, CsvCallback csvCallback){
+
+        String root = Environment.getExternalStorageDirectory().toString() + "/terrassteel";
+
+        File myDir = new File(root);
+        if (!myDir.exists()) {
+            myDir.mkdirs();
+        }
+
+        File gpxfile = new File(root, "export_"+workOrder.getWorkOrderReference()+".csv");
+
+        try
+        {
+            final CSVWriter writer = new CSVWriter(new FileWriter(gpxfile), ',');
             String[] headerArray = {"N° AFFAIRE", "N° POINTAGE", "CODE EMPLOYE","DATE (JJMMAAAA)","HEURE DEBUT (HHMM)", "HEURE FIN (HHMM)","OBSERVATION", "RESIDUEL", "NB PIECES", "CODE FRAIS" };
-
-            writeCsvLine(Arrays.asList(headerArray));
+            writer.writeNext(headerArray);
 
             DatabaseManager.getInstance(context).getImputationsForWorkorder(workOrder, new DatabaseOperationCallBack<ArrayList<Imputation>>() {
                 @Override
@@ -38,50 +51,42 @@ public class CsvUtil {
 
                     for(Imputation imputation : imputations){
 
-                        ArrayList<String> line = new ArrayList<>();
 
-                        line.add(workOrder.getWorkOrderAffaire());
-                        line.add(workOrder.getWorkOrderReference());
-                        line.add(String.valueOf(imputation.getEmployee().getEmployeeId()));
-                        line.add(String.valueOf(imputation.getImputationStart())); //Get Only Date JJMMAAA
-                        line.add(String.valueOf(imputation.getImputationStart())); //Get Only Date HHMM
-                        line.add(String.valueOf(imputation.getImputationEnd())); //Get Only Date HHMM
-                        line.add(imputation.getObservation());
-                        line.add("N");
-                        line.add(String.valueOf(0));
-                        line.add("POSE");
+                        //String[] lineArray = new String[ line.size() ];
+                        String[] lineArray = {
+                                workOrder.getWorkOrderAffaire(),
+                                workOrder.getWorkOrderReference(),
+                                imputation.getEmployee().getEmployeeCode(),
+                                String.valueOf(dateFormater.format(imputation.getImputationStart())),
+                                String.valueOf(timeFormater.format(imputation.getImputationStart())),
+                                String.valueOf(timeFormater.format(imputation.getImputationEnd())),
+                                imputation.getObservation(),
+                                "N",
+                                String.valueOf(0),
+                                "POSE"
+                        };
 
-                        writeCsvLine(line);
-
+                        writer.writeNext(lineArray);
                     }
                 }
             });
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            writer.close();
+            csvCallback.onSuccess();
+        }
+        catch (IOException e)
+        {
+            csvCallback.onFail();
         }
 
     }
 
-    private void writeCsvLine(List<String> headerArray)  {
 
-        try {
 
-            StringBuilder line = new StringBuilder();
+    public interface CsvCallback{
 
-            for(String string : headerArray){
-                line.append(string);
-                line.append(",");
-            }
+        public void onSuccess();
 
-            line.append("\n");
-            writer.write(line.toString());
-
-            Log.d(CsvUtil.class.getSimpleName(), "Success writing line : " + line.toString());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        public void onFail();
     }
-
 }

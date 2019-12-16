@@ -7,7 +7,6 @@ public class WorkOrder implements Serializable {
     public long workOrderId;
     public String workOrderReference;
     public String workOrderAffaire;
-    public String workOrderProductType;
     public int workOrderAllocatedHour;
     public WorkOrderStatus workOrderStatus;
 
@@ -27,11 +26,6 @@ public class WorkOrder implements Serializable {
 
     public WorkOrder withWorkOrderAffaire(String workOrderAffaire){
         this.workOrderAffaire = workOrderAffaire;
-        return this;
-    }
-
-    public WorkOrder withWorkOrderProductType(String workOrderProductType){
-        this.workOrderProductType = workOrderProductType;
         return this;
     }
 
@@ -60,10 +54,6 @@ public class WorkOrder implements Serializable {
 
     public String getWorkOrderAffaire() {
         return workOrderAffaire;
-    }
-
-    public String getWorkOrderProductType() {
-        return workOrderProductType;
     }
 
     public int getWorkOrderAllocatedHour() {

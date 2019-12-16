@@ -33,6 +33,7 @@ public class AddConstructionActivity extends AbstractActivity  {
     private static final String SELECT_CUSTOMER_DIALOG = "SELECT_CUSTOMER_DIALOG" ;
 
     private static final int ERROR_EMPTY_CONSTRUCTION_NAME_FIELD = 1;
+    private static final int ERROR_EMPTY_CUSTOMER_NAME_FIELD = 2;
 
     private Customer selectedCustomer;
 
@@ -69,17 +70,12 @@ public class AddConstructionActivity extends AbstractActivity  {
     @BindView(R.id.construction_name_edittext)
     EditText constructionNameEditText;
 
-    @BindView(R.id.construction_address1_edittext)
-    EditText constructionAddress1EditText;
+    @BindView(R.id.customer_name_til)
+    View customerNameTil;
 
-    @BindView(R.id.construction_address2_edittext)
-    EditText constructionAddress2EditText;
+    @BindView(R.id.customer_name_edittext)
+    EditText customerNameEditText;
 
-    @BindView(R.id.construction_zip_edittext)
-    EditText constructionZipEditText;
-
-    @BindView(R.id.construction_city_edittext)
-    EditText constructionCityEditText;
 
 
 
@@ -108,10 +104,7 @@ public class AddConstructionActivity extends AbstractActivity  {
     private void addNewConstruction() {
         Construction newConstruction = new Construction()
                 .withConstructionName(constructionNameEditText.getText().toString())
-                .withConstructionAddress1(constructionAddress1EditText.getText().toString())
-                .withConstructionAddress2(constructionAddress2EditText.getText().toString())
-                .withConstructionZip(constructionZipEditText.getText().toString())
-                .withConstructionCity(constructionCityEditText.getText().toString())
+                .withCustomer(customerNameEditText.getText().toString())
                 .withConstructionStatus(ConstructionStatus.IN_PROGRESS);
 
         DatabaseManager.getInstance(getApplicationContext()).addConstruction(newConstruction, new DatabaseOperationCallBack<DefaultResponse>() {
@@ -138,6 +131,10 @@ public class AddConstructionActivity extends AbstractActivity  {
             return ERROR_EMPTY_CONSTRUCTION_NAME_FIELD;
         }
 
+        if (customerNameEditText.getText().length() == 0) {
+            return ERROR_EMPTY_CUSTOMER_NAME_FIELD;
+        }
+
 
 
         return NO_ERROR_CODE;
@@ -149,12 +146,18 @@ public class AddConstructionActivity extends AbstractActivity  {
                 constructionNameTIL.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
                 constructionNameEditText.setError(getString(R.string.standard_mandatory_field_message));
                 break;
+            case ERROR_EMPTY_CUSTOMER_NAME_FIELD:
+                customerNameTil.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
+                customerNameEditText.setError(getString(R.string.standard_mandatory_field_message));
+                break;
 
         }
     }
 
     private void clearHighlightErrors() {
+
         constructionNameEditText.setError(null);
+        customerNameEditText.setError(null);
     }
 
 }

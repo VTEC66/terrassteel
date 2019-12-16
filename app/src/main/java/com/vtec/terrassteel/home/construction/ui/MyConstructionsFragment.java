@@ -38,12 +38,13 @@ import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
 import static com.vtec.terrassteel.common.ui.ScanActivity.CODE;
+import static com.vtec.terrassteel.common.ui.ScanActivity.MANUAL;
 import static com.vtec.terrassteel.core.ui.AbstractActivity.PERMISSION_REQUEST_CODE;
 
 public class MyConstructionsFragment extends AbstractFragment implements ConstructionCallback {
 
-    private static final int ADD_CONSTRUCTION_INTENT_CODE = 12;
     private static final int SCAN_QR_REQUEST_CODE = 23;
+    private static final int ADD_MANUAL_CONSTRUCTION_REQUEST_CODE = 24;
 
     @BindView(R.id.construction_listview)
     RecyclerView constructionRecyclerView;
@@ -146,29 +147,41 @@ public class MyConstructionsFragment extends AbstractFragment implements Constru
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == SCAN_QR_REQUEST_CODE &&
-                resultCode == RESULT_OK) {
-            if(!TextUtils.isEmpty(data.getStringExtra(CODE))){
-                String extractedData = data.getStringExtra(CODE);
-                String[] parts = extractedData.replace("\"","").trim().split(";");
 
-                if(parts.length!=2){
-                    showError(getString(R.string.qr_construction_notrecognized));
-                }else{
-                    Construction newConstruction = new Construction()
-                            .withConstructionName(parts[1])
-                            .withCustomer(parts[0])
-                            .withConstructionStatus(ConstructionStatus.IN_PROGRESS);
+        if (requestCode == SCAN_QR_REQUEST_CODE) {
+            switch (resultCode) {
+                case RESULT_OK:
 
-                    DatabaseManager.getInstance(getContext())
-                            .addConstruction(newConstruction, new DatabaseOperationCallBack<DefaultResponse>() {
-                                @Override
-                                public void onSuccess(DefaultResponse defaultResponse) {
-                                    onResume();
-                                }
-                            });
-                }
+                    if (!TextUtils.isEmpty(data.getStringExtra(CODE))) {
+                        String extractedData = data.getStringExtra(CODE);
+                        String[] parts = extractedData.replace("\"", "").trim().split(";");
+
+                        if (parts.length != 2) {
+                            showError(getString(R.string.qr_construction_notrecognized));
+                        } else {
+                            Construction newConstruction = new Construction()
+                                    .withConstructionName(parts[1])
+                                    .withCustomer(parts[0])
+                                    .withConstructionStatus(ConstructionStatus.IN_PROGRESS);
+
+                            DatabaseManager.getInstance(getContext())
+                                    .addConstruction(newConstruction, new DatabaseOperationCallBack<DefaultResponse>() {
+                                        @Override
+                                        public void onSuccess(DefaultResponse defaultResponse) {
+                                            onResume();
+                                        }
+                                    });
+                        }
+                    }
+                    break;
+
+                case MANUAL:
+                    startActivityForResult(new Intent(getActivity(), AddConstructionActivity.class), ADD_MANUAL_CONSTRUCTION_REQUEST_CODE);
+                    break;
+
             }
+        }else if(requestCode == ADD_MANUAL_CONSTRUCTION_REQUEST_CODE && resultCode == RESULT_OK){
+            onResume();
         }
     }
 

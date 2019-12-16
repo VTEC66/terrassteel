@@ -32,86 +32,23 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/construction_address1_textinputlayout"
+        android:id="@+id/customer_name_til"
         style="@style/TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/standard"
-        android:layout_marginTop="@dimen/standard"
+        android:layout_marginTop="@dimen/xlarge"
         android:layout_marginEnd="@dimen/standard">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/construction_address1_edittext"
+            android:id="@+id/customer_name_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_address1"
+            android:hint="@string/hint_customer_name"
             android:imeOptions="actionNext"
             android:inputType="text" />
 
     </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/construction_address2_textinputlayout"
-        style="@style/TextInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/standard"
-        android:layout_marginTop="@dimen/standard"
-        android:layout_marginEnd="@dimen/standard">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/construction_address2_edittext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_address2"
-            android:imeOptions="actionNext"
-            android:inputType="text" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/standard">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/construction_zip_textinputlayout"
-            style="@style/TextInputLayout"
-            android:layout_width="135dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/standard">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/construction_zip_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_zip"
-                android:imeOptions="actionNext"
-                android:maxLength="5"
-                android:inputType="number" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/construction_city_textinputlayout"
-            style="@style/TextInputLayout"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/standard"
-            android:layout_marginEnd="@dimen/standard">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/construction_city_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_city"
-                android:imeOptions="actionDone"
-                android:inputType="text" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
