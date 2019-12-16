@@ -33,14 +33,25 @@ public class ImputationAdapter extends RecyclerView.Adapter<ImputationAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         Imputation imputation = elements.get(position);
+        DateFormat f = new SimpleDateFormat(" dd/MM/yyyy  HH:mm");
 
+        Date start = new Date(imputation.getImputationStart());
+        holder.imputationStartTimeTextView.setText("Début : " + f.format(start));//calculateTime(imputation.getImputationTotalTime()));//String.valueOf(imputation.getImputationTotalTime()));
 
+        if(imputation.getImputationEnd() != 0){
+            holder.imputationEndTimeTextView.setVisibility(View.VISIBLE);
+            holder.statusIndicatorView.setVisibility(View.GONE);
+            Date end = new Date(imputation.getImputationEnd());
+            holder.imputationEndTimeTextView.setText("Fin : " + f.format(end));//calculateTime(imputation.getImputationTotalTime()));//String.valueOf(imputation.getImputationTotalTime()));
+        }else{
+            holder.imputationEndTimeTextView.setVisibility(View.GONE);
+            holder.statusIndicatorView.setVisibility(View.VISIBLE);
+        }
 
-        holder.imputationTimeTextView.setText(calculateTime(imputation.getImputationTotalTime()));//String.valueOf(imputation.getImputationTotalTime()));
         holder.imputationEmployeeTextView.setText(imputation.getEmployee().getEmployeeName());
         holder.imputationEmployeeJobTextView.setText(imputation.getEmployee().getEmployeeJob().getRessourceReference());
-
     }
 
     @Override
@@ -80,8 +91,14 @@ public class ImputationAdapter extends RecyclerView.Adapter<ImputationAdapter.Vi
         @BindView(R.id.employee_job_tv)
         TextView imputationEmployeeJobTextView;
 
-        @BindView(R.id.imputation_time_name_tv)
-        TextView imputationTimeTextView;
+        @BindView(R.id.start_time_tv)
+        TextView imputationStartTimeTextView;
+
+        @BindView(R.id.end_time_tv)
+        TextView imputationEndTimeTextView;
+
+        @BindView(R.id.status_indicator_container)
+        View statusIndicatorView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -10,9 +10,9 @@ public class Imputation implements Serializable {
 
     public Assign assign;
 
-    public long imputationTotalTime;
-
     public long imputationStart;
+
+    public long imputationEnd;
 
     public Employee employee;
 
@@ -34,13 +34,13 @@ public class Imputation implements Serializable {
         return this;
     }
 
-    public Imputation withTotalTime(long totalTime){
-        this.imputationTotalTime = totalTime;
+    public Imputation withImputationStart(long imputationStart){
+        this.imputationStart = imputationStart;
         return this;
     }
 
-    public Imputation withImputationStart(long imputationStart){
-        this.imputationStart = imputationStart;
+    public Imputation withImputationEnd(long imputationEnd){
+        this.imputationEnd = imputationEnd;
         return this;
     }
 
@@ -61,10 +61,6 @@ public class Imputation implements Serializable {
         return assign;
     }
 
-    public long getImputationTotalTime() {
-        return imputationTotalTime;
-    }
-
     public long getImputationStart() {
         return imputationStart;
     }
@@ -74,8 +70,7 @@ public class Imputation implements Serializable {
     }
 
     public long getImputationEnd() {
-        //TODO
-        return 0;
+        return imputationEnd;
     }
 
     public String getObservation() {

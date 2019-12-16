@@ -83,7 +83,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String KEY_IMPUTATION_ASSIGN_ID = "imputationAssignId";
     private static final String KEY_IMPUTATION_EMPLOYEE_ID = "imputationEmployeeId";
     private static final String KEY_IMPUTATION_WORK_ORDER_ID_FK = "imputationWorkOrderIdFk";
-    private static final String KEY_IMPUTATION_TOTAL_TIME = "imputationTotalTime";
     private static final String KEY_IMPUTATION_START_TIME = "imputationStart";
     private static final String KEY_IMPUTATION_END_TIME = "imputationEnd";
 
@@ -170,8 +169,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 KEY_IMPUTATION_WORK_ORDER_ID_FK + " INTEGER REFERENCES " + TABLE_WORK_ORDER + "," + // Define a foreign key
                 KEY_IMPUTATION_EMPLOYEE_ID + " INTEGER," + // Define a foreign key
                 KEY_IMPUTATION_START_TIME + " INTEGER," +
-                KEY_IMPUTATION_END_TIME + " INTEGER," +
-                KEY_IMPUTATION_TOTAL_TIME + " INTEGER" +
+                KEY_IMPUTATION_END_TIME + " INTEGER" +
                 ")";
 
         db.execSQL(CREATE_CONSTRUCTIONS_TABLE);
@@ -807,20 +805,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             db.execSQL(DELETE_ASSIGN_QUERY);
 
-            Imputation imputation = getImputationForAssign(assign.getAssignId());
+            Imputation imputation = getLastImputationForAssign(assign.getAssignId());
 
-            if(imputation != null){
-                imputation
-                        .withTotalTime((System.currentTimeMillis()/1000 - imputation.getImputationStart()) + imputation.imputationTotalTime)
-                        .withImputationStart(0);
+              //(System.currentTimeMillis()/1000 - imputation.getImputationStart()) + imputation.imputationTotalTime
 
-                updateImputation(imputation, new DatabaseOperationCallBack<DefaultResponse>() {
+
+                stopImputation(imputation, new DatabaseOperationCallBack<DefaultResponse>() {
                     @Override
                     public void onSuccess(DefaultResponse defaultResponse) {
                         Log.e(TAG, "Imputation successfuly deleted for AssignId : " + assign.getAssignId());
                     }
                 });
-            }
+
 
         } catch (Exception e) {
             Log.e(TAG, "Error while trying to delete assign from database : " + e.toString());
@@ -834,13 +830,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 
 
-    public Imputation getImputationForAssign(long assignId) {
+    public Imputation getLastImputationForAssign(long assignId) {
 
         Imputation imputation = null;
 
         String IMPUTATION_SELECT_QUERY = "SELECT * " +
                 "FROM "+ TABLE_IMPUTATION  +
-                " WHERE imputationAssignId = "+  assignId;
+                " WHERE imputationAssignId = "+  assignId +
+                " AND imputationStart = (" +
+                " SELECT MAX(imputationStart)" +
+                        " FROM "+ TABLE_IMPUTATION  +
+                        " WHERE imputationAssignId = "+  assignId + ")";
 
         Log.e(TAG, IMPUTATION_SELECT_QUERY);
 
@@ -855,10 +855,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
                 imputation = new Imputation()
                         .withImputationId(cursor.getLong(cursor.getColumnIndex(KEY_IMPUTATION_ID_PK)))
-                        .withTotalTime(cursor.getInt(cursor.getColumnIndex(KEY_IMPUTATION_TOTAL_TIME)))
-                        .withImputationStart(cursor.getInt(cursor.getColumnIndex(KEY_IMPUTATION_START_TIME)));
+                        .withImputationStart(cursor.getInt(cursor.getColumnIndex(KEY_IMPUTATION_START_TIME)))
+                        .withImputationEnd(cursor.getInt(cursor.getColumnIndex(KEY_IMPUTATION_END_TIME)));
 
-                Log.e(TAG, "One imputation data have been return for Work order assign with total time : " + imputation.getImputationTotalTime());
+
+                Log.e(TAG, "The last imputation have been return for assign ");
 
             }else{
                 Log.e(TAG, "No imputation data for Work order assign");
@@ -876,25 +877,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public void startImputation(Assign assign, DatabaseOperationCallBack<DefaultResponse> callBack) {
-        Imputation imputation = getImputationForAssign(assign.getAssignId());
 
-        if(imputation == null){
-            imputation = new Imputation()
+        Imputation imputation = new Imputation()
                     .withAssign(assign)
                     .withWorkOrder(assign.getWorkOrder())
-                    .withImputationStart(System.currentTimeMillis()/1000);
-
-            addImputation(imputation, callBack);
-        }else{
-            imputation
-                   .withImputationStart(System.currentTimeMillis()/1000);
-
-            updateImputation(imputation, callBack);
-        }
-    }
-
-
-    public void addImputation(Imputation imputation, DatabaseOperationCallBack<DefaultResponse> callBack) {
+                    .withImputationStart(System.currentTimeMillis());
 
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -922,19 +909,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
-
     }
 
-    public void updateImputation(Imputation imputation, DatabaseOperationCallBack<DefaultResponse> callBack) {
+
+
+
+    public void stopImputation(Imputation imputation, DatabaseOperationCallBack<DefaultResponse> callBack) {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
         try {
 
             ContentValues values = new ContentValues();
 
-            values.put(KEY_IMPUTATION_START_TIME, imputation.getImputationStart());
-            values.put(KEY_IMPUTATION_TOTAL_TIME, imputation.getImputationTotalTime());
-
+            values.put(KEY_IMPUTATION_END_TIME, System.currentTimeMillis());
 
             db.update(TABLE_IMPUTATION
                     , values
@@ -943,12 +930,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             db.setTransactionSuccessful();
 
-            Log.d(TAG, "Imputation have been successfuly edited into database");
+            Log.d(TAG, "Imputation have been successfuly stopped into database");
 
             callBack.onSuccess(new DefaultResponse());
 
         } catch (Exception e) {
-            Log.e(TAG, "Error while trying to edit Imputation into database : " + e.toString());
+            Log.e(TAG, "Error while trying to stop Imputation into database : " + e.toString());
             callBack.onError();
         } finally {
             db.endTransaction();
@@ -958,24 +945,32 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public int getConsumedTimeForWorkOrder(WorkOrder workOrder) {
         int result = 0;
 
+        ArrayList<Imputation> imputations = new ArrayList<>();
+
         SQLiteDatabase db = getReadableDatabase();
 
-        String SUM_CONSUMED_TIME_QUERY = "SELECT SUM(imputation.imputationTotalTime) " +
+        String SELECT_ALL_IMPUTATION_FOR_WORK_ORDER_QUERY = "SELECT * " +
                 "FROM "+ TABLE_IMPUTATION  + " imputation " +
                 "INNER JOIN "+ TABLE_WORK_ORDER + " wo " +
                 "ON wo.workOrderIdPk = imputation.imputationWorkOrderIdFk " +
                 "WHERE wo.workOrderIdPk = " + workOrder.getWorkOrderId();
 
-        Log.e(TAG, SUM_CONSUMED_TIME_QUERY);
+        Log.e(TAG, SELECT_ALL_IMPUTATION_FOR_WORK_ORDER_QUERY);
 
 
-        Cursor cursor = db.rawQuery(SUM_CONSUMED_TIME_QUERY, null);
+        Cursor cursor = db.rawQuery(SELECT_ALL_IMPUTATION_FOR_WORK_ORDER_QUERY, null);
         try {
-            if(cursor.moveToFirst()) {
-                result = cursor.getInt(0);
-                Log.e(TAG, "Succesfuly return sum of time consumed from database");
-            }else {
-                result = 0;
+            if (cursor.moveToFirst()) {
+                do {
+                    Imputation imputation =
+                            new Imputation()
+                                    .withImputationEnd(cursor.getLong(cursor.getColumnIndex(KEY_IMPUTATION_END_TIME)))
+                                    .withImputationStart(cursor.getLong(cursor.getColumnIndex(KEY_IMPUTATION_START_TIME)));
+
+                    imputations.add(imputation);
+
+
+                } while (cursor.moveToNext());
             }
         }catch (Exception e){
                 Log.e(TAG, "Error while trying to make Sum of time consumed from database : " + e.toString());
@@ -984,6 +979,24 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     cursor.close();
             }
         }
+
+        Log.e(TAG, "Returning  : " + result);
+
+        return processTotalTimeConsumed(imputations);
+    }
+
+    private int processTotalTimeConsumed(ArrayList<Imputation> imputations) {
+        int result = 0;
+
+        for(Imputation imputation : imputations){
+            if(imputation.getImputationEnd() != 0){
+                result +=  imputation.getImputationEnd() - imputation.getImputationStart();
+            }else{
+                result +=  System.currentTimeMillis() - imputation.getImputationStart();
+            }
+        }
+
+        Log.d(TAG, "Time consummed have been processed : " + result + " , in " + imputations.size() + " imputations");
 
         return result;
     }
@@ -1037,7 +1050,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 do {
                     Imputation imputation =
                             new Imputation()
-                                    .withTotalTime(cursor.getLong(cursor.getColumnIndex(KEY_IMPUTATION_TOTAL_TIME)))
+                                    .withImputationStart(cursor.getLong(cursor.getColumnIndex(KEY_IMPUTATION_START_TIME)))
+                                    .withImputationEnd(cursor.getLong(cursor.getColumnIndex(KEY_IMPUTATION_END_TIME)))
                                     .withEmployee(getEmployeeWithId(cursor.getInt(cursor.getColumnIndex(KEY_IMPUTATION_EMPLOYEE_ID))));
 
                     imputations.add(imputation);
@@ -1057,5 +1071,46 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 
         callBack.onSuccess(imputations);
+    }
+
+    public int getConsumedTimeForAssign(Assign assign) {
+        int result = 0;
+
+        ArrayList<Imputation> imputations = new ArrayList<>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        String SELECT_ALL_IMPUTATION_FOR_WORK_ORDER_QUERY = "SELECT * " +
+                "FROM "+ TABLE_IMPUTATION  + " imputation " +
+                "WHERE imputation.imputationAssignId = " + assign.getAssignId();
+
+        Log.e(TAG, SELECT_ALL_IMPUTATION_FOR_WORK_ORDER_QUERY);
+
+
+        Cursor cursor = db.rawQuery(SELECT_ALL_IMPUTATION_FOR_WORK_ORDER_QUERY, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Imputation imputation =
+                            new Imputation()
+                                    .withImputationEnd(cursor.getLong(cursor.getColumnIndex(KEY_IMPUTATION_END_TIME)))
+                                    .withImputationStart(cursor.getLong(cursor.getColumnIndex(KEY_IMPUTATION_START_TIME)));
+
+                    imputations.add(imputation);
+
+
+                } while (cursor.moveToNext());
+            }
+        }catch (Exception e){
+            Log.e(TAG, "Error while trying to make Sum of time consumed from database : " + e.toString());
+        }finally {
+            if (!cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+        Log.e(TAG, "Returning  : " + result);
+
+        return processTotalTimeConsumed(imputations);
     }
 }

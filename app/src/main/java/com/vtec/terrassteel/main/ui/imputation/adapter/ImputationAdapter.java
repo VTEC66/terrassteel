@@ -2,6 +2,7 @@ package com.vtec.terrassteel.main.ui.imputation.adapter;
 
 import android.content.Context;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,11 +95,8 @@ public class ImputationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if(itemViewHolder.isWorking){
 
                         itemViewHolder.chronometer.stop();
-                        itemViewHolder.imputation
-                                .withTotalTime((System.currentTimeMillis()/1000 - itemViewHolder.imputation.getImputationStart()) + itemViewHolder.imputation.imputationTotalTime)
-                                .withImputationStart(0);
 
-                        DatabaseManager.getInstance(context).updateImputation(itemViewHolder.imputation, new DatabaseOperationCallBack<DefaultResponse>() {
+                        DatabaseManager.getInstance(context).stopImputation(itemViewHolder.imputation, new DatabaseOperationCallBack<DefaultResponse>() {
                             @Override
                             public void onSuccess(DefaultResponse defaultResponse) {
                                 itemViewHolder.isWorking = false;
@@ -111,11 +109,11 @@ public class ImputationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             @Override
                             public void onSuccess(DefaultResponse defaultResponse) {
                                 itemViewHolder.isWorking = true;
-                                itemViewHolder.setupChronometer(assign);
                             }
                         });
                     }
 
+                    itemViewHolder.setupChronometer(assign);
                     itemViewHolder.setDrawableForActionView();
                 });
 
@@ -198,12 +196,12 @@ public class ImputationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public void setupChronometer(Assign assign) {
 
-            imputation = DatabaseManager.getInstance(context).getImputationForAssign(assign.getAssignId());
+            imputation = DatabaseManager.getInstance(context).getLastImputationForAssign(assign.getAssignId());
 
-            chronometer.setBase(getBaseTime());
+            chronometer.setBase(getBaseTime(assign));
 
             if(imputation != null){
-                if(imputation.getImputationStart() > 0){
+                if(imputation.getImputationEnd() == 0){
                     this.isWorking = true;
                     chronometer.start();
                 }else{
@@ -214,15 +212,13 @@ public class ImputationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         }
 
-        private long getBaseTime(){
+        private long getBaseTime(Assign assign){
             if(imputation == null){
                 return SystemClock.elapsedRealtime();
             }else{
-                if(imputation.getImputationStart() > 0){
-                    long time = (System.currentTimeMillis()/1000 - imputation.getImputationStart()) + imputation.imputationTotalTime;
-                    return SystemClock.elapsedRealtime() - time * 1000;
-                }
-                return SystemClock.elapsedRealtime() - imputation.imputationTotalTime * 1000;
+                int totalTime = DatabaseManager.getInstance(context).getConsumedTimeForAssign(assign); //TODO
+                Log.d(this.getClass().getSimpleName(), "Total time for this assign : " + (SystemClock.elapsedRealtime() - totalTime));
+                return SystemClock.elapsedRealtime() - totalTime; //imputation.imputationTotalTime * 1000;
             }
         }
     }

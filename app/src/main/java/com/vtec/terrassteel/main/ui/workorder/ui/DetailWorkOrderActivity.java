@@ -172,10 +172,10 @@ public class DetailWorkOrderActivity extends AbstractActivity {
         int consummed = DatabaseManager.getInstance(this).getConsumedTimeForWorkOrder(workOrder);
 
         affectedTimeTextview.setText(String.valueOf(affected)+ "h");
-        consumedTimeTextview.setText(String.valueOf(consummed/3600)+ "h");
+        consumedTimeTextview.setText(String.valueOf(consummed/3600000)+ "h");
 
         progressBar.setMax(affected*60);
-        progressBar.setProgress(consummed/60);
+        progressBar.setProgress(consummed/60000);
 
         statusIndicatorTextView.setText(workOrder.getWorkOrderStatus().getRessourceReference());
         referenceAffaireTV.setText(workOrder.getWorkOrderReference());
