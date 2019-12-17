@@ -7,8 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.vtec.terrassteel.R;
+import com.vtec.terrassteel.common.listener.ActionBarListener;
 import com.vtec.terrassteel.common.model.Assign;
 import com.vtec.terrassteel.common.model.WorkOrder;
+import com.vtec.terrassteel.common.ui.ActionBar;
+import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractFragment;
 import com.vtec.terrassteel.database.DatabaseManager;
@@ -37,6 +40,9 @@ public class ImputationFragment extends AbstractFragment implements ImputationCa
     @BindView(R.id.imputation_time_listview)
     RecyclerView imputationTimeRecyclerView;
 
+    @BindView(R.id.action_bar)
+    ActionBar actionBar;
+
     @BindView(R.id.imputation_time_view)
     View imputationView;
 
@@ -53,6 +59,24 @@ public class ImputationFragment extends AbstractFragment implements ImputationCa
         View thisView = inflater.inflate(R.layout.imputation_fragment, container, false);
 
         ButterKnife.bind(this, thisView);
+
+        actionBar.setListener(new ActionBarListener() {
+            @Override
+            public void onBackArrowClick() {
+
+            }
+
+            @Override
+            public void onActionButtonClick() {
+                DatabaseManager.getInstance(getContext()).stopAllActiveImputation(sessionManager.getContruction(),
+                new DatabaseOperationCallBack<DefaultResponse>() {
+                    @Override
+                    public void onSuccess(DefaultResponse defaultResponse) {
+                       onResume();
+                    }
+                });
+            }
+        });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);

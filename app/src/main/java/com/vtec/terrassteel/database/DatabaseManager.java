@@ -1094,4 +1094,39 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         return processTotalTimeConsumed(imputations);
     }
+
+
+    public void stopAllActiveImputation(Construction construction, DatabaseOperationCallBack<DefaultResponse> callBack){
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+
+        String STOP_ALL_IMPUTATION_QUERY = "UPDATE " + TABLE_IMPUTATION +
+                    " SET imputationEnd  = "  + System.currentTimeMillis() +
+                    " WHERE imputationIdPk IN " +
+                    "(SELECT imp.imputationIdPk " +
+                    "FROM " + TABLE_IMPUTATION + " imp " +
+                    "INNER JOIN "+ TABLE_WORK_ORDER + " wo " +
+                    "ON wo.workOrderIdPk = imp.imputationWorkOrderIdFk " +
+                    "WHERE wo.constructionIdFk = " +  construction.getConstructionId() +
+                    " AND imp.imputationEnd IS NULL)" ;
+
+
+        Log.e(TAG, STOP_ALL_IMPUTATION_QUERY);
+
+        try {
+
+            db.execSQL(STOP_ALL_IMPUTATION_QUERY);
+
+            db.setTransactionSuccessful();
+
+            Log.d(TAG, "imputations have been successfuly stopped into database");
+            callBack.onSuccess(new DefaultResponse());
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to stop Imputation into database : " + e.toString());
+            callBack.onError();
+        } finally {
+            db.endTransaction();
+        }
+    }
 }

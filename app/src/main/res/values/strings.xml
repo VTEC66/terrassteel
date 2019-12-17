@@ -80,5 +80,6 @@
     <string name="manual_mode">Saisie Manuelle</string>
     <string name="export_file_generated">Fichier d\'export généré avec succès.</string>
     <string name="export_file_generation_fail">Une erreur est survenu durant la génération du fichier d\'export.</string>
+    <string name="dashboard_not_available">Le tableau de bord n\'est pas disponible pour le moment.</string>
 
 </resources>

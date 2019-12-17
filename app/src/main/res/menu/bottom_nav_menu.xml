@@ -17,6 +17,7 @@
         android:id="@+id/action_dashboard"
         android:enabled="true"
         android:icon="@drawable/ic_dashboard"
+        android:iconTint="@color/light_grey"
         android:title="@string/dashboard_menu"
         app:showAsAction="ifRoom" />
 </menu>

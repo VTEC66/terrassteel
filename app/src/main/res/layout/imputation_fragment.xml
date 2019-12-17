@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:showBackArrow="false"
+        app:showActionButton="true"
+        app:actionButtonDrawable="@drawable/ic_pause_circle"
         app:title="@string/point_time_title" />
 
     <LinearLayout

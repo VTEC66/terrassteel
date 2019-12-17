@@ -206,9 +206,11 @@ public class ImputationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     chronometer.start();
                 }else{
                     this.isWorking = false;
+                    chronometer.stop();
                 }
             }else{
                 this.isWorking = false;
+                chronometer.stop();
             }
         }
 
