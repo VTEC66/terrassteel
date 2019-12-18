@@ -1,5 +1,6 @@
 package com.vtec.terrassteel.main.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -7,6 +8,7 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
+import com.vtec.terrassteel.home.ui.HomeActivity;
 import com.vtec.terrassteel.main.ui.dashboard.ui.DashboardFragment;
 import com.vtec.terrassteel.main.ui.imputation.ui.ImputationFragment;
 import com.vtec.terrassteel.main.ui.workorder.ui.WorkOrderFragment;
@@ -95,5 +97,16 @@ public class MainActivity extends AbstractActivity {
         }
 
         showFragment(fragment, WorkOrderFragment.TAG);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        overridePendingTransition(
+                R.anim.fade_in,
+                R.anim.fade_out
+        );
+        finishAffinity();
     }
 }

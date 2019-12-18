@@ -1,6 +1,7 @@
 package com.vtec.terrassteel.home.company.employee.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -21,6 +22,7 @@ import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
 import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.home.company.employee.callback.SelectJobCallback;
+import com.vtec.terrassteel.home.ui.HomeActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -136,7 +138,7 @@ public class EditEmployeeActivity extends AbstractActivity implements SelectJobC
         actionBar.setListener(new ActionBarListener() {
             @Override
             public void onBackArrowClick() {
-                finish();
+                onBackPressed();
             }
 
             @Override
@@ -275,5 +277,12 @@ public class EditEmployeeActivity extends AbstractActivity implements SelectJobC
                 super.onError();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

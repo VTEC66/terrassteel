@@ -40,4 +40,6 @@ public class HomeActivity extends AbstractActivity {
         tabs.getTabAt(HomePagerAdapter.CONSTRUCTION).setIcon(R.drawable.ic_constrcution);
         tabs.getTabAt(HomePagerAdapter.COMPANY).setIcon(R.drawable.ic_business);
     }
+
+
 }

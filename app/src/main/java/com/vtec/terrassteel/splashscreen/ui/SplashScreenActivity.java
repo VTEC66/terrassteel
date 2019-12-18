@@ -53,6 +53,7 @@ public class SplashScreenActivity extends AbstractActivity {
 
         //GetConfig
         startActivity(new Intent(this, HomeActivity.class));
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finishAffinity();
     }
 }

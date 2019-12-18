@@ -1,5 +1,6 @@
 package com.vtec.terrassteel.main.ui.workorder.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -13,6 +14,7 @@ import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
 import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.home.company.employee.adapter.EmployeesAdapter;
+import com.vtec.terrassteel.main.ui.MainActivity;
 import com.vtec.terrassteel.main.ui.workorder.adapter.ImputationAdapter;
 
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class ListImputationActivity extends AbstractActivity {
         actionBar.setListener(new ActionBarListener() {
             @Override
             public void onBackArrowClick() {
-                finish();
+                onBackPressed();
             }
 
             @Override
@@ -106,5 +108,20 @@ public class ListImputationActivity extends AbstractActivity {
             emptyView.setVisibility(View.GONE);
             imputationrecyclerView.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, DetailWorkOrderActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(EXTRA_WORK_ORDER, workOrder);
+        intent.putExtras(bundle);
+
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+
+
+        finishAffinity();
     }
 }

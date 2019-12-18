@@ -127,7 +127,11 @@ public class MyConstructionsFragment extends AbstractFragment implements Constru
 
         sessionManager.setConstruction(construction);
         startActivity(new Intent(getContext(), MainActivity.class));
-        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+        if(getActivity() != null){
+            getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            getActivity().finishAffinity();
+        }
     }
 
     @Override

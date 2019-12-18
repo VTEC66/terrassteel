@@ -17,6 +17,7 @@ import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.home.company.employee.ui.EditEmployeeActivity;
 import com.vtec.terrassteel.main.ui.assign.adapter.AssignEmployeeAdapter;
 import com.vtec.terrassteel.main.ui.assign.callback.AssignEmployeeCallback;
+import com.vtec.terrassteel.main.ui.workorder.ui.DetailWorkOrderActivity;
 
 import java.util.ArrayList;
 
@@ -83,7 +84,7 @@ public class AddAssignActivity extends AbstractActivity implements AssignEmploye
         actionBar.setListener(new ActionBarListener() {
             @Override
             public void onBackArrowClick() {
-                finish();
+                onBackPressed();
             }
 
             @Override
@@ -198,5 +199,19 @@ public class AddAssignActivity extends AbstractActivity implements AssignEmploye
                 refreshAvailableEmployee();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, DetailWorkOrderActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(EXTRA_WORK_ORDER, workOrder);
+        intent.putExtras(bundle);
+
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+
+
     }
 }

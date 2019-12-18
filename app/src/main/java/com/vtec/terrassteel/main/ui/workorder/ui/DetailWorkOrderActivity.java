@@ -22,6 +22,7 @@ import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
 import com.vtec.terrassteel.database.DatabaseManager;
+import com.vtec.terrassteel.main.ui.MainActivity;
 import com.vtec.terrassteel.main.ui.assign.ui.AddAssignActivity;
 
 import java.util.ArrayList;
@@ -72,13 +73,14 @@ public class DetailWorkOrderActivity extends AbstractActivity {
     View closeWorkOrderButton;
 
     @OnClick(R.id.assign_management_view)
-    public void clicShowAssign(){
+    public void clicShowAssign() {
 
-        if(workOrder.getWorkOrderStatus().equals(WorkOrderStatus.FINISHED)){
+        if (workOrder.getWorkOrderStatus().equals(WorkOrderStatus.FINISHED)) {
             return;
         }
 
         Intent intent = new Intent(this, AddAssignActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(EXTRA_WORK_ORDER, workOrder);
@@ -88,8 +90,9 @@ public class DetailWorkOrderActivity extends AbstractActivity {
     }
 
     @OnClick(R.id.imputation_management_view)
-    public void clicShowImputation(){
+    public void clicShowImputation() {
         Intent intent = new Intent(this, ListImputationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(EXTRA_WORK_ORDER, workOrder);
@@ -102,23 +105,22 @@ public class DetailWorkOrderActivity extends AbstractActivity {
     @OnClick(R.id.close_workorder_button)
     public void clicCloseWorkorder() {
 
-                new ConfirmationDialog()
-                        .setConfirmationMessage(getString(R.string.workorder_close_confirmation_message))
-                        .setCallBack(new ConfirmationDialogCallback() {
+        new ConfirmationDialog()
+                .setConfirmationMessage(getString(R.string.workorder_close_confirmation_message))
+                .setCallBack(new ConfirmationDialogCallback() {
+                    @Override
+                    public void onConfirm() {
+                        DatabaseManager.getInstance(getBaseContext()).closeWorkOrder(workOrder, new DatabaseOperationCallBack<WorkOrder>() {
                             @Override
-                            public void onConfirm() {
-                                DatabaseManager.getInstance(getBaseContext()).closeWorkOrder(workOrder, new DatabaseOperationCallBack<WorkOrder>() {
-                                    @Override
-                                    public void onSuccess(WorkOrder defaultResponse) {
-                                        onResume();
-                                    }
-                                });
+                            public void onSuccess(WorkOrder defaultResponse) {
+                                onResume();
                             }
-                        })
-                        .show(getSupportFragmentManager(), CONFIRMATION_DIALOG);
+                        });
+                    }
+                })
+                .show(getSupportFragmentManager(), CONFIRMATION_DIALOG);
 
     }
-
 
 
     @Override
@@ -137,7 +139,8 @@ public class DetailWorkOrderActivity extends AbstractActivity {
         actionBar.setListener(new ActionBarListener() {
             @Override
             public void onBackArrowClick() {
-                finish();
+
+                onBackPressed();
             }
 
             @Override
@@ -171,25 +174,25 @@ public class DetailWorkOrderActivity extends AbstractActivity {
     protected void onResume() {
         super.onResume();
 
-        if(workOrder.getWorkOrderStatus() == WorkOrderStatus.FINISHED){
+        if (workOrder.getWorkOrderStatus() == WorkOrderStatus.FINISHED) {
             closeWorkOrderButton.setVisibility(View.GONE);
-        }else{
+        } else {
             closeWorkOrderButton.setVisibility(View.VISIBLE);
         }
 
         int affected = workOrder.getWorkOrderAllocatedHour();
         int consummed = DatabaseManager.getInstance(this).getConsumedTimeForWorkOrder(workOrder);
 
-        affectedTimeTextview.setText(String.valueOf(affected)+ "h");
-        consumedTimeTextview.setText(String.valueOf(consummed/3600000)+ "h");
+        affectedTimeTextview.setText(String.valueOf(affected) + "h");
+        consumedTimeTextview.setText(String.valueOf(consummed / 3600000) + "h");
 
-        progressBar.setMax(affected*60);
-        progressBar.setProgress(consummed/60000);
+        progressBar.setMax(affected * 60);
+        progressBar.setProgress(consummed / 60000);
 
         statusIndicatorTextView.setText(workOrder.getWorkOrderStatus().getRessourceReference());
         referenceAffaireTV.setText(workOrder.getWorkOrderReference());
 
-        switch (workOrder.getWorkOrderStatus()){
+        switch (workOrder.getWorkOrderStatus()) {
             case IN_PROGRESS:
                 statusIndicatorContainer.setBackground(getResources().getDrawable(R.drawable.bg_status_indicator_inprogress));
                 unavailableIndicatorView.setVisibility(View.GONE);
@@ -246,4 +249,13 @@ public class DetailWorkOrderActivity extends AbstractActivity {
         return manifestPermissions;
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+
+        finishAffinity();
+    }
 }
