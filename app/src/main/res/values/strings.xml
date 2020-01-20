@@ -52,7 +52,7 @@
     <string name="empty_working_order_text">Vous n\'avez pas encore créé de bon de travail pour ce chantier.</string>
     <string name="add_working_order_textbutton">Ajouter un bon de travail</string>
     <string name="add_workorder_title">Ajouter un bon de travail</string>
-    <string name="workorder_reference_hint">Référence du bon de travail</string>
+    <string name="workorder_reference_hint">N° pointage</string>
     <string name="hint_workorder_affaire">Référence affaire</string>
     <string name="hint_workorder_producttype">Type de produit</string>
     <string name="hint_workorder_hours">Nombre d\'heure</string>

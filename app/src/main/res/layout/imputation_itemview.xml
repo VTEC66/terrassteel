@@ -1,79 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="@dimen/standard_itemview_height">
+    android:layout_height="@dimen/standard_itemview_height"
+    android:paddingStart="@dimen/small"
+    android:paddingEnd="@dimen/small">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="@dimen/standard"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
-
-        <com.vtec.terrassteel.common.ui.FontTextView
-            android:id="@+id/employee_name_tv"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_title"
-            android:textColor="@color/antracite_grey"/>
+            android:layout_gravity="center_vertical">
 
-        <com.vtec.terrassteel.common.ui.FontTextView
-            android:id="@+id/employee_job_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_standard"
-            android:textColor="@color/manatee_grey"/>
+                <com.vtec.terrassteel.common.ui.FontTextView
+                    android:id="@+id/employee_name_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/start_time_tv"
+                    android:layout_marginEnd="@dimen/xsmall"
+                    android:maxLines="1"
+                    android:layout_alignParentStart="true"
+                    android:ellipsize="end"
+                    android:textSize="@dimen/text_size_standard"
+                    android:textColor="@color/antracite_grey"/>
 
-    </LinearLayout>
+                <com.vtec.terrassteel.common.ui.FontTextView
+                    android:id="@+id/start_time_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="end"
+                    android:maxLines="1"
+                    android:textSize="@dimen/text_size_standard"
+                    android:textColor="@color/antracite_grey"/>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        android:gravity="center_vertical"
-        android:layout_marginEnd="@dimen/standard"
-        android:orientation="vertical">
 
-        <com.vtec.terrassteel.common.ui.FontTextView
-            android:id="@+id/start_time_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:textSize="@dimen/text_size_standard"
-            android:textColor="@color/antracite_grey"/>
+                <com.vtec.terrassteel.common.ui.FontTextView
+                    android:id="@+id/employee_job_tv"
+                    android:layout_below="@+id/employee_name_tv"
+                    android:layout_alignParentStart="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_standard"
+                    android:textColor="@color/manatee_grey"/>
 
-        <com.vtec.terrassteel.common.ui.FontTextView
-            android:id="@+id/end_time_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:textSize="@dimen/text_size_standard"
-            android:textColor="@color/antracite_grey"
-            android:visibility="gone"/>
+                <com.vtec.terrassteel.common.ui.FontTextView
+                    android:id="@+id/end_time_tv"
+                    android:layout_below="@+id/employee_name_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:maxLines="1"
+                    android:layout_gravity="end"
+                    android:textSize="@dimen/text_size_standard"
+                    android:textColor="@color/antracite_grey"
+                    android:visibility="gone"/>
 
-        <FrameLayout
-            android:id="@+id/status_indicator_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/bg_status_indicator_inprogress"
-            android:paddingStart="@dimen/small"
-            android:paddingEnd="@dimen/small"
-            android:visibility="gone">
+                <FrameLayout
+                    android:id="@+id/status_indicator_container"
+                    android:layout_below="@+id/employee_name_tv"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/bg_status_indicator_inprogress"
+                    android:paddingStart="@dimen/small"
+                    android:paddingEnd="@dimen/small"
+                    android:visibility="gone">
 
-            <com.vtec.terrassteel.common.ui.FontTextView
-                android:id="@+id/status_indicator_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/workorder_status_inprogress"
-                android:textColor="@color/antracite_grey"
-                android:textSize="@dimen/text_size_standard" />
-        </FrameLayout>
+                    <com.vtec.terrassteel.common.ui.FontTextView
+                        android:id="@+id/status_indicator_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@string/workorder_status_inprogress"
+                        android:textColor="@color/antracite_grey"
+                        android:textSize="@dimen/text_size_standard" />
+                </FrameLayout>
 
-    </LinearLayout>
-
-</RelativeLayout>
+        </RelativeLayout>
+</LinearLayout>
