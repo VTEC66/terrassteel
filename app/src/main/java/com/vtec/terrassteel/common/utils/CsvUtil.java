@@ -41,7 +41,7 @@ public class CsvUtil {
 
         try
         {
-            final CSVWriter writer = new CSVWriter(new FileWriter(gpxfile), ',');
+            final CSVWriter writer = new CSVWriter(new FileWriter(gpxfile), ',' , CSVWriter.NO_QUOTE_CHARACTER);
             String[] headerArray = {"N° AFFAIRE", "N° POINTAGE", "CODE EMPLOYE","DATE (JJMMAAAA)","HEURE DEBUT (HHMM)", "HEURE FIN (HHMM)","OBSERVATION", "RESIDUEL", "NB PIECES", "CODE FRAIS" };
             writer.writeNext(headerArray);
 
