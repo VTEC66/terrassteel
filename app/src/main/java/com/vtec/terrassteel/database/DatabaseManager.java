@@ -788,15 +788,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             Imputation imputation = getLastImputationForAssign(assign.getAssignId());
 
-              //(System.currentTimeMillis()/1000 - imputation.getImputationStart()) + imputation.imputationTotalTime
-
+            if(imputation.getImputationEnd() == 0) {
 
                 stopImputation(imputation, new DatabaseOperationCallBack<DefaultResponse>() {
                     @Override
                     public void onSuccess(DefaultResponse defaultResponse) {
-                        Log.e(TAG, "Imputation successfuly deleted for AssignId : " + assign.getAssignId());
+                        Log.e(TAG, "Stop imputation : " + assign.getAssignId());
                     }
                 });
+            }
 
 
         } catch (Exception e) {

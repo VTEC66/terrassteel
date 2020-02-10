@@ -41,9 +41,10 @@ public class CsvUtil {
 
         try
         {
-            final CSVWriter writer = new CSVWriter(new FileWriter(gpxfile), ',' , CSVWriter.NO_QUOTE_CHARACTER);
-            String[] headerArray = {"N° AFFAIRE", "N° POINTAGE", "CODE EMPLOYE","DATE (JJMMAAAA)","HEURE DEBUT (HHMM)", "HEURE FIN (HHMM)","OBSERVATION", "RESIDUEL", "NB PIECES", "CODE FRAIS" };
-            writer.writeNext(headerArray);
+            final CSVWriter writer = new CSVWriter(new FileWriter(gpxfile), ';',  CSVWriter.NO_QUOTE_CHARACTER);
+
+            //String[] headerArray = {"N° AFFAIRE", "N° POINTAGE", "CODE EMPLOYE","DATE (JJMMAAAA)","HEURE DEBUT (HHMM)", "HEURE FIN (HHMM)","OBSERVATION", "RESIDUEL", "NB PIECES", "CODE FRAIS" };
+            //writer.writeNext(headerArray);
 
             DatabaseManager.getInstance(context).getImputationsForWorkorder(workOrder, new DatabaseOperationCallBack<ArrayList<Imputation>>() {
                 @Override
@@ -51,8 +52,6 @@ public class CsvUtil {
 
                     for(Imputation imputation : imputations){
 
-
-                        //String[] lineArray = new String[ line.size() ];
                         String[] lineArray = {
                                 workOrder.getWorkOrderAffaire(),
                                 workOrder.getWorkOrderReference(),
