@@ -5,6 +5,7 @@ import android.content.Context;
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.home.company.ui.MyCompanyFragment;
 import com.vtec.terrassteel.home.construction.ui.MyConstructionsFragment;
+import com.vtec.terrassteel.home.order.ui.MyOrdersFragment;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -15,7 +16,8 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
     Context context;
 
     public static final int CONSTRUCTION = 0;
-    public static final int COMPANY = 1;
+    public static final int ORDER = 1;
+    public static final int COMPANY = 2;
 
     public HomePagerAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -24,7 +26,7 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -32,7 +34,9 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
         switch (position){
             case CONSTRUCTION:
                 return context.getString(R.string.tab_construction);
-            case 1:
+            case ORDER:
+                return context.getString(R.string.tab_order);
+            case COMPANY:
                 return context.getString(R.string.tab_company);
             default:
                 return null;
@@ -44,7 +48,9 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
         switch (position){
             case CONSTRUCTION: //Page number 1
                 return MyConstructionsFragment.newInstance();
-            case COMPANY: //Page number 2
+            case ORDER: //Page number 2
+                return MyOrdersFragment.newInstance();
+            case COMPANY: //Page number 3
                 return MyCompanyFragment.newInstance();
             default:
                 return null;

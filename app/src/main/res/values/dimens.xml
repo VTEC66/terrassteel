@@ -8,6 +8,8 @@
     <dimen name="small">15dp</dimen>
     <dimen name="xsmall">9dp</dimen>
 
+    <dimen name="tabnav_size">12dp</dimen>
+
     <dimen name="text_size_standard">14sp</dimen>
     <dimen name="text_size_title">17sp</dimen>
     <dimen name="chronometer_size">21sp</dimen>

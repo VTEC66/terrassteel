@@ -13,6 +13,7 @@ import com.vtec.terrassteel.common.model.ConstructionStatus;
 import com.vtec.terrassteel.common.model.Employee;
 import com.vtec.terrassteel.common.model.Job;
 import com.vtec.terrassteel.common.model.Imputation;
+import com.vtec.terrassteel.common.model.Order;
 import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.common.model.WorkOrderStatus;
 import com.vtec.terrassteel.core.manager.SessionManager;
@@ -36,6 +37,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String TABLE_WORK_ORDER = "work_order";
     private static final String TABLE_ASSIGN = "assign";
     private static final String TABLE_IMPUTATION = "imputation";
+    private static final String TABLE_ORDER = "order";
 
 
     // Construction Table Columns
@@ -83,6 +85,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String KEY_IMPUTATION_START_TIME = "imputationStart";
     private static final String KEY_IMPUTATION_END_TIME = "imputationEnd";
 
+
+    // Order Table Columns
+    private static final String KEY_ORDER_ID_PK = "orderIdPk";
+    private static final String KEY_ORDER_CODE = "orderCode";
+    private static final String KEY_ORDER_STATUS = "orderStatus";
 
 
 
@@ -165,11 +172,20 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 KEY_IMPUTATION_END_TIME + " INTEGER" +
                 ")";
 
+        String CREATE_ORDER_TABLE = "CREATE TABLE " + TABLE_ORDER +
+                "(" +
+                KEY_ORDER_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                KEY_ORDER_CODE + " TEXT," +
+                KEY_ORDER_STATUS + " TEXT " +
+                ")";
+
         db.execSQL(CREATE_CONSTRUCTIONS_TABLE);
         db.execSQL(CREATE_EMPLOYEES_TABLE);
         db.execSQL(CREATE_WORK_ORDER_TABLE);
         db.execSQL(CREATE_ASSIGN_TABLE);
         db.execSQL(CREATE_IMPUTATION_TABLE);
+        db.execSQL(CREATE_ORDER_TABLE);
+
     }
 
     @Override
@@ -191,6 +207,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_WORK_ORDER);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSIGN);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMPUTATION);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDER);
+
 
             onCreate(db);
         }
@@ -1128,5 +1146,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
+    }
+
+    public void getAllOrders(DatabaseOperationCallBack<ArrayList<Order>> callBack) {
+        callBack.onSuccess(new ArrayList<Order>());
+        //TODO
+    }
+
+    public void addOrder(Order newOrder, DatabaseOperationCallBack<DefaultResponse> callBack) {
+        //TODO
     }
 }

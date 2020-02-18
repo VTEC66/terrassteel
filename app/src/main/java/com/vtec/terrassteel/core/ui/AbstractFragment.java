@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment;
 
 public abstract class AbstractFragment extends Fragment {
 
+    protected static final int SCAN_QR_REQUEST_CODE = 23;
+
     @Inject
     protected PreferenceManager preferenceManager;
 

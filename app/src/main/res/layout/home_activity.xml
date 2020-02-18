@@ -13,7 +13,7 @@
         android:background="@color/colorPrimary"
         app:tabIndicatorColor="@color/colorAccent"
         app:tabIndicatorHeight="@dimen/tab_indicator_height"
-        app:tabTextColor="@color/white"
+        app:tabTextAppearance="@style/NavigationTabTextAppeareance"
         app:tabIconTint="@color/white" />
 
     <androidx.viewpager.widget.ViewPager

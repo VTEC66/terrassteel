@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/order_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/order_listview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/xlarge"
+            android:layout_marginEnd="@dimen/standard"
+            app:backgroundTint="@color/colorPrimary"
+            app:elevation="6dp"
+            app:pressedTranslationZ="12dp"
+            android:src="@drawable/ic_add"
+            android:tint="@color/white"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.vtec.terrassteel.common.ui.FontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/StandardTextStyle"
+            android:text="@string/empty_order_text"/>
+
+        <com.vtec.terrassteel.common.ui.FontButton
+            android:id="@+id/add_order_button"
+            android:layout_marginTop="@dimen/xlarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_add_circle"
+            android:drawablePadding="@dimen/standard"
+            android:drawableTint="@color/white"
+            style="@style/FullButtonStyle"
+            android:text="@string/add_order_textbutton"/>
+
+    </LinearLayout>
+
+</LinearLayout>

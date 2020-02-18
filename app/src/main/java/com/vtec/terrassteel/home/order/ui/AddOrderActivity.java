@@ -1,7 +1,6 @@
-package com.vtec.terrassteel.home.construction.ui;
+package com.vtec.terrassteel.home.order.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -14,13 +13,13 @@ import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.listener.ActionBarListener;
 import com.vtec.terrassteel.common.model.Construction;
 import com.vtec.terrassteel.common.model.ConstructionStatus;
-import com.vtec.terrassteel.common.model.Customer;
+import com.vtec.terrassteel.common.model.Order;
+import com.vtec.terrassteel.common.model.OrderStatus;
 import com.vtec.terrassteel.common.ui.ActionBar;
-import com.vtec.terrassteel.database.DatabaseManager;
 import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
-import com.vtec.terrassteel.home.ui.HomeActivity;
+import com.vtec.terrassteel.database.DatabaseManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,11 +28,25 @@ import butterknife.OnClick;
 import static com.vtec.terrassteel.core.Const.NO_ERROR_CODE;
 import static com.vtec.terrassteel.core.Const.VIBRATION_DURATION;
 
-public class AddConstructionActivity extends AbstractActivity  {
+public class AddOrderActivity extends AbstractActivity {
 
-
-    private static final int ERROR_EMPTY_CONSTRUCTION_NAME_FIELD = 1;
+    private static final int ERROR_EMPTY_CODE_ORDER_FIELD = 1;
     private static final int ERROR_EMPTY_CUSTOMER_NAME_FIELD = 2;
+
+    @BindView(R.id.action_bar)
+    ActionBar actionBar;
+
+    @BindView(R.id.ordercode_name_til)
+    View codeOrderTIL;
+
+    @BindView(R.id.ordercode_edittext)
+    EditText codeOrderEditText;
+
+    @BindView(R.id.customer_name_til)
+    View customerNameTil;
+
+    @BindView(R.id.customer_name_edittext)
+    EditText customerNameEditText;
 
     @OnClick(R.id.validate_button)
     public void onClickValidateButton(){
@@ -42,7 +55,7 @@ public class AddConstructionActivity extends AbstractActivity  {
         int error = controlField();
 
         if (error == NO_ERROR_CODE) {
-            addNewConstruction();
+            addNewOrder();
         } else {
 
             Vibrator vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
@@ -58,26 +71,11 @@ public class AddConstructionActivity extends AbstractActivity  {
         }
     }
 
-    @BindView(R.id.action_bar)
-    ActionBar actionBar;
-
-    @BindView(R.id.construction_name_til)
-    View constructionNameTIL;
-
-    @BindView(R.id.construction_name_edittext)
-    EditText constructionNameEditText;
-
-    @BindView(R.id.customer_name_til)
-    View customerNameTil;
-
-    @BindView(R.id.customer_name_edittext)
-    EditText customerNameEditText;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.add_construction_activity);
+        setContentView(R.layout.add_order_activity);
         ButterKnife.bind(this);
 
 
@@ -90,16 +88,15 @@ public class AddConstructionActivity extends AbstractActivity  {
             @Override
             public void onActionButtonClick() { }
         });
-
     }
 
-    private void addNewConstruction() {
-        Construction newConstruction = new Construction()
-                .withConstructionName(constructionNameEditText.getText().toString())
+    private void addNewOrder() {
+        Order newOrder = new Order()
+                .withOrderCode(codeOrderEditText.getText().toString())
                 .withCustomer(customerNameEditText.getText().toString())
-                .withConstructionStatus(ConstructionStatus.IN_PROGRESS);
+                .withStatus(OrderStatus.IN_PROGRESS);
 
-        DatabaseManager.getInstance(getApplicationContext()).addConstruction(newConstruction, new DatabaseOperationCallBack<DefaultResponse>() {
+        DatabaseManager.getInstance(getApplicationContext()).addOrder(newOrder, new DatabaseOperationCallBack<DefaultResponse>() {
 
             @Override
             public void onSuccess(DefaultResponse defaultResponse) {
@@ -114,23 +111,11 @@ public class AddConstructionActivity extends AbstractActivity  {
         });
     }
 
-    private int controlField() {
-        if (constructionNameEditText.getText().length() == 0) {
-            return ERROR_EMPTY_CONSTRUCTION_NAME_FIELD;
-        }
-
-        if (customerNameEditText.getText().length() == 0) {
-            return ERROR_EMPTY_CUSTOMER_NAME_FIELD;
-        }
-
-        return NO_ERROR_CODE;
-    }
-
     private void highlightError(int error) {
         switch (error) {
-            case ERROR_EMPTY_CONSTRUCTION_NAME_FIELD:
-                constructionNameTIL.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
-                constructionNameEditText.setError(getString(R.string.standard_mandatory_field_message));
+            case ERROR_EMPTY_CODE_ORDER_FIELD:
+                codeOrderTIL.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
+                codeOrderEditText.setError(getString(R.string.standard_mandatory_field_message));
                 break;
             case ERROR_EMPTY_CUSTOMER_NAME_FIELD:
                 customerNameTil.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
@@ -140,18 +125,20 @@ public class AddConstructionActivity extends AbstractActivity  {
         }
     }
 
-    private void clearHighlightErrors() {
+    private int controlField() {
+        if (codeOrderEditText.getText().length() == 0) {
+            return ERROR_EMPTY_CODE_ORDER_FIELD;
+        }
 
-        constructionNameEditText.setError(null);
+        if (customerNameEditText.getText().length() == 0) {
+            return ERROR_EMPTY_CUSTOMER_NAME_FIELD;
+        }
+
+        return NO_ERROR_CODE;
+    }
+
+    private void clearHighlightErrors() {
+        codeOrderEditText.setError(null);
         customerNameEditText.setError(null);
     }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-        finishAffinity();
-    }
-
 }

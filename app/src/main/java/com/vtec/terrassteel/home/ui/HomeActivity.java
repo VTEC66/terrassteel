@@ -38,6 +38,7 @@ public class HomeActivity extends AbstractActivity {
 
     private void setupTabIcons() {
         tabs.getTabAt(HomePagerAdapter.CONSTRUCTION).setIcon(R.drawable.ic_constrcution);
+        tabs.getTabAt(HomePagerAdapter.ORDER).setIcon(R.drawable.ic_shipping);
         tabs.getTabAt(HomePagerAdapter.COMPANY).setIcon(R.drawable.ic_business);
     }
 

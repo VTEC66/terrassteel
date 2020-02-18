@@ -81,5 +81,11 @@
     <string name="export_file_generated">Fichier d\'export généré avec succès.</string>
     <string name="export_file_generation_fail">Une erreur est survenu durant la génération du fichier d\'export.</string>
     <string name="dashboard_not_available">Le tableau de bord n\'est pas disponible pour le moment.</string>
+    <string name="tab_order">Mes commandes</string>
+    <string name="add_order_textbutton">Ajouter une commande</string>
+    <string name="empty_order_text">Vous n\'avez pas encore ajouté de commande.</string>
+    <string name="qr_order_notrecognized">Le QR code du de la Commande n\'à pas été reconnu.</string>
+    <string name="add_order_title">Ajouter une commande</string>
+    <string name="hint_ordercode_name">Code de commande</string>
 
 </resources>
