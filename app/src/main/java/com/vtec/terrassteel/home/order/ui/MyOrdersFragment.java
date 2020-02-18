@@ -16,6 +16,7 @@ import com.vtec.terrassteel.common.model.ConstructionStatus;
 import com.vtec.terrassteel.common.model.Order;
 import com.vtec.terrassteel.common.model.OrderStatus;
 import com.vtec.terrassteel.common.ui.ScanActivity;
+import com.vtec.terrassteel.construction.ui.ConstructionMainActivity;
 import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractFragment;
@@ -26,6 +27,7 @@ import com.vtec.terrassteel.home.construction.ui.AddConstructionActivity;
 import com.vtec.terrassteel.home.construction.ui.MyConstructionsFragment;
 import com.vtec.terrassteel.home.order.adapter.OrderAdapter;
 import com.vtec.terrassteel.home.order.callback.OrderCallback;
+import com.vtec.terrassteel.order.ui.OrderMainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -200,5 +202,16 @@ public class MyOrdersFragment extends AbstractFragment implements OrderCallback 
 
     private void startScanActivity() {
         startActivityForResult(new Intent(getActivity(), ScanActivity.class), SCAN_QR_REQUEST_CODE);
+    }
+
+    @Override
+    public void onOrderSelected(Order order) {
+        sessionManager.setCurrentOrder(order);
+        startActivity(new Intent(getContext(), OrderMainActivity.class));
+
+        if(getActivity() != null){
+            getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            getActivity().finishAffinity();
+        }
     }
 }

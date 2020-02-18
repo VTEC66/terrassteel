@@ -7,6 +7,11 @@ public class Order {
     private String customer;
     private OrderStatus status;
 
+    public Order withId(long id){
+        this.orderId = id;
+        return this;
+    }
+
     public Order withOrderCode(String orderCode) {
         this.orderCode = orderCode;
         return this;

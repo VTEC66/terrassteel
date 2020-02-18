@@ -1,6 +1,7 @@
 package com.vtec.terrassteel.core.manager;
 
 import com.vtec.terrassteel.common.model.Construction;
+import com.vtec.terrassteel.common.model.Order;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -12,6 +13,7 @@ public class SessionManager {
     private boolean isLoggedIn;
 
     private Construction construction;
+    private Order order;
 
 
     @Inject
@@ -40,5 +42,13 @@ public class SessionManager {
 
     public Construction getContruction(){
         return construction;
+    }
+
+    public void setCurrentOrder(Order order) {
+        this.order = order;
+    }
+
+    public Order getOrder(){
+        return order;
     }
 }

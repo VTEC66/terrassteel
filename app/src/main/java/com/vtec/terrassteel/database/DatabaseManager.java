@@ -14,6 +14,7 @@ import com.vtec.terrassteel.common.model.Employee;
 import com.vtec.terrassteel.common.model.Job;
 import com.vtec.terrassteel.common.model.Imputation;
 import com.vtec.terrassteel.common.model.Order;
+import com.vtec.terrassteel.common.model.OrderStatus;
 import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.common.model.WorkOrderStatus;
 import com.vtec.terrassteel.core.manager.SessionManager;
@@ -37,7 +38,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String TABLE_WORK_ORDER = "work_order";
     private static final String TABLE_ASSIGN = "assign";
     private static final String TABLE_IMPUTATION = "imputation";
-    private static final String TABLE_ORDER = "order";
+    private static final String TABLE_ORDER = "_order";
 
 
     // Construction Table Columns
@@ -89,10 +90,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     // Order Table Columns
     private static final String KEY_ORDER_ID_PK = "orderIdPk";
     private static final String KEY_ORDER_CODE = "orderCode";
+    private static final String KEY_ORDER_CUSTOMER  = "orderCustomer";
     private static final String KEY_ORDER_STATUS = "orderStatus";
-
-
-
 
 
     private static DatabaseManager sInstance;
@@ -176,6 +175,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 "(" +
                 KEY_ORDER_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 KEY_ORDER_CODE + " TEXT," +
+                KEY_ORDER_CUSTOMER + " TEXT," + // Define a foreign key
                 KEY_ORDER_STATUS + " TEXT " +
                 ")";
 
@@ -275,8 +275,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-
-
         }
 
         Log.d(TAG, "Database successfully return " + constructions.size() + " constructions.");
@@ -1149,11 +1147,66 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public void getAllOrders(DatabaseOperationCallBack<ArrayList<Order>> callBack) {
-        callBack.onSuccess(new ArrayList<Order>());
-        //TODO
+        ArrayList<Order> orders = new ArrayList<>();
+
+        String GET_ALL_ORDER_QUERY =
+                String.format("SELECT * FROM %s",
+                        TABLE_ORDER);
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(GET_ALL_ORDER_QUERY, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Order newOrder =
+                            new Order()
+                                    .withId(cursor.getLong(cursor.getColumnIndex(KEY_ORDER_ID_PK)))
+                                    .withOrderCode(cursor.getString(cursor.getColumnIndex(KEY_ORDER_CODE)))
+                                    .withCustomer(cursor.getString(cursor.getColumnIndex(KEY_ORDER_CUSTOMER)))
+                                    .withStatus(OrderStatus.valueOf(cursor.getString(cursor.getColumnIndex(KEY_ORDER_STATUS))));
+
+                    orders.add(newOrder);
+
+                } while(cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to get orders from database : " + e.toString());
+            callBack.onError();
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+        Log.d(TAG, "Database successfully return " + orders.size() + " orders.");
+
+        callBack.onSuccess(orders);
     }
 
     public void addOrder(Order newOrder, DatabaseOperationCallBack<DefaultResponse> callBack) {
-        //TODO
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_ORDER_CUSTOMER, newOrder.getCustomer());
+            values.put(KEY_ORDER_CODE, newOrder.getOrderCode());
+            values.put(KEY_ORDER_STATUS, newOrder.getStatus().name());
+
+
+            // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
+            db.insertOrThrow(TABLE_ORDER, null, values);
+            db.setTransactionSuccessful();
+
+            Log.d(TAG, "New order successfuly added into database");
+            callBack.onSuccess(new DefaultResponse());
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to add order into database : " + e.toString());
+            callBack.onError();
+        } finally {
+            db.endTransaction();
+        }
     }
 }
