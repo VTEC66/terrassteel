@@ -211,7 +211,6 @@ public class MyOrdersFragment extends AbstractFragment implements OrderCallback 
 
         if(getActivity() != null){
             getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            getActivity().finishAffinity();
         }
     }
 }

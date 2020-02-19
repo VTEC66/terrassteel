@@ -14,7 +14,7 @@
         app:showActionButton="true"
         app:actionButtonDrawable="@drawable/ic_check" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/picture_order_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -33,14 +33,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="@dimen/xlarge"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/standard"
             app:backgroundTint="@color/colorPrimary"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"
-            android:src="@drawable/ic_add"
+            android:src="@drawable/ic_add_picture"
             android:tint="@color/white"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/empty_view"

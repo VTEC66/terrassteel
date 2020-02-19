@@ -12,32 +12,35 @@ import com.vtec.terrassteel.common.listener.ActionBarListener;
 import com.vtec.terrassteel.common.listener.ConfirmationDialogCallback;
 import com.vtec.terrassteel.common.model.OrderStatus;
 import com.vtec.terrassteel.common.model.Picture;
-import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.common.ui.ActionBar;
 import com.vtec.terrassteel.common.ui.ConfirmationDialog;
-import com.vtec.terrassteel.common.ui.ScanActivity;
-import com.vtec.terrassteel.core.manager.SessionManager;
 import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
 import com.vtec.terrassteel.database.DatabaseManager;
+import com.vtec.terrassteel.home.order.adapter.OrderAdapter;
+import com.vtec.terrassteel.order.adapter.PictureGridAdapter;
+import com.vtec.terrassteel.order.callback.PictureOrderCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class OrderMainActivity  extends AbstractActivity {
+public class OrderMainActivity  extends AbstractActivity implements PictureOrderCallback {
 
     private static final String CONFIRMATION_DIALOG = "CONFIRMATION_DIALOG";
     private static final int TAKE_PICTURE_REQUEST_CODE = 12;
 
     @BindView(R.id.picture_order_listview)
-    RecyclerView pictureOrderRecyclerView;
+    RecyclerView pictureOrderGridView;
 
     @BindView(R.id.action_bar)
     ActionBar actionBar;
@@ -60,6 +63,8 @@ public class OrderMainActivity  extends AbstractActivity {
             startCameraActivity();
         }
     }
+
+    PictureGridAdapter pictureGridAdapter;
 
 
     @Override
@@ -95,6 +100,14 @@ public class OrderMainActivity  extends AbstractActivity {
                         .show(getSupportFragmentManager(), CONFIRMATION_DIALOG);
             }
         });
+
+        pictureOrderGridView.setLayoutManager(new GridLayoutManager(this, 3));
+        pictureOrderGridView.setHasFixedSize(true);
+
+        pictureGridAdapter = new PictureGridAdapter(this, sessionManager.getOrder());
+        pictureGridAdapter.setCallback(this);
+
+        pictureOrderGridView.setAdapter(pictureGridAdapter);
     }
 
     @Override
@@ -105,9 +118,8 @@ public class OrderMainActivity  extends AbstractActivity {
             @Override
             public void onSuccess(ArrayList<Picture> pictures) {
                 setupVisibility(pictures.isEmpty());
-                //TODO
-                /*imputationAdapter.setData(assigns);
-                imputationAdapter.notifyDataSetChanged();*/
+                pictureGridAdapter.setData(pictures);
+                pictureGridAdapter.notifyDataSetChanged();
             }
         });
 
@@ -115,6 +127,9 @@ public class OrderMainActivity  extends AbstractActivity {
         if(sessionManager.getOrder().getStatus().equals(OrderStatus.FINISHED)){
             addFab.setVisibility(View.GONE);
             actionBar.showActionButton(false);
+        }else{
+            addFab.setVisibility(View.VISIBLE);
+            actionBar.showActionButton(true);
         }
     }
 
