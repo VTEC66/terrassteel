@@ -15,6 +15,7 @@ import com.vtec.terrassteel.common.model.Job;
 import com.vtec.terrassteel.common.model.Imputation;
 import com.vtec.terrassteel.common.model.Order;
 import com.vtec.terrassteel.common.model.OrderStatus;
+import com.vtec.terrassteel.common.model.Picture;
 import com.vtec.terrassteel.common.model.WorkOrder;
 import com.vtec.terrassteel.common.model.WorkOrderStatus;
 import com.vtec.terrassteel.core.manager.SessionManager;
@@ -39,6 +40,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String TABLE_ASSIGN = "assign";
     private static final String TABLE_IMPUTATION = "imputation";
     private static final String TABLE_ORDER = "_order";
+    private static final String TABLE_PICTURE = "picture";
 
 
     // Construction Table Columns
@@ -92,6 +94,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String KEY_ORDER_CODE = "orderCode";
     private static final String KEY_ORDER_CUSTOMER  = "orderCustomer";
     private static final String KEY_ORDER_STATUS = "orderStatus";
+
+    // Order Table Columns
+    private static final String KEY_PICTURE_ID_PK = "pictureIdPk";
+    private static final String KEY_PICTURE_NAME = "pictureNmae";
+    private static final String KEY_ORDER_ID_FK = "orderIdFk";
+
+
 
 
     private static DatabaseManager sInstance;
@@ -179,12 +188,20 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 KEY_ORDER_STATUS + " TEXT " +
                 ")";
 
+        String CREATE_PICTURE_TABLE = "CREATE TABLE " + TABLE_PICTURE +
+                "(" +
+                KEY_PICTURE_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                KEY_PICTURE_NAME + " TEXT," +
+                KEY_ORDER_ID_FK + " INTEGER REFERENCES " + TABLE_ORDER + //define a foreign key
+                ")";
+
         db.execSQL(CREATE_CONSTRUCTIONS_TABLE);
         db.execSQL(CREATE_EMPLOYEES_TABLE);
         db.execSQL(CREATE_WORK_ORDER_TABLE);
         db.execSQL(CREATE_ASSIGN_TABLE);
         db.execSQL(CREATE_IMPUTATION_TABLE);
         db.execSQL(CREATE_ORDER_TABLE);
+        db.execSQL(CREATE_PICTURE_TABLE);
 
     }
 
@@ -208,7 +225,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSIGN);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMPUTATION);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDER);
-
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_PICTURE);
 
             onCreate(db);
         }
@@ -1209,4 +1226,97 @@ public class DatabaseManager extends SQLiteOpenHelper {
             db.endTransaction();
         }
     }
+
+    public void closeOrder(Order order, DatabaseOperationCallBack<DefaultResponse> callBack) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_ORDER_STATUS, OrderStatus.FINISHED.name());
+
+            db.update(TABLE_ORDER
+                    , values
+                    , KEY_ORDER_ID_PK + "=" + order.getOrderId()
+                    ,null);
+
+            db.setTransactionSuccessful();
+
+            Log.d(TAG, "Workorder have been successfuly closed");
+            callBack.onSuccess(new DefaultResponse());
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to close Workorder : " + e.toString());
+            callBack.onError();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void addPicture(Picture newPicture, DatabaseOperationCallBack<DefaultResponse> callBack) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_PICTURE_NAME, newPicture.getPictureName());
+            values.put(KEY_ORDER_ID_FK, newPicture.getOrder().getOrderId());
+
+            // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
+            db.insertOrThrow(TABLE_PICTURE, null, values);
+            db.setTransactionSuccessful();
+
+            Log.d(TAG, "New picture successfuly added into database");
+            callBack.onSuccess(new DefaultResponse());
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to add picture into database : " + e.toString());
+            callBack.onError();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void getAllPictureForOrder(Order order, DatabaseOperationCallBack<ArrayList<Picture>> callBack) {
+        ArrayList<Picture> pictures = new ArrayList<>();
+
+        String PICTURE_SELECT_QUERY = "SELECT * " +
+                "FROM "+ TABLE_PICTURE + " picture " +
+                "WHERE picture.orderIdFk = "+  order.getOrderId() ;
+
+
+        Log.e(TAG, PICTURE_SELECT_QUERY);
+
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(PICTURE_SELECT_QUERY, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Picture picture =
+                            new Picture()
+                                    .withId(cursor.getLong(cursor.getColumnIndex(KEY_PICTURE_ID_PK)))
+                                    .withPictureName(cursor.getString(cursor.getColumnIndex(KEY_PICTURE_NAME)));
+
+                    pictures.add(picture);
+
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to get pictures from database : " + e.toString());
+            callBack.onError();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        Log.d(TAG, "Database successfully return " + pictures.size() + " pictures.");
+
+
+        callBack.onSuccess(pictures);
+    }
+
 }

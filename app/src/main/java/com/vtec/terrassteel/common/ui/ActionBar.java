@@ -101,4 +101,12 @@ public class ActionBar extends LinearLayout {
             backArrow.setVisibility(View.INVISIBLE);
         }
     }
+
+    public void showActionButton(boolean shouldShow) {
+        if(shouldShow){
+            actionButton.setVisibility(View.VISIBLE);
+        }else{
+            actionButton.setVisibility(View.INVISIBLE);
+        }
+    }
 }

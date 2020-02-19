@@ -87,5 +87,9 @@
     <string name="qr_order_notrecognized">Le QR code du de la Commande n\'à pas été reconnu.</string>
     <string name="add_order_title">Ajouter une commande</string>
     <string name="hint_ordercode_name">Code de commande</string>
+    <string name="add_picture_textbutton">Ajouter une photo</string>
+    <string name="empty_picture_text">Aucune photo n\'a été enregistrée pour cette commande pour le moment.</string>
+    <string name="order_close_confirmation_message">Etes-vous sûr de vouloir clôturer cette commande.</string>
+    <string name="retake">Recommencer</string>
 
 </resources>
