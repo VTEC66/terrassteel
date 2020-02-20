@@ -92,7 +92,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
     // Order Table Columns
     private static final String KEY_ORDER_ID_PK = "orderIdPk";
     private static final String KEY_ORDER_CODE = "orderCode";
-    private static final String KEY_ORDER_CUSTOMER  = "orderCustomer";
     private static final String KEY_ORDER_STATUS = "orderStatus";
 
     // Order Table Columns
@@ -157,7 +156,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
             "(" +
             KEY_ORDER_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             KEY_ORDER_CODE + " TEXT," +
-            KEY_ORDER_CUSTOMER + " TEXT," + // Define a foreign key
             KEY_ORDER_STATUS + " TEXT " +
             ")";
 
@@ -1170,7 +1168,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                             new Order()
                                     .withId(cursor.getLong(cursor.getColumnIndex(KEY_ORDER_ID_PK)))
                                     .withOrderCode(cursor.getString(cursor.getColumnIndex(KEY_ORDER_CODE)))
-                                    .withCustomer(cursor.getString(cursor.getColumnIndex(KEY_ORDER_CUSTOMER)))
+                                    //.withCustomer(cursor.getString(cursor.getColumnIndex(KEY_ORDER_CUSTOMER)))
                                     .withStatus(OrderStatus.valueOf(cursor.getString(cursor.getColumnIndex(KEY_ORDER_STATUS))));
 
                     orders.add(newOrder);
@@ -1198,7 +1196,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             ContentValues values = new ContentValues();
 
-            values.put(KEY_ORDER_CUSTOMER, newOrder.getCustomer());
+            //values.put(KEY_ORDER_CUSTOMER, newOrder.getCustomer());
             values.put(KEY_ORDER_CODE, newOrder.getOrderCode());
             values.put(KEY_ORDER_STATUS, newOrder.getStatus().name());
 

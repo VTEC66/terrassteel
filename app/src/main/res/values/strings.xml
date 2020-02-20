@@ -92,5 +92,8 @@
     <string name="order_close_confirmation_message">Etes-vous sûr de vouloir clôturer cette commande.</string>
     <string name="retake">Recommencer</string>
     <string name="delete_picture_confirmation_message">Souhaitez-vous vraiment supprimer cette photo ?</string>
+    <string name="filterHint">Filtrer vos commandes</string>
+    <string name="all">Toutes</string>
+    <string name="in_progress">En cours</string>
 
 </resources>

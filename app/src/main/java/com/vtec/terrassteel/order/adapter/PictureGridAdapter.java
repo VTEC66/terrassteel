@@ -45,7 +45,7 @@ public class PictureGridAdapter extends RecyclerView.Adapter<PictureGridAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Picture picture = elements.get(position);
 
-        String completePath = Environment.getExternalStorageDirectory().toString() + "/terrassteel/commandes/" + currentOrder.getOrderCode() + "-" + currentOrder.getCustomer() + "/" + picture.getPictureName();
+        String completePath = Environment.getExternalStorageDirectory().toString() + "/terrassteel/commandes/" + currentOrder.getOrderCode()  + "/" + picture.getPictureName();
 
         File file = new File(completePath);
         Uri imageUri = Uri.fromFile(file);

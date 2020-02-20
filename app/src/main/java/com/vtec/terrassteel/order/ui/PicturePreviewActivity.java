@@ -112,6 +112,6 @@ public class PicturePreviewActivity extends AbstractActivity {
     }
 
     private String getCompletePath() {
-        return Environment.getExternalStorageDirectory().toString() + "/terrassteel/commandes/" + sessionManager.getOrder().getOrderCode() + "-" + sessionManager.getOrder().getCustomer() + "/" + picture.getPictureName();
+        return Environment.getExternalStorageDirectory().toString() + "/terrassteel/commandes/" + sessionManager.getOrder().getOrderCode() + "/" + picture.getPictureName();
     }
 }

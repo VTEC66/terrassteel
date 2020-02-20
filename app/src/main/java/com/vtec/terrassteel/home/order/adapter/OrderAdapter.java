@@ -1,6 +1,7 @@
 package com.vtec.terrassteel.home.order.adapter;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +10,14 @@ import android.widget.TextView;
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.model.Construction;
 import com.vtec.terrassteel.common.model.Order;
+import com.vtec.terrassteel.common.model.OrderStatus;
 import com.vtec.terrassteel.home.construction.adapter.ConstructionAdapter;
 import com.vtec.terrassteel.home.order.callback.OrderCallback;
 import com.vtec.terrassteel.home.order.ui.MyOrdersFragment;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,7 +28,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     private final Context context;
     private ArrayList<Order> elements = new ArrayList<>();
+    private ArrayList<Order> filteredElements = new ArrayList<>();
+
+
     private OrderCallback callback;
+    private boolean shouldShowAll = false;
+
 
     public OrderAdapter(Context context) {
         this.context = context;
@@ -38,10 +47,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull OrderAdapter.ViewHolder holder, int position) {
-        Order order = elements.get(position);
+        Order order = filteredElements.get(position);
 
         holder.codeOrderTextView.setText(order.getOrderCode());
-        holder.customerTextView.setText(order.getCustomer());
         holder.statusIndicatorTextView.setText(order.getStatus().getRessourceReference());
 
         switch (order.getStatus()){
@@ -58,8 +66,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        if (elements.size() > 0)
-            return elements.size();
+        if (filteredElements.size() > 0)
+            return filteredElements.size();
         return 0;
     }
 
@@ -67,17 +75,60 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         this.callback = callback;
     }
 
-    public void setData(ArrayList<Order> orders) {
-            this.elements = orders;
+    public void setData(ArrayList<Order> elements) {
+        this.elements = new ArrayList<>();
+        this.filteredElements = new ArrayList<>();
+
+        if(elements != null){
+            this.elements.addAll(elements);
+            this.filteredElements.addAll(getElementToShow());
+        }
+    }
+
+    public void clearData() {
+        filteredElements.clear();
+    }
+
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        filteredElements.clear();
+        if (charText.length() == 0) {
+            filteredElements.addAll(getElementToShow());
+        } else {
+            for (Order order : getElementToShow()) {
+                if (order.getOrderCode().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        filteredElements.add(order);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    private ArrayList<Order> getElementToShow() {
+
+        if(shouldShowAll){
+            return elements;
+        }
+
+        ArrayList<Order> elementToShow =new ArrayList<Order>();
+
+        for (Order order : elements){
+            if(order.getStatus().equals(OrderStatus.IN_PROGRESS)){
+                elementToShow.add(order);
+            }
+        }
+
+        return elementToShow;
+    }
+
+    public void setShowAll(boolean shouldShowAll) {
+        this.shouldShowAll = shouldShowAll;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.code_order_tv)
         TextView codeOrderTextView;
-
-        @BindView(R.id.customer_tv)
-        TextView customerTextView;
 
         @BindView(R.id.status_indicator_tv)
         TextView statusIndicatorTextView;

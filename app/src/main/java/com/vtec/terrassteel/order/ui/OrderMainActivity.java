@@ -73,7 +73,7 @@ public class OrderMainActivity  extends AbstractActivity implements PictureOrder
         setContentView(R.layout.order_main_activity);
         ButterKnife.bind(this);
 
-        actionBar.setTitle(sessionManager.getOrder().getOrderCode() + " " + sessionManager.getOrder().getCustomer());
+        actionBar.setTitle(sessionManager.getOrder().getOrderCode());
         actionBar.setListener(new ActionBarListener() {
             @Override
             public void onBackArrowClick() {

@@ -14,4 +14,5 @@
     <color name="dialog_overlay_transparency">#88000000</color>
 
     <color name="green_in_progress">#88D840</color>
+    <color name="transparent">#00000000</color>
 </resources>

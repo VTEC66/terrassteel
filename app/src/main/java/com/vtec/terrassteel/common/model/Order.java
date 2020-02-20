@@ -4,7 +4,7 @@ public class Order {
 
     private long orderId;
     private String orderCode;
-    private String customer;
+    //private String customer;
     private OrderStatus status;
 
     public Order withId(long id){
@@ -17,10 +17,10 @@ public class Order {
         return this;
     }
 
-    public Order withCustomer(String customerName) {
+    /*public Order withCustomer(String customerName) {
         this.customer = customerName;
         return this;
-    }
+    }*/
 
     public Order withStatus(OrderStatus status) {
         this.status = status;
@@ -35,9 +35,9 @@ public class Order {
         return orderCode;
     }
 
-    public String getCustomer() {
+    /*public String getCustomer() {
         return customer;
-    }
+    }*/
 
     public OrderStatus getStatus() {
         return status;

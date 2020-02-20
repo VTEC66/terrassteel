@@ -9,6 +9,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.model.Construction;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -58,6 +61,12 @@ public class MyOrdersFragment extends AbstractFragment implements OrderCallback 
 
     @BindView(R.id.empty_view)
     View emptyView;
+
+    @BindView(R.id.search_view)
+    SearchView searchView;
+
+    @BindView(R.id.toggleBouton)
+    ToggleButton toggleButton;
 
     private OrderAdapter orderAdapter;
 
@@ -94,6 +103,29 @@ public class MyOrdersFragment extends AbstractFragment implements OrderCallback 
 
         orderRecyclerView.addItemDecoration(dividerItemDecoration);
         orderRecyclerView.setAdapter(orderAdapter);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                String text = newText;
+                orderAdapter.filter(text);
+
+                return false;
+            }
+        });
+
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                orderAdapter.setShowAll(isChecked);
+                orderAdapter.filter(searchView.getQuery().toString());
+            }
+        });
 
         return view;
     }
@@ -151,7 +183,19 @@ public class MyOrdersFragment extends AbstractFragment implements OrderCallback 
 
                     if (!TextUtils.isEmpty(data.getStringExtra(CODE))) {
                         String extractedData = data.getStringExtra(CODE);
-                        String[] parts = extractedData.replace("\"", "").trim().split("-");
+
+                        Order newOrder = new Order()
+                                .withOrderCode(extractedData)
+                                .withStatus(OrderStatus.IN_PROGRESS);
+
+                        DatabaseManager.getInstance(getContext())
+                                .addOrder(newOrder, new DatabaseOperationCallBack<DefaultResponse>() {
+                                    @Override
+                                    public void onSuccess(DefaultResponse defaultResponse) {
+                                        onResume();
+                                    }
+                                });
+                        /*String[] parts = extractedData.replace("\"", "").trim().split("-");
 
                         if (parts.length != 2) {
                             showError(getString(R.string.qr_order_notrecognized));
@@ -168,7 +212,7 @@ public class MyOrdersFragment extends AbstractFragment implements OrderCallback 
                                             onResume();
                                         }
                                     });
-                        }
+                        }*/
                     }
                     break;
 

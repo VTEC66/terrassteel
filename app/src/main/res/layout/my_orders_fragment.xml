@@ -13,6 +13,34 @@
         android:orientation="vertical"
         android:visibility="gone">
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/xsmall"
+            android:layout_marginStart="@dimen/xsmall"
+            android:layout_marginEnd="@dimen/xsmall"
+            >
+            <androidx.appcompat.widget.SearchView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/search_view"
+                android:background="@drawable/background_edittext"
+                app:queryBackground="@color/transparent"
+                app:queryHint="@string/filterHint"
+                app:iconifiedByDefault="false"/>
+
+            <ToggleButton
+                android:id="@+id/toggleBouton"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textOn="@string/all"
+                android:textOff="@string/in_progress"
+                android:checked="false"/>
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/order_listview"
             android:layout_width="match_parent"

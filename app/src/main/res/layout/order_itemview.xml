@@ -18,13 +18,6 @@
             android:textSize="@dimen/text_size_title"
             android:textColor="@color/antracite_grey"/>
 
-        <com.vtec.terrassteel.common.ui.FontTextView
-            android:id="@+id/customer_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_standard"
-            android:textColor="@color/manatee_grey"/>
-
     </LinearLayout>
 
 

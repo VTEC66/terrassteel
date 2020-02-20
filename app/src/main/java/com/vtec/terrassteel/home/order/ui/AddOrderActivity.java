@@ -31,7 +31,6 @@ import static com.vtec.terrassteel.core.Const.VIBRATION_DURATION;
 public class AddOrderActivity extends AbstractActivity {
 
     private static final int ERROR_EMPTY_CODE_ORDER_FIELD = 1;
-    private static final int ERROR_EMPTY_CUSTOMER_NAME_FIELD = 2;
 
     @BindView(R.id.action_bar)
     ActionBar actionBar;
@@ -41,12 +40,6 @@ public class AddOrderActivity extends AbstractActivity {
 
     @BindView(R.id.ordercode_edittext)
     EditText codeOrderEditText;
-
-    @BindView(R.id.customer_name_til)
-    View customerNameTil;
-
-    @BindView(R.id.customer_name_edittext)
-    EditText customerNameEditText;
 
     @OnClick(R.id.validate_button)
     public void onClickValidateButton(){
@@ -93,7 +86,6 @@ public class AddOrderActivity extends AbstractActivity {
     private void addNewOrder() {
         Order newOrder = new Order()
                 .withOrderCode(codeOrderEditText.getText().toString())
-                .withCustomer(customerNameEditText.getText().toString())
                 .withStatus(OrderStatus.IN_PROGRESS);
 
         DatabaseManager.getInstance(getApplicationContext()).addOrder(newOrder, new DatabaseOperationCallBack<DefaultResponse>() {
@@ -117,11 +109,6 @@ public class AddOrderActivity extends AbstractActivity {
                 codeOrderTIL.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
                 codeOrderEditText.setError(getString(R.string.standard_mandatory_field_message));
                 break;
-            case ERROR_EMPTY_CUSTOMER_NAME_FIELD:
-                customerNameTil.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
-                customerNameEditText.setError(getString(R.string.standard_mandatory_field_message));
-                break;
-
         }
     }
 
@@ -130,15 +117,10 @@ public class AddOrderActivity extends AbstractActivity {
             return ERROR_EMPTY_CODE_ORDER_FIELD;
         }
 
-        if (customerNameEditText.getText().length() == 0) {
-            return ERROR_EMPTY_CUSTOMER_NAME_FIELD;
-        }
-
         return NO_ERROR_CODE;
     }
 
     private void clearHighlightErrors() {
         codeOrderEditText.setError(null);
-        customerNameEditText.setError(null);
     }
 }

@@ -147,7 +147,7 @@ public class CameraActivity extends AbstractActivity {
 
     private String saveImage(Bitmap finalBitmap) {
 
-        String root = Environment.getExternalStorageDirectory().toString() + "/terrassteel/commandes/" + sessionManager.getOrder().getOrderCode() + "-" + sessionManager.getOrder().getCustomer();
+        String root = Environment.getExternalStorageDirectory().toString() + "/terrassteel/commandes/" + sessionManager.getOrder().getOrderCode() ;
 
         File myDir = new File(root);
         if (!myDir.exists()) {
