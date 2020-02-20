@@ -91,5 +91,6 @@
     <string name="empty_picture_text">Aucune photo n\'a été enregistrée pour cette commande pour le moment.</string>
     <string name="order_close_confirmation_message">Etes-vous sûr de vouloir clôturer cette commande.</string>
     <string name="retake">Recommencer</string>
+    <string name="delete_picture_confirmation_message">Souhaitez-vous vraiment supprimer cette photo ?</string>
 
 </resources>

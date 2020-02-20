@@ -1,6 +1,8 @@
 package com.vtec.terrassteel.common.model;
 
-public class Picture {
+import java.io.Serializable;
+
+public class Picture implements Serializable {
 
 
 

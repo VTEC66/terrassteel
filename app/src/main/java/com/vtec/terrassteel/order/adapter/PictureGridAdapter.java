@@ -55,7 +55,11 @@ public class PictureGridAdapter extends RecyclerView.Adapter<PictureGridAdapter.
 
         Glide.with(context)
                 .load(imageUri)
+                .centerCrop()
                 .into(holder.pictureHolder);
+
+        holder.itemView.setOnClickListener(v -> callback.onPictureSelected(picture));
+
 
     }
 

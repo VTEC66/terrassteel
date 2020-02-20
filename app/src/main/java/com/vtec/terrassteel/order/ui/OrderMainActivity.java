@@ -38,6 +38,7 @@ public class OrderMainActivity  extends AbstractActivity implements PictureOrder
 
     private static final String CONFIRMATION_DIALOG = "CONFIRMATION_DIALOG";
     private static final int TAKE_PICTURE_REQUEST_CODE = 12;
+    private static final int SHOW_PICTURE = 13;
 
     @BindView(R.id.picture_order_listview)
     RecyclerView pictureOrderGridView;
@@ -187,5 +188,18 @@ public class OrderMainActivity  extends AbstractActivity implements PictureOrder
                     break;
             }
         }
+
+        if(requestCode == SHOW_PICTURE) {
+            switch (resultCode) {
+                case PicturePreviewActivity.PICTURE_DELETED:
+                    onResume();
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onPictureSelected(Picture picture) {
+        startActivityForResult(PicturePreviewActivity.newIntent(this, picture), SHOW_PICTURE);
     }
 }

@@ -79,7 +79,8 @@
 
         <activity android:name=".common.ui.ScanActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/FullTranslucent"/>
 
         <activity android:name=".order.ui.CameraActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
@@ -95,6 +96,12 @@
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:screenOrientation="portrait"
             android:theme="@style/FullTranslucent"/>
+
+        <activity android:name=".order.ui.PicturePreviewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullTranslucent"/>
+
 
     </application>
 

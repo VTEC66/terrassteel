@@ -1319,4 +1319,27 @@ public class DatabaseManager extends SQLiteOpenHelper {
         callBack.onSuccess(pictures);
     }
 
+    public void deletePicture(Picture picture, DatabaseOperationCallBack<DefaultResponse> callBack) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+
+            String DELETE_PICTURE_QUERY = "DELETE " +
+                    "FROM "+ TABLE_PICTURE +
+                    " WHERE pictureIdPk = " + picture.getPictureId();
+
+            Log.e(TAG, DELETE_PICTURE_QUERY);
+
+            db.execSQL(DELETE_PICTURE_QUERY);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error while trying to delete picture from database : " + e.toString());
+            callBack.onError();
+        } finally {
+            db.close();
+        }
+
+        callBack.onSuccess(new DefaultResponse());
+    }
 }
