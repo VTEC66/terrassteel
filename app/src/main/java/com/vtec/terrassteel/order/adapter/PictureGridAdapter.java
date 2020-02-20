@@ -12,10 +12,7 @@ import com.bumptech.glide.Glide;
 import com.vtec.terrassteel.R;
 import com.vtec.terrassteel.common.model.Order;
 import com.vtec.terrassteel.common.model.Picture;
-import com.vtec.terrassteel.home.order.adapter.OrderAdapter;
-import com.vtec.terrassteel.home.order.callback.OrderCallback;
 import com.vtec.terrassteel.order.callback.PictureOrderCallback;
-import com.vtec.terrassteel.order.ui.OrderMainActivity;
 
 import java.io.File;
 import java.util.ArrayList;

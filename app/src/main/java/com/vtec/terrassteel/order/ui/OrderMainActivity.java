@@ -18,17 +18,15 @@ import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
 import com.vtec.terrassteel.database.DatabaseManager;
-import com.vtec.terrassteel.home.order.adapter.OrderAdapter;
 import com.vtec.terrassteel.order.adapter.PictureGridAdapter;
 import com.vtec.terrassteel.order.callback.PictureOrderCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -170,6 +168,24 @@ public class OrderMainActivity  extends AbstractActivity implements PictureOrder
 
             if (requestPermissions.size() > 0) {
                 requestPermissions(requestPermissions.toArray(new String[0]), AbstractActivity.PERMISSION_REQUEST_CODE);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            int approvedPermissions = 0;
+
+            for (int i = 0; i < permissions.length; i++) {
+
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    approvedPermissions = approvedPermissions + 1;
+                }
+            }
+
+            if (approvedPermissions == permissions.length) {
+                startCameraActivity();
             }
         }
     }

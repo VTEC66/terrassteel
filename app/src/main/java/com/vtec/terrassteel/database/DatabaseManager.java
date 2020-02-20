@@ -30,11 +30,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     // Database Info
     private static final String DATABASE_NAME = "mainDatabase";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION_0_4_X = 1;
+    private static final int DATABASE_VERSION_0_5_X = 2;
 
     // Tables
     private static final String TABLE_CONSTRUCTIONS = "constructions";
-    private static final String TABLE_CUSTOMERS = "customers";
     private static final String TABLE_EMPLOYEES = "employees";
     private static final String TABLE_WORK_ORDER = "work_order";
     private static final String TABLE_ASSIGN = "assign";
@@ -101,6 +101,72 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String KEY_ORDER_ID_FK = "orderIdFk";
 
 
+    String CREATE_CONSTRUCTIONS_TABLE = "CREATE TABLE " + TABLE_CONSTRUCTIONS +
+            "(" +
+            KEY_CONSTRUCTION_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            KEY_CONSTRUCTION_CUSTOMER + " TEXT," + // Define a foreign key
+            KEY_CONSTRUCTION_NAME + " TEXT," +
+            KEY_CONSTRUCTION_STATUS + " TEXT" +
+            ")";
+
+
+    String CREATE_EMPLOYEES_TABLE = "CREATE TABLE " + TABLE_EMPLOYEES +
+            "(" +
+            KEY_EMPLOYEE_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            KEY_EMPLOYEE_NAME + " TEXT," +
+            KEY_EMPLOYEE_CODE + " TEXT," +
+            KEY_EMPLOYEE_JOB + " TEXT," +
+            KEY_EMPLOYEE_ADDRESS1 + " TEXT," +
+            KEY_EMPLOYEE_ADDRESS2 + " TEXT," +
+            KEY_EMPLOYEE_ZIP + " TEXT," +
+            KEY_EMPLOYEE_CITY + " TEXT," +
+            KEY_EMPLOYEE_PHONE + " TEXT," +
+            KEY_EMPLOYEE_MAIL + " TEXT" +
+            ")";
+
+    String CREATE_WORK_ORDER_TABLE = "CREATE TABLE " + TABLE_WORK_ORDER +
+            "(" +
+            KEY_WORK_ORDER_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            KEY_WORK_ORDER_CONSTRUCTION_ID_FK + " INTEGER REFERENCES " + TABLE_CONSTRUCTIONS + "," + // Define a foreign key
+            KEY_WORK_ORDER_REFERENCE + " TEXT," +
+            KEY_WORK_ORDER_AFFAIRE + " TEXT," +
+            KEY_WORK_ORDER_PRODUCT_TYPE + " TEXT," +
+            KEY_WORK_ORDER_ALLOCATED_TIME + " TEXT," +
+            KEY_WORK_ORDER_STATUS + " TEXT" +
+            ")";
+
+    String CREATE_ASSIGN_TABLE = "CREATE TABLE " + TABLE_ASSIGN +
+            "(" +
+            KEY_ASSIGN_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            KEY_ASSIGN_WORKORDER_ID_FK + " INTEGER REFERENCES " + TABLE_WORK_ORDER + "," + // Define a foreign key
+            KEY_ASSIGN_EMPLOYEE_ID_FK + " INTEGER REFERENCES " + TABLE_EMPLOYEES + "," + // Define a foreign key
+            KEY_ASSIGN_IS_WORKING + " INTEGER" +
+            ")";
+
+    String CREATE_IMPUTATION_TABLE = "CREATE TABLE " + TABLE_IMPUTATION +
+            "(" +
+            KEY_IMPUTATION_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            KEY_IMPUTATION_ASSIGN_ID + " INTEGER," +
+            KEY_IMPUTATION_WORK_ORDER_ID_FK + " INTEGER REFERENCES " + TABLE_WORK_ORDER + "," + // Define a foreign key
+            KEY_IMPUTATION_EMPLOYEE_ID + " INTEGER," + // Define a foreign key
+            KEY_IMPUTATION_START_TIME + " INTEGER," +
+            KEY_IMPUTATION_END_TIME + " INTEGER" +
+            ")";
+
+    String CREATE_ORDER_TABLE = "CREATE TABLE " + TABLE_ORDER +
+            "(" +
+            KEY_ORDER_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            KEY_ORDER_CODE + " TEXT," +
+            KEY_ORDER_CUSTOMER + " TEXT," + // Define a foreign key
+            KEY_ORDER_STATUS + " TEXT " +
+            ")";
+
+    String CREATE_PICTURE_TABLE = "CREATE TABLE " + TABLE_PICTURE +
+            "(" +
+            KEY_PICTURE_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            KEY_PICTURE_NAME + " TEXT," +
+            KEY_ORDER_ID_FK + " INTEGER REFERENCES " + TABLE_ORDER + //define a foreign key
+            ")";
 
 
     private static DatabaseManager sInstance;
@@ -114,7 +180,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     private DatabaseManager(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION_0_5_X);
     }
 
 
@@ -127,73 +193,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
-        String CREATE_CONSTRUCTIONS_TABLE = "CREATE TABLE " + TABLE_CONSTRUCTIONS +
-                "(" +
-                KEY_CONSTRUCTION_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                KEY_CONSTRUCTION_CUSTOMER + " TEXT," + // Define a foreign key
-                KEY_CONSTRUCTION_NAME + " TEXT," +
-                KEY_CONSTRUCTION_STATUS + " TEXT" +
-                ")";
-
-
-        String CREATE_EMPLOYEES_TABLE = "CREATE TABLE " + TABLE_EMPLOYEES +
-                "(" +
-                KEY_EMPLOYEE_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                KEY_EMPLOYEE_NAME + " TEXT," +
-                KEY_EMPLOYEE_CODE + " TEXT," +
-                KEY_EMPLOYEE_JOB + " TEXT," +
-                KEY_EMPLOYEE_ADDRESS1 + " TEXT," +
-                KEY_EMPLOYEE_ADDRESS2 + " TEXT," +
-                KEY_EMPLOYEE_ZIP + " TEXT," +
-                KEY_EMPLOYEE_CITY + " TEXT," +
-                KEY_EMPLOYEE_PHONE + " TEXT," +
-                KEY_EMPLOYEE_MAIL + " TEXT" +
-                ")";
-
-        String CREATE_WORK_ORDER_TABLE = "CREATE TABLE " + TABLE_WORK_ORDER +
-                "(" +
-                KEY_WORK_ORDER_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                KEY_WORK_ORDER_CONSTRUCTION_ID_FK + " INTEGER REFERENCES " + TABLE_CONSTRUCTIONS + "," + // Define a foreign key
-                KEY_WORK_ORDER_REFERENCE + " TEXT," +
-                KEY_WORK_ORDER_AFFAIRE + " TEXT," +
-                KEY_WORK_ORDER_PRODUCT_TYPE + " TEXT," +
-                KEY_WORK_ORDER_ALLOCATED_TIME + " TEXT," +
-                KEY_WORK_ORDER_STATUS + " TEXT" +
-                ")";
-
-        String CREATE_ASSIGN_TABLE = "CREATE TABLE " + TABLE_ASSIGN +
-                "(" +
-                KEY_ASSIGN_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                KEY_ASSIGN_WORKORDER_ID_FK + " INTEGER REFERENCES " + TABLE_WORK_ORDER + "," + // Define a foreign key
-                KEY_ASSIGN_EMPLOYEE_ID_FK + " INTEGER REFERENCES " + TABLE_EMPLOYEES + "," + // Define a foreign key
-                KEY_ASSIGN_IS_WORKING + " INTEGER" +
-                ")";
-
-        String CREATE_IMPUTATION_TABLE = "CREATE TABLE " + TABLE_IMPUTATION +
-                "(" +
-                KEY_IMPUTATION_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                KEY_IMPUTATION_ASSIGN_ID + " INTEGER," +
-                KEY_IMPUTATION_WORK_ORDER_ID_FK + " INTEGER REFERENCES " + TABLE_WORK_ORDER + "," + // Define a foreign key
-                KEY_IMPUTATION_EMPLOYEE_ID + " INTEGER," + // Define a foreign key
-                KEY_IMPUTATION_START_TIME + " INTEGER," +
-                KEY_IMPUTATION_END_TIME + " INTEGER" +
-                ")";
-
-        String CREATE_ORDER_TABLE = "CREATE TABLE " + TABLE_ORDER +
-                "(" +
-                KEY_ORDER_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                KEY_ORDER_CODE + " TEXT," +
-                KEY_ORDER_CUSTOMER + " TEXT," + // Define a foreign key
-                KEY_ORDER_STATUS + " TEXT " +
-                ")";
-
-        String CREATE_PICTURE_TABLE = "CREATE TABLE " + TABLE_PICTURE +
-                "(" +
-                KEY_PICTURE_ID_PK + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                KEY_PICTURE_NAME + " TEXT," +
-                KEY_ORDER_ID_FK + " INTEGER REFERENCES " + TABLE_ORDER + //define a foreign key
-                ")";
 
         db.execSQL(CREATE_CONSTRUCTIONS_TABLE);
         db.execSQL(CREATE_EMPLOYEES_TABLE);
@@ -216,18 +215,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion != newVersion) {
+        if (oldVersion == DATABASE_VERSION_0_4_X && newVersion == DATABASE_VERSION_0_5_X) {
 
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONSTRUCTIONS);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_CUSTOMERS);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_EMPLOYEES);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_WORK_ORDER);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSIGN);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMPUTATION);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDER);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_PICTURE);
-
-            onCreate(db);
+            db.execSQL(CREATE_ORDER_TABLE);
+            db.execSQL(CREATE_PICTURE_TABLE);
         }
     }
 
