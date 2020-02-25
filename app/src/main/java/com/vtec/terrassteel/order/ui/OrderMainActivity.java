@@ -18,6 +18,7 @@ import com.vtec.terrassteel.core.model.DefaultResponse;
 import com.vtec.terrassteel.core.task.DatabaseOperationCallBack;
 import com.vtec.terrassteel.core.ui.AbstractActivity;
 import com.vtec.terrassteel.database.DatabaseManager;
+import com.vtec.terrassteel.order.CameraXActivity;
 import com.vtec.terrassteel.order.adapter.PictureGridAdapter;
 import com.vtec.terrassteel.order.callback.PictureOrderCallback;
 
@@ -191,7 +192,7 @@ public class OrderMainActivity  extends AbstractActivity implements PictureOrder
     }
 
     private void startCameraActivity() {
-        startActivityForResult(new Intent(this, CameraActivity.class), TAKE_PICTURE_REQUEST_CODE);
+        startActivityForResult(new Intent(this, CameraXActivity.class), TAKE_PICTURE_REQUEST_CODE);
     }
 
     @Override

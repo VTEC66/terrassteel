@@ -37,7 +37,12 @@ public class SplashScreenActivity extends AbstractActivity {
     protected void onResume() {
         super.onResume();
 
-        if (CommonUtil.hasConnectivity(this)) {
+        new Handler().postDelayed(
+                this::standardStarting,
+                DELAY_MILLIS
+        );
+
+        /*if (CommonUtil.hasConnectivity(this)) {
 
             new Handler().postDelayed(
                     this::standardStarting,
@@ -46,7 +51,7 @@ public class SplashScreenActivity extends AbstractActivity {
 
         } else {
             showError(getString(R.string.no_internet_title), getString(R.string.no_internet_message));
-        }
+        }*/
     }
 
     private void standardStarting() {

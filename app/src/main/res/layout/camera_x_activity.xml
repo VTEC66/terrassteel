@@ -1,44 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activityMain"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white"
-    android:clipToPadding="true">
+    android:layout_height="match_parent">
 
-    <FrameLayout
+    <TextureView
+        android:id="@+id/view_finder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.vtec.terrassteel.camera.CameraView
-            android:id="@+id/camera"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            app:camera_aspectRatio="1.3"
-            app:camera_facing="back"
-            app:camera_focus="continuous"
-            app:camera_imageJpegQuality="100"
-            app:camera_imageMegaPixels="2.0"
-            app:camera_permissions="camera" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="top|end"
-            android:scaleType="centerInside"
-            android:visibility="gone" />
-
-    </FrameLayout>
-
+    <ImageView
+        android:id="@+id/render"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top|end"
+        android:scaleType="centerInside"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -58,20 +46,22 @@
                 android:id="@+id/retry_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/large">
+                android:layout_marginStart="@dimen/large"
+                android:gravity="center">
+
                 <ImageView
-                    android:src="@drawable/ic_retake_picture"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:layout_centerInParent="true"/>
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_retake_picture" />
+
                 <ImageView
-                    android:src="@drawable/ic_refresh"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_centerInParent="true"
-                    android:tint="#29AF56"/>
+                    android:src="@drawable/ic_refresh"
+                    android:tint="#29AF56" />
             </RelativeLayout>
         </RelativeLayout>
 
@@ -90,4 +80,5 @@
                 android:background="@drawable/ic_take_picture" />
         </RelativeLayout>
     </LinearLayout>
-</RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

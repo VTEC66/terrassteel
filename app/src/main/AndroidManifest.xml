@@ -81,7 +81,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/FullTranslucent"/>
 
-        <activity android:name=".order.ui.CameraActivity"
+        <activity android:name=".order.CameraXActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:screenOrientation="portrait"
             android:theme="@style/FullTranslucent"/>
